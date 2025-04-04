@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
-from tkinter import messagebox
+from editor_screen import show_editor_screen
 
 class ExperimentApp:
     def __init__(self, root):
@@ -122,49 +122,8 @@ class ExperimentApp:
                 self.saved_metadata.append(name)
 
 
-        self.show_editor_screen()
+        show_editor_screen(self)
     
-    def show_editor_screen(self):
-        self.clear_screen()
-
-        # Go Back Arrow
-        back_btn = tk.Button(self.root, text="←", font=("Arial", 16), bg="#fef6f6", command=self.show_create_screen)
-        back_btn.place(x=10, y=10)
-
-        # Main white canvas
-        editor_frame = tk.Frame(self.root, bg="white", bd=2, relief="flat")
-        editor_frame.place(relx=0.025, rely=0.025, relwidth=0.7, relheight=0.65)
-
-        # Timeline or bottom white area
-        timeline_frame = tk.Frame(self.root, bg="white", bd=2, relief="flat")
-        timeline_frame.place(relx=0.025, rely=0.7, relwidth=0.7, relheight=0.2)
-
-        # Start block
-        start_block = tk.Frame(timeline_frame, width=60, height=60, bg="green")
-        start_block.pack(padx=20, pady=10, anchor="nw")
-        tk.Label(timeline_frame, text="Start", bg="white").place(x=22, y=75)
-
-        # Component panel
-        components_panel = tk.Frame(self.root, bg="white", bd=2, relief="flat")
-        components_panel.place(relx=0.75, rely=0.025, relwidth=0.22, relheight=0.65)
-
-        tk.Label(components_panel, text="Components", font=("Segoe UI", 12, "bold"), bg="#dcdcdc").pack(fill="x")
-
-        comp_data = [
-            ("Text", "gray"),
-            ("Stimulus", "yellow"),
-            ("Stimulus notification", "purple"),
-            ("End", "red")
-        ]
-
-        for label, color in comp_data:
-            block = tk.Frame(components_panel, bg=color, width=60, height=60)
-            block.pack(pady=10)
-            tk.Label(components_panel, text=label, font=("Segoe UI", 10, "bold"), bg="white").pack()
-
-        # Create button
-        create_button = tk.Button(self.root, text="Create", font=("Segoe UI", 12), bg="#fef6f6", width=12)
-        create_button.place(relx=0.82, rely=0.8)
         
 root = tk.Tk()
 app = ExperimentApp(root)

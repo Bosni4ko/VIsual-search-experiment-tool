@@ -1,47 +1,96 @@
 import tkinter as tk
 
 class ComponentBlock(tk.Frame):
-    def __init__(self, parent, label, color, x=0, y=0):
+    def __init__(self, parent, label, color, x=0, y=0, from_timeline=False, preview=False):
         super().__init__(parent, width=80, height=60, bg=color, highlightbackground="black", highlightthickness=1)
-        self.label = label
+        self.label_text = label
         self.color = color
+        self.from_timeline = from_timeline
+        self.preview = preview
+        self.parent = parent
         self.place(x=x, y=y)
-        self.label_widget = tk.Label(self, text=label, bg=color, font=("Segoe UI", 9, "bold"))
+
+        self.label_offset_y = 65  # vertical offset for text below the block
+
+        # Hidden internal label inside block
+        self.label_widget = tk.Label(self, text="", bg=color)
         self.label_widget.place(relx=0.5, rely=0.5, anchor="center")
 
-        self.bind("<Button-1>", self.on_start_drag)
-        self.bind("<B1-Motion>", self.on_drag)
-        self.bind("<ButtonRelease-1>", self.on_drop)
-        self.label_widget.bind("<Button-1>", self.on_start_drag)
-        self.label_widget.bind("<B1-Motion>", self.on_drag)
-        self.label_widget.bind("<ButtonRelease-1>", self.on_drop)
+        if self.from_timeline and not self.preview:
+            # Editable entry for timeline blocks
+            self.name_var = tk.StringVar(value=self.label_text)
+            self.name_entry = tk.Entry(parent, textvariable=self.name_var, font=("Segoe UI", 9), width=10, justify="center")
+            self.name_entry.place(x=x, y=y + self.label_offset_y)
+            self.name_entry.bind("<Return>", self.update_label)
+            self.name_entry.bind("<FocusOut>", self.update_label)
+
+        elif not self.from_timeline and not self.preview:
+            # Static label for sidebar components only
+            self.name_label = tk.Label(parent, text=self.label_text, font=("Segoe UI", 9), bg="white")
+            self.name_label.place(x=x, y=y + self.label_offset_y)
+
+        if self.from_timeline and not self.preview:
+            # Make draggable if it's in the timeline (not preview)
+            self.bind("<Button-1>", self.on_start_drag)
+            self.bind("<B1-Motion>", self.on_drag)
+            self.bind("<ButtonRelease-1>", self.on_drop)
+            self.label_widget.bind("<Button-1>", self.on_start_drag)
+            self.label_widget.bind("<B1-Motion>", self.on_drag)
+            self.label_widget.bind("<ButtonRelease-1>", self.on_drop)
 
         self.start_x = 0
         self.start_y = 0
 
     def on_start_drag(self, event):
         self.start_x = event.x
-        self.start_y = event.y
+        self.lift()
+        if self.from_timeline and not self.preview:
+            self.name_entry.lift()
 
     def on_drag(self, event):
         dx = event.x - self.start_x
-        dy = event.y - self.start_y
-        x = self.winfo_x() + dx
-        y = self.winfo_y() + dy
-        self.place(x=x, y=y)
+        new_x = self.winfo_x() + dx
+        self.place(x=new_x, y=10)
+
+        if self.from_timeline and not self.preview:
+            self.name_entry.place(x=new_x, y=10 + self.label_offset_y)
 
     def on_drop(self, event):
-        # Optional: Snap to grid, prevent out-of-bounds
-        pass
+        if self.from_timeline and not self.preview:
+            self.master.reorder_component(self)
 
+    def update_label(self, event=None):
+        self.label_text = self.name_var.get()
 
 def show_editor_screen(app):
     app.clear_screen()
+    app.timeline_components = []
+    app.timeline_spacing = 90  # horizontal space between blocks
 
     # Timeline drop zone
-    timeline_frame = tk.Frame(app.root, bg="white", bd=2, relief="flat")
+    timeline_frame = tk.Frame(app.root, bg="white", bd=2, relief="flat", height=80)
     timeline_frame.place(relx=0.025, rely=0.7, relwidth=0.7, relheight=0.2)
     app.timeline_frame = timeline_frame
+
+    def reorder_component(component):
+        # Get current x-position and determine new index
+        x = component.winfo_x()
+        new_index = x // app.timeline_spacing
+        new_index = max(0, min(new_index, len(app.timeline_components)))
+
+        # Remove and re-insert component at new index
+        if component in app.timeline_components:
+            app.timeline_components.remove(component)
+            app.timeline_components.insert(new_index, component)
+
+        # Rearrange all components in order
+        for i, block in enumerate(app.timeline_components):
+            block.place(x=i * app.timeline_spacing, y=10)
+            if block.from_timeline:
+                block.name_entry.place(x=i * app.timeline_spacing, y=75)
+
+    app.timeline_frame.reorder_component = reorder_component
+
 
     # Back button
     back_btn = tk.Button(app.root, text="←", font=("Arial", 16), bg="#fef6f6", command=app.show_create_screen)
@@ -62,7 +111,7 @@ def show_editor_screen(app):
     ]
 
     def create_component(label, color, x=10, y=10):
-        ComponentBlock(app.timeline_frame, label, color, x=x, y=y)
+        ComponentBlock(app.timeline_frame, label, color, x=x, y=y,from_timeline=True)
 
     def on_click(event, label, color):
         # Click = add to default location
@@ -70,7 +119,7 @@ def show_editor_screen(app):
 
     def on_start_drag_from_palette(event, label, color, template):
         # Create temp drag block
-        temp = ComponentBlock(app.root, label, color)
+        temp = ComponentBlock(app.root, label, color,from_timeline=True)
         temp.lift()
 
         def follow_mouse(ev):
@@ -121,7 +170,7 @@ def show_editor_screen(app):
 
         if not drag_data["dragging"] and (abs(dx) > 5 or abs(dy) > 5):
             drag_data["dragging"] = True
-            drag_data["temp"] = ComponentBlock(app.root, drag_data["label"], drag_data["color"])
+            drag_data["temp"] = ComponentBlock(app.root, drag_data["label"], drag_data["color"], preview=True)
             drag_data["temp"].lift()
             app.root.config(cursor="none")  # hide mouse
 
@@ -138,41 +187,57 @@ def show_editor_screen(app):
         app.root.config(cursor="")  # Show mouse again
 
         if drag_data["dragging"] and drag_data["temp"]:
-            x_win = event.x_root - app.root.winfo_rootx()
-            y_win = event.y_root - app.root.winfo_rooty()
+            x_root = event.x_root
+            timeline_x = app.timeline_frame.winfo_rootx()
+            timeline_y = app.timeline_frame.winfo_rooty()
+            timeline_w = app.timeline_frame.winfo_width()
+            timeline_h = app.timeline_frame.winfo_height()
 
-            timeline_abs_x = app.timeline_frame.winfo_rootx() - app.root.winfo_rootx()
-            timeline_abs_y = app.timeline_frame.winfo_rooty() - app.root.winfo_rooty()
+            if timeline_x <= x_root <= timeline_x + timeline_w:
+                # Determine insert index based on horizontal position
+                drop_x = x_root - timeline_x
+                index = drop_x // app.timeline_spacing
 
-            if timeline_abs_x <= x_win <= timeline_abs_x + app.timeline_frame.winfo_width() and \
-                timeline_abs_y <= y_win <= timeline_abs_y + app.timeline_frame.winfo_height():
-                rel_x = x_win - timeline_abs_x - 40
-                rel_y = y_win - timeline_abs_y - 30
-                ComponentBlock(app.timeline_frame, drag_data["label"], drag_data["color"], x=rel_x, y=rel_y)
+                index = min(index, len(app.timeline_components))  # cap index
 
+                # Shift right from insert point
+                for i in range(index, len(app.timeline_components)):
+                    block = app.timeline_components[i]
+                    block.place(x=(i + 1) * app.timeline_spacing, y=10)
+
+                # Insert new component visually and into tracking list
+                new_block = ComponentBlock(app.timeline_frame, drag_data["label"], drag_data["color"], x=index * app.timeline_spacing, y=10,from_timeline=True)
+                app.timeline_components.insert(index, new_block)
+                
             drag_data["temp"].destroy()
             drag_data["temp"] = None
 
         elif not drag_data["dragging"]:
             # Only create on click if not dragging
-            ComponentBlock(app.timeline_frame, drag_data["label"], drag_data["color"], x=10, y=10)
+            ComponentBlock(app.timeline_frame, drag_data["label"], drag_data["color"], x=10, y=10,from_timeline=True)
 
         drag_data["dragging"] = False
 
 
     def on_template_click(event, label, color):
         if not drag_data["dragging"]:
-            ComponentBlock(app.timeline_frame, label, color, x=10, y=10)
+            ComponentBlock(app.timeline_frame, label, color, x=10, y=10 , from_timeline=True)
 
     for label, color in component_data:
-        template = tk.Frame(components_panel, bg=color, width=60, height=40)
-        template.pack(pady=10)
-        tk.Label(template, text=label, font=("Segoe UI", 10, "bold"), bg=color).place(relx=0.5, rely=0.5, anchor="center")
+        container = tk.Frame(components_panel, bg="white")
+        container.pack(pady=10)
 
-        # Bind left click and drag
-        template.bind("<ButtonPress-1>", lambda e, l=label, c=color: on_template_press(e, l, c))
-        template.bind("<B1-Motion>", on_template_motion)
-        template.bind("<ButtonRelease-1>", on_template_release)
+        block = tk.Frame(container, bg=color, width=60, height=40)
+        block.pack()
+
+        text_label = tk.Label(container, text=label, font=("Segoe UI", 9), bg="white")
+        text_label.pack()
+
+        # Bind drag + click events
+        block.bind("<ButtonPress-1>", lambda e, l=label, c=color: on_template_press(e, l, c))
+        block.bind("<B1-Motion>", on_template_motion)
+        block.bind("<ButtonRelease-1>", on_template_release)
+
 
 
     # Optional top editor space

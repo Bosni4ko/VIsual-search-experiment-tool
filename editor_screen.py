@@ -67,11 +67,17 @@ def show_editor_screen(app):
     app.timeline_components = []
     app.timeline_spacing = 90  # horizontal space between blocks
 
+
     # Timeline drop zone
     timeline_frame = tk.Frame(app.root, bg="white", bd=2, relief="flat", height=80)
     timeline_frame.place(relx=0.025, rely=0.7, relwidth=0.7, relheight=0.2)
     app.timeline_frame = timeline_frame
 
+    # Automatically add Start block at index 0
+    start_block = ComponentBlock(app.timeline_frame, "Start", "green", x=0, y=10, from_timeline=True)
+    app.timeline_components.append(start_block)
+    start_block.name_entry.place(x=0, y=75)
+    
     def reorder_component(component):
         x = component.winfo_x()
         new_index = x // app.timeline_spacing
@@ -178,12 +184,12 @@ def show_editor_screen(app):
     tk.Label(components_panel, text="Components", font=("Segoe UI", 12, "bold"), bg="#dcdcdc").pack(fill="x")
 
     component_data = [
-        ("Start", "green"),
         ("Text", "gray"),
         ("Stimulus", "yellow"),
         ("Stimulus notification", "purple"),
         ("End", "red")
     ]
+
 
     def create_component(label, color, x=10, y=10):
         ComponentBlock(app.timeline_frame, label, color, x=x, y=y,from_timeline=True)

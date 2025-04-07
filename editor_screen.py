@@ -73,23 +73,98 @@ def show_editor_screen(app):
     app.timeline_frame = timeline_frame
 
     def reorder_component(component):
-        # Get current x-position and determine new index
         x = component.winfo_x()
         new_index = x // app.timeline_spacing
-        new_index = max(0, min(new_index, len(app.timeline_components)))
+        new_index = max(0, min(new_index, len(app.timeline_components) - 1))
 
-        # Remove and re-insert component at new index
-        if component in app.timeline_components:
-            app.timeline_components.remove(component)
-            app.timeline_components.insert(new_index, component)
+        if component not in app.timeline_components:
+            return
 
-        # Rearrange all components in order
+        current_index = app.timeline_components.index(component)
+        label = component.label_text
+
+        # Prevent "Start" from being moved
+        if label == "Start" and new_index != 0:
+            component.place(x=current_index * app.timeline_spacing, y=10)
+            component.name_entry.place(x=current_index * app.timeline_spacing, y=75)
+            return
+
+        # Prevent "End" from being moved
+        if label == "End" and new_index != len(app.timeline_components) - 1:
+            component.place(x=current_index * app.timeline_spacing, y=10)
+            component.name_entry.place(x=current_index * app.timeline_spacing, y=75)
+            return
+
+        # Prevent dropping INTO Start or End slot
+        target_block = app.timeline_components[new_index]
+        target_label = target_block.label_text
+
+        if target_label == "Start" and new_index == 0:
+            # Can't insert at index 0
+            component.place(x=current_index * app.timeline_spacing, y=10)
+            component.name_entry.place(x=current_index * app.timeline_spacing, y=75)
+            return
+
+        if target_label == "End" and new_index == len(app.timeline_components) - 1:
+            # Can't insert before End
+            component.place(x=current_index * app.timeline_spacing, y=10)
+            component.name_entry.place(x=current_index * app.timeline_spacing, y=75)
+            return
+
+        # Perform the reordering
+        app.timeline_components.remove(component)
+        app.timeline_components.insert(new_index, component)
+
+        # Rerender
         for i, block in enumerate(app.timeline_components):
             block.place(x=i * app.timeline_spacing, y=10)
             if block.from_timeline:
                 block.name_entry.place(x=i * app.timeline_spacing, y=75)
 
+
+
     app.timeline_frame.reorder_component = reorder_component
+
+    def insert_component(label, color):
+        index = len(app.timeline_components)
+
+        # Prevent duplicates
+        if label == "Start" and any(b.label_text == "Start" for b in app.timeline_components):
+            print("Only one Start allowed.")
+            return
+        if label == "End" and any(b.label_text == "End" for b in app.timeline_components):
+            print("Only one End allowed.")
+            return
+
+        # Enforce Start at beginning
+        if label == "Start":
+            index = 0
+            for i in range(len(app.timeline_components)):
+                block = app.timeline_components[i]
+                block.place(x=(i + 1) * app.timeline_spacing, y=10)
+                if block.from_timeline:
+                    block.name_entry.place(x=(i + 1) * app.timeline_spacing, y=75)
+
+        # Enforce End at the end
+        elif label == "End":
+            index = len(app.timeline_components)
+
+        # For others, insert before End if it exists
+        else:
+            for i, block in enumerate(app.timeline_components):
+                if block.label_text == "End":
+                    index = i
+                    break
+
+        # Create and insert block
+        new_block = ComponentBlock(app.timeline_frame, label, color, x=index * app.timeline_spacing, y=10, from_timeline=True)
+        app.timeline_components.insert(index, new_block)
+
+        # Rerender
+        for i, block in enumerate(app.timeline_components):
+            block.place(x=i * app.timeline_spacing, y=10)
+            if block.from_timeline:
+                block.name_entry.place(x=i * app.timeline_spacing, y=75)
 
 
     # Back button
@@ -194,34 +269,48 @@ def show_editor_screen(app):
             timeline_h = app.timeline_frame.winfo_height()
 
             if timeline_x <= x_root <= timeline_x + timeline_w:
-                # Determine insert index based on horizontal position
                 drop_x = x_root - timeline_x
                 index = drop_x // app.timeline_spacing
+                index = min(index, len(app.timeline_components))
 
-                index = min(index, len(app.timeline_components))  # cap index
+                label = drag_data["label"]
+
+                # Constraint: Only allow "Start" at position 0
+                if label == "Start" and index != 0:
+                    print("Start component must be at the beginning!")
+                    drag_data["temp"].destroy()
+                    drag_data["temp"] = None
+                    drag_data["dragging"] = False
+                    return
+
+                # Constraint: Only allow "End" at the last position
+                if label == "End" and index != len(app.timeline_components):
+                    print("End component must be at the end!")
+                    drag_data["temp"].destroy()
+                    drag_data["temp"] = None
+                    drag_data["dragging"] = False
+                    return
 
                 # Shift right from insert point
                 for i in range(index, len(app.timeline_components)):
                     block = app.timeline_components[i]
                     block.place(x=(i + 1) * app.timeline_spacing, y=10)
+                    if block.from_timeline:
+                        block.name_entry.place(x=(i + 1) * app.timeline_spacing, y=75)
 
-                # Insert new component visually and into tracking list
-                new_block = ComponentBlock(app.timeline_frame, drag_data["label"], drag_data["color"], x=index * app.timeline_spacing, y=10,from_timeline=True)
-                app.timeline_components.insert(index, new_block)
+                insert_component(drag_data["label"], drag_data["color"])
+
+
                 
             drag_data["temp"].destroy()
             drag_data["temp"] = None
 
         elif not drag_data["dragging"]:
-            # Only create on click if not dragging
-            ComponentBlock(app.timeline_frame, drag_data["label"], drag_data["color"], x=10, y=10,from_timeline=True)
+            insert_component(drag_data["label"], drag_data["color"])
+
 
         drag_data["dragging"] = False
 
-
-    def on_template_click(event, label, color):
-        if not drag_data["dragging"]:
-            ComponentBlock(app.timeline_frame, label, color, x=10, y=10 , from_timeline=True)
 
     for label, color in component_data:
         container = tk.Frame(components_panel, bg="white")

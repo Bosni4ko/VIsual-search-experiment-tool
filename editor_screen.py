@@ -68,7 +68,7 @@ class ComponentBlock(tk.Frame):
 def show_editor_screen(app):
     app.clear_screen()
     app.timeline_components = []
-    app.timeline_spacing = 90  # horizontal space between blocks
+    app.timeline_spacing = 100  # horizontal space between blocks
 
 
     # Timeline drop zone
@@ -86,6 +86,28 @@ def show_editor_screen(app):
         new_index = x // app.timeline_spacing
         new_index = max(0, min(new_index, len(app.timeline_components) - 1))
 
+        # Prevent placing between Stimulus and its attached Notification
+        for i in range(len(app.timeline_components) - 1):
+            first = app.timeline_components[i]
+            second = app.timeline_components[i + 1]
+
+            if first.component_type == "Stimulus notification" and \
+            second.component_type == "Stimulus" and \
+            second.attachment == first and i <= new_index < i+1:
+                if component in app.timeline_components:
+                    current_index = app.timeline_components.index(component)
+                    app.timeline_components.remove(component)
+                    # Adjust insertion index if component was before the pair
+                    if current_index <= i:
+                        i -= 1
+                        
+                app.timeline_components.insert(i, component)
+                # Rerender after safe insert
+                for j, block in enumerate(app.timeline_components):
+                    block.place(x=j * app.timeline_spacing, y=10)
+                    if block.from_timeline:
+                        block.name_entry.place(x=j * app.timeline_spacing, y=75)
+                return
         if component not in app.timeline_components:
             return
 

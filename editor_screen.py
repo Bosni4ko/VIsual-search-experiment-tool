@@ -1,7 +1,7 @@
 import tkinter as tk
 
 class ComponentBlock(tk.Frame):
-    def __init__(self, parent, label, color, x=0, y=0, from_timeline=False, preview=False, attachment=None):
+    def __init__(self, parent, label, color, x=0, y=0, from_timeline=False, preview=False, attachment=None, component_type=None):
         super().__init__(parent, width=80, height=60, bg=color, highlightbackground="black", highlightthickness=1)
         self.label_text = label
         self.color = color
@@ -10,6 +10,7 @@ class ComponentBlock(tk.Frame):
         self.parent = parent
         self.place(x=x, y=y)
         self.attachment = attachment  # can be another ComponentBlock or None
+        self.component_type = component_type or label
 
 
         self.label_offset_y = 65  # vertical offset for text below the block
@@ -76,7 +77,7 @@ def show_editor_screen(app):
     app.timeline_frame = timeline_frame
 
     # Automatically add Start block at index 0
-    start_block = ComponentBlock(app.timeline_frame, "Start", "green", x=0, y=10, from_timeline=True)
+    start_block = ComponentBlock(app.timeline_frame, "Start", "green", x=0, y=10, from_timeline=True,component_type="Start")
     app.timeline_components.append(start_block)
     start_block.name_entry.place(x=0, y=75)
     
@@ -89,37 +90,63 @@ def show_editor_screen(app):
             return
 
         current_index = app.timeline_components.index(component)
-        label = component.label_text
+        component_type = component.component_type
 
-        # Prevent "Start" from being moved
-        if label == "Start" and new_index != 0:
+        # Prevent Start from being moved
+        if component_type == "Start" and new_index != 0:
             component.place(x=current_index * app.timeline_spacing, y=10)
             component.name_entry.place(x=current_index * app.timeline_spacing, y=75)
             return
 
-        # Prevent "End" from being moved
-        if label == "End" and new_index != len(app.timeline_components) - 1:
+        # Prevent End from being moved
+        if component_type == "End" and new_index != len(app.timeline_components) - 1:
             component.place(x=current_index * app.timeline_spacing, y=10)
             component.name_entry.place(x=current_index * app.timeline_spacing, y=75)
             return
 
-        # Prevent dropping INTO Start or End slot
-        target_block = app.timeline_components[new_index]
-        target_label = target_block.label_text
-
-        if target_label == "Start" and new_index == 0:
-            # Can't insert at index 0
+        # Prevent dropping into position 0 (reserved for Start)
+        if new_index == 0:
             component.place(x=current_index * app.timeline_spacing, y=10)
             component.name_entry.place(x=current_index * app.timeline_spacing, y=75)
             return
 
-        if target_label == "End" and new_index == len(app.timeline_components) - 1:
-            # Can't insert before End
-            component.place(x=current_index * app.timeline_spacing, y=10)
-            component.name_entry.place(x=current_index * app.timeline_spacing, y=75)
+        # Prevent dropping after End
+        if len(app.timeline_components) > 0:
+            last = app.timeline_components[-1]
+            if last.component_type == "End" and new_index >= len(app.timeline_components) - 1:
+                if component.component_type != "End":  # End is already protected above
+                    component.place(x=current_index * app.timeline_spacing, y=10)
+                    component.name_entry.place(x=current_index * app.timeline_spacing, y=75)
+                    return
+
+        # Stimulus with notification — move both together
+        if component_type == "Stimulus" and component.attachment:
+            notification = component.attachment
+
+            # Remove both (if notification comes before or after Stimulus)
+            if notification in app.timeline_components:
+                app.timeline_components.remove(notification)
+            app.timeline_components.remove(component)
+
+            # Adjust index after removal
+            if new_index > current_index:
+                new_index -= 2 if notification else 1
+
+            # Prevent illegal positions
+            new_index = max(1, min(new_index, len(app.timeline_components) - 1))
+
+            # Insert notification first, then Stimulus
+            app.timeline_components.insert(new_index, notification)
+            app.timeline_components.insert(new_index + 1, component)
+
+            # Rerender
+            for i, block in enumerate(app.timeline_components):
+                block.place(x=i * app.timeline_spacing, y=10)
+                if block.from_timeline:
+                    block.name_entry.place(x=i * app.timeline_spacing, y=75)
             return
 
-        # Perform the reordering
+        # Normal move for other components
         app.timeline_components.remove(component)
         app.timeline_components.insert(new_index, component)
 
@@ -129,23 +156,22 @@ def show_editor_screen(app):
             if block.from_timeline:
                 block.name_entry.place(x=i * app.timeline_spacing, y=75)
 
-
-
     app.timeline_frame.reorder_component = reorder_component
 
-    def insert_component(label, color):
-        index = len(app.timeline_components)
+    def insert_component(label, color, component_type, index=None ):
+        if index == None: 
+            index = len(app.timeline_components)
 
         # Prevent duplicates
-        if label == "Start" and any(b.label_text == "Start" for b in app.timeline_components):
+        if component_type == "Start" and any(b.component_type == "Start" for b in app.timeline_components):
             print("Only one Start allowed.")
             return
-        if label == "End" and any(b.label_text == "End" for b in app.timeline_components):
+        if component_type == "End" and any(b.component_type == "End" for b in app.timeline_components):
             print("Only one End allowed.")
             return
 
         # Enforce Start at beginning
-        if label == "Start":
+        if component_type == "Start":
             index = 0
             for i in range(len(app.timeline_components)):
                 block = app.timeline_components[i]
@@ -154,19 +180,19 @@ def show_editor_screen(app):
                     block.name_entry.place(x=(i + 1) * app.timeline_spacing, y=75)
 
         # Enforce End at the end
-        elif label == "End":
+        elif component_type == "End":
             index = len(app.timeline_components)
 
         # For others, insert before End if it exists
         else:
             for i, block in enumerate(app.timeline_components):
-                if block.label_text == "End":
+                if (block.component_type == "End" and index > i):
                     index = i
                     break
-        if label == "Stimulus notification":
+        if component_type == "Stimulus notification":
             # Find the first Stimulus with no attachment
             for i, block in enumerate(app.timeline_components):
-                if block.label_text == "Stimulus" and block.attachment is None:
+                if block.component_type == "Stimulus" and block.attachment is None:
                     stimulus_block = block
                     stimulus_index = i
                     break
@@ -182,7 +208,8 @@ def show_editor_screen(app):
                 x=stimulus_index * app.timeline_spacing,
                 y=10,
                 from_timeline=True,
-                attachment=stimulus_block
+                attachment=stimulus_block,
+                component_type = component_type
             )
 
             stimulus_block.attachment = notification
@@ -196,9 +223,11 @@ def show_editor_screen(app):
                     block.name_entry.place(x=i * app.timeline_spacing, y=75)
 
             return  # Done
-                
+        
+        if index == 0 and component_type != "Start":
+            index = 1
         # Create and insert block
-        new_block = ComponentBlock(app.timeline_frame, label, color, x=index * app.timeline_spacing, y=10, from_timeline=True)
+        new_block = ComponentBlock(app.timeline_frame, label, color, x=index * app.timeline_spacing, y=10, from_timeline=True,component_type=component_type)
         app.timeline_components.insert(index, new_block)
 
         # Rerender
@@ -219,50 +248,13 @@ def show_editor_screen(app):
     tk.Label(components_panel, text="Components", font=("Segoe UI", 12, "bold"), bg="#dcdcdc").pack(fill="x")
 
     component_data = [
-        ("Text", "gray"),
-        ("Stimulus", "yellow"),
-        ("Stimulus notification", "purple"),
-        ("End", "red")
+        ("Text", "gray","Text"),
+        ("Stimulus", "yellow","Stimulus"),
+        ("Stimulus notification", "purple","Stimulus notification"),
+        ("End", "red","End")
     ]
 
 
-    def create_component(label, color, x=10, y=10):
-        ComponentBlock(app.timeline_frame, label, color, x=x, y=y,from_timeline=True)
-
-    def on_click(event, label, color):
-        # Click = add to default location
-        create_component(label, color)
-
-    def on_start_drag_from_palette(event, label, color, template):
-        # Create temp drag block
-        temp = ComponentBlock(app.root, label, color,from_timeline=True)
-        temp.lift()
-
-        def follow_mouse(ev):
-            temp.place(x=ev.x_root - 50, y=ev.y_root - 50)
-
-        def on_release(ev):
-            # Check if dropped inside timeline
-            x_win = ev.x_root - app.root.winfo_rootx()
-            y_win = ev.y_root - app.root.winfo_rooty()
-
-            timeline_bbox = app.timeline_frame.bbox()
-            timeline_abs_x = app.timeline_frame.winfo_rootx() - app.root.winfo_rootx()
-            timeline_abs_y = app.timeline_frame.winfo_rooty() - app.root.winfo_rooty()
-
-            if timeline_abs_x <= x_win <= timeline_abs_x + app.timeline_frame.winfo_width() and \
-               timeline_abs_y <= y_win <= timeline_abs_y + app.timeline_frame.winfo_height():
-                rel_x = x_win - timeline_abs_x
-                rel_y = y_win - timeline_abs_y
-                create_component(label, color, x=rel_x, y=rel_y)
-
-            temp.destroy()
-
-            app.root.unbind("<Motion>")
-            app.root.unbind("<ButtonRelease-1>")
-
-        app.root.bind("<Motion>", follow_mouse)
-        app.root.bind("<ButtonRelease-1>", on_release)
 
     drag_data = {
         "start_x": 0,
@@ -270,15 +262,17 @@ def show_editor_screen(app):
         "dragging": False,
         "temp": None,
         "label": "",
-        "color": ""
+        "color": "",
+        "component_type":""
     }
 
-    def on_template_press(event, label, color):
+    def on_template_press(event, label, color, component_type):
         drag_data["start_x"] = event.x_root
         drag_data["start_y"] = event.y_root
         drag_data["label"] = label
         drag_data["color"] = color
         drag_data["dragging"] = False
+        drag_data["component_type"] = component_type
 
     def on_template_motion(event):
         dx = event.x_root - drag_data["start_x"]
@@ -286,7 +280,7 @@ def show_editor_screen(app):
 
         if not drag_data["dragging"] and (abs(dx) > 5 or abs(dy) > 5):
             drag_data["dragging"] = True
-            drag_data["temp"] = ComponentBlock(app.root, drag_data["label"], drag_data["color"], preview=True)
+            drag_data["temp"] = ComponentBlock(app.root, drag_data["label"], drag_data["color"], preview=True,component_type=label)
             drag_data["temp"].lift()
             app.root.config(cursor="none")  # hide mouse
 
@@ -301,13 +295,11 @@ def show_editor_screen(app):
 
     def on_template_release(event):
         app.root.config(cursor="")  # Show mouse again
-
+        component_type = drag_data["component_type"]
         if drag_data["dragging"] and drag_data["temp"]:
             x_root = event.x_root
             timeline_x = app.timeline_frame.winfo_rootx()
-            timeline_y = app.timeline_frame.winfo_rooty()
             timeline_w = app.timeline_frame.winfo_width()
-            timeline_h = app.timeline_frame.winfo_height()
 
             if timeline_x <= x_root <= timeline_x + timeline_w:
                 drop_x = x_root - timeline_x
@@ -318,7 +310,7 @@ def show_editor_screen(app):
                 color = drag_data["color"]
 
                 # Constraint: Only allow "Start" at position 0
-                if label == "Start" and index != 0:
+                if component_type == "Start" and index != 0:
                     print("Start component must be at the beginning!")
                     drag_data["temp"].destroy()
                     drag_data["temp"] = None
@@ -326,17 +318,17 @@ def show_editor_screen(app):
                     return
 
                 # Constraint: Only allow "End" at the last position
-                if label == "End" and index != len(app.timeline_components):
+                if component_type == "End" and index != len(app.timeline_components):
                     print("End component must be at the end!")
                     drag_data["temp"].destroy()
                     drag_data["temp"] = None
                     drag_data["dragging"] = False
                     return
-                if label == "Stimulus notification":
+                if component_type == "Stimulus notification":
                 # Check the block that will come AFTER the drop
                     if index < len(app.timeline_components):
                         stimulus_candidate = app.timeline_components[index]
-                        if stimulus_candidate.label_text == "Stimulus" and stimulus_candidate.attachment is None:
+                        if stimulus_candidate.component_type == "Stimulus" and stimulus_candidate.attachment is None:
                             # Valid: insert and attach
                             notification = ComponentBlock(
                                 app.timeline_frame,
@@ -345,7 +337,8 @@ def show_editor_screen(app):
                                 x=index * app.timeline_spacing,
                                 y=10,
                                 from_timeline=True,
-                                attachment=stimulus_candidate
+                                attachment=stimulus_candidate,
+                                component_type=component_type
                             )
                             stimulus_candidate.attachment = notification
                             app.timeline_components.insert(index, notification)
@@ -366,25 +359,20 @@ def show_editor_screen(app):
                         block.place(x=(i + 1) * app.timeline_spacing, y=10)
                         if block.from_timeline:
                             block.name_entry.place(x=(i + 1) * app.timeline_spacing, y=75)
-                    insert_component(drag_data["label"], drag_data["color"])
-                
-
-                
-
-
+                    insert_component(drag_data["label"], drag_data["color"],drag_data["component_type"],index=index)
                 
             drag_data["temp"].destroy()
             drag_data["temp"] = None
             drag_data["dragging"] = False
 
         elif not drag_data["dragging"]:
-            insert_component(drag_data["label"], drag_data["color"])
+            insert_component(drag_data["label"], drag_data["color"], drag_data["component_type"])
 
 
         drag_data["dragging"] = False
 
 
-    for label, color in component_data:
+    for label, color, component_type in component_data:
         container = tk.Frame(components_panel, bg="white")
         container.pack(pady=10)
 
@@ -395,7 +383,7 @@ def show_editor_screen(app):
         text_label.pack()
 
         # Bind drag + click events
-        block.bind("<ButtonPress-1>", lambda e, l=label, c=color: on_template_press(e, l, c))
+        block.bind("<ButtonPress-1>", lambda e, l=label, c=color,ct=component_type: on_template_press(e, l, c,ct))
         block.bind("<B1-Motion>", on_template_motion)
         block.bind("<ButtonRelease-1>", on_template_release)
 

@@ -1,7 +1,7 @@
 import tkinter as tk
 
 class ComponentBlock(tk.Frame):
-    def __init__(self, parent, label, color, x=0, y=0, from_timeline=False, preview=False):
+    def __init__(self, parent, label, color, x=0, y=0, from_timeline=False, preview=False, attachment=None):
         super().__init__(parent, width=80, height=60, bg=color, highlightbackground="black", highlightthickness=1)
         self.label_text = label
         self.color = color
@@ -9,6 +9,8 @@ class ComponentBlock(tk.Frame):
         self.preview = preview
         self.parent = parent
         self.place(x=x, y=y)
+        self.attachment = attachment  # can be another ComponentBlock or None
+
 
         self.label_offset_y = 65  # vertical offset for text below the block
 
@@ -161,7 +163,40 @@ def show_editor_screen(app):
                 if block.label_text == "End":
                     index = i
                     break
+        if label == "Stimulus notification":
+            # Find the first Stimulus with no attachment
+            for i, block in enumerate(app.timeline_components):
+                if block.label_text == "Stimulus" and block.attachment is None:
+                    stimulus_block = block
+                    stimulus_index = i
+                    break
+            else:
+                print("No available Stimulus for notification.")
+                return
 
+            # Create the notification and attach it
+            notification = ComponentBlock(
+                app.timeline_frame,
+                label,
+                color,
+                x=stimulus_index * app.timeline_spacing,
+                y=10,
+                from_timeline=True,
+                attachment=stimulus_block
+            )
+
+            stimulus_block.attachment = notification
+
+            app.timeline_components.insert(stimulus_index, notification)
+
+            # Rerender
+            for i, block in enumerate(app.timeline_components):
+                block.place(x=i * app.timeline_spacing, y=10)
+                if block.from_timeline:
+                    block.name_entry.place(x=i * app.timeline_spacing, y=75)
+
+            return  # Done
+                
         # Create and insert block
         new_block = ComponentBlock(app.timeline_frame, label, color, x=index * app.timeline_spacing, y=10, from_timeline=True)
         app.timeline_components.insert(index, new_block)
@@ -280,6 +315,7 @@ def show_editor_screen(app):
                 index = min(index, len(app.timeline_components))
 
                 label = drag_data["label"]
+                color = drag_data["color"]
 
                 # Constraint: Only allow "Start" at position 0
                 if label == "Start" and index != 0:
@@ -296,20 +332,50 @@ def show_editor_screen(app):
                     drag_data["temp"] = None
                     drag_data["dragging"] = False
                     return
+                if label == "Stimulus notification":
+                # Check the block that will come AFTER the drop
+                    if index < len(app.timeline_components):
+                        stimulus_candidate = app.timeline_components[index]
+                        if stimulus_candidate.label_text == "Stimulus" and stimulus_candidate.attachment is None:
+                            # Valid: insert and attach
+                            notification = ComponentBlock(
+                                app.timeline_frame,
+                                label,
+                                color,
+                                x=index * app.timeline_spacing,
+                                y=10,
+                                from_timeline=True,
+                                attachment=stimulus_candidate
+                            )
+                            stimulus_candidate.attachment = notification
+                            app.timeline_components.insert(index, notification)
 
-                # Shift right from insert point
-                for i in range(index, len(app.timeline_components)):
-                    block = app.timeline_components[i]
-                    block.place(x=(i + 1) * app.timeline_spacing, y=10)
-                    if block.from_timeline:
-                        block.name_entry.place(x=(i + 1) * app.timeline_spacing, y=75)
+                            # Rerender
+                            for i, block in enumerate(app.timeline_components):
+                                block.place(x=i * app.timeline_spacing, y=10)
+                                if block.from_timeline:
+                                    block.name_entry.place(x=i * app.timeline_spacing, y=75)
+                        else:
+                            print("Drop must be before a free Stimulus.")
+                    else:
+                        print("Drop must be before a Stimulus.")
+                else:
+                    # Shift right from insert point
+                    for i in range(index, len(app.timeline_components)):
+                        block = app.timeline_components[i]
+                        block.place(x=(i + 1) * app.timeline_spacing, y=10)
+                        if block.from_timeline:
+                            block.name_entry.place(x=(i + 1) * app.timeline_spacing, y=75)
+                    insert_component(drag_data["label"], drag_data["color"])
+                
 
-                insert_component(drag_data["label"], drag_data["color"])
+                
 
 
                 
             drag_data["temp"].destroy()
             drag_data["temp"] = None
+            drag_data["dragging"] = False
 
         elif not drag_data["dragging"]:
             insert_component(drag_data["label"], drag_data["color"])

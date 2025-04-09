@@ -85,7 +85,42 @@ def show_editor_screen(app):
         x = component.winfo_x()
         new_index = x // app.timeline_spacing
         new_index = max(0, min(new_index, len(app.timeline_components) - 1))
+        current_index = app.timeline_components.index(component)
+        component_type = component.component_type
+        print(new_index)
+        # Prevent Start from being moved
+        if component_type == "Start" and new_index != 0:
+            component.place(x=current_index * app.timeline_spacing, y=10)
+            component.name_entry.place(x=current_index * app.timeline_spacing, y=75)
+            return
 
+        # Prevent End from being moved
+        if component_type == "End" and new_index != len(app.timeline_components) - 1:
+            component.place(x=current_index * app.timeline_spacing, y=10)
+            component.name_entry.place(x=current_index * app.timeline_spacing, y=75)
+            return
+
+        # Prevent dropping into position 0 (reserved for Start)
+        if new_index == 0 and component.component_type != "Start" and component.component_type != "Stimulus notification" and component.component_type != "Stimulus":
+            new_index = 1  # force move to second slot
+            # Move to corrected position in list
+            app.timeline_components.remove(component)
+            app.timeline_components.insert(new_index, component)
+            # Rerender all components
+            for i, block in enumerate(app.timeline_components):
+                block.place(x=i * app.timeline_spacing, y=10)
+                if block.from_timeline:
+                    block.name_entry.place(x=i * app.timeline_spacing, y=75)
+            return
+
+        # Prevent dropping after End
+        if len(app.timeline_components) > 0:
+            last = app.timeline_components[-1]
+            if last.component_type == "End" and new_index >= len(app.timeline_components) - 1:
+                if component.component_type != "End":  # End is already protected above
+                    component.place(x=current_index * app.timeline_spacing, y=10)
+                    component.name_entry.place(x=current_index * app.timeline_spacing, y=75)
+                    return
         # Prevent placing between Stimulus and its attached Notification
         for i in range(len(app.timeline_components) - 1):
             first = app.timeline_components[i]
@@ -111,53 +146,31 @@ def show_editor_screen(app):
         if component not in app.timeline_components:
             return
 
-        current_index = app.timeline_components.index(component)
-        component_type = component.component_type
-
-        # Prevent Start from being moved
-        if component_type == "Start" and new_index != 0:
-            component.place(x=current_index * app.timeline_spacing, y=10)
-            component.name_entry.place(x=current_index * app.timeline_spacing, y=75)
-            return
-
-        # Prevent End from being moved
-        if component_type == "End" and new_index != len(app.timeline_components) - 1:
-            component.place(x=current_index * app.timeline_spacing, y=10)
-            component.name_entry.place(x=current_index * app.timeline_spacing, y=75)
-            return
-
-        # Prevent dropping into position 0 (reserved for Start)
-        if new_index == 0:
-            component.place(x=current_index * app.timeline_spacing, y=10)
-            component.name_entry.place(x=current_index * app.timeline_spacing, y=75)
-            return
-
-        # Prevent dropping after End
-        if len(app.timeline_components) > 0:
-            last = app.timeline_components[-1]
-            if last.component_type == "End" and new_index >= len(app.timeline_components) - 1:
-                if component.component_type != "End":  # End is already protected above
-                    component.place(x=current_index * app.timeline_spacing, y=10)
-                    component.name_entry.place(x=current_index * app.timeline_spacing, y=75)
-                    return
 
         # Stimulus with notification — move both together
         if component_type == "Stimulus" and component.attachment:
             notification = component.attachment
-
-            # Remove both (if notification comes before or after Stimulus)
+            # Remove both components (if they exist)
             if notification in app.timeline_components:
                 app.timeline_components.remove(notification)
-            app.timeline_components.remove(component)
+            if component in app.timeline_components:
+                app.timeline_components.remove(component)
 
-            # Adjust index after removal
-            if new_index > current_index:
-                new_index -= 2 if notification else 1
+            # Special Case: drop to the end (before End)
+            if len(app.timeline_components) > 0 and \
+            app.timeline_components[-1].component_type == "End" and \
+            new_index >= len(app.timeline_components):
+                new_index = len(app.timeline_components) - 1
 
-            # Prevent illegal positions
-            new_index = max(1, min(new_index, len(app.timeline_components) - 1))
+            else:
+                # Adjust index if component was moved forward
+                if new_index > current_index:
+                    new_index -= 1 
+                if new_index < current_index:
+                    new_index += 1 
+                new_index = max(1, min(new_index, len(app.timeline_components)))
 
-            # Insert notification first, then Stimulus
+            # Insert both in order
             app.timeline_components.insert(new_index, notification)
             app.timeline_components.insert(new_index + 1, component)
 
@@ -166,8 +179,11 @@ def show_editor_screen(app):
                 block.place(x=i * app.timeline_spacing, y=10)
                 if block.from_timeline:
                     block.name_entry.place(x=i * app.timeline_spacing, y=75)
+
             return
 
+        if new_index < current_index:
+                    new_index += 1 
         # Normal move for other components
         app.timeline_components.remove(component)
         app.timeline_components.insert(new_index, component)

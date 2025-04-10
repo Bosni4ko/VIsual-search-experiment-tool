@@ -391,13 +391,31 @@ def show_editor_screen(app):
                     else:
                         print("Drop must be before a Stimulus.")
                 else:
-                    # Shift right from insert point
+                    # Prevent dropping into a locked Stimulus-Notification pair
+                    for i in range(len(app.timeline_components) - 1):
+                        first = app.timeline_components[i]
+                        second = app.timeline_components[i + 1]
+                        if (
+                            first.component_type == "Stimulus notification"
+                            and second.component_type == "Stimulus"
+                            and second.attachment == first
+                            and i < index <= i + 1
+                        ):
+                            print("Redirecting to safe position before the notification")
+                            index = i  # redirect insert before notification
+                            break
+
+                    # If allowed, shift right and insert
                     for i in range(index, len(app.timeline_components)):
                         block = app.timeline_components[i]
                         block.place(x=(i + 1) * app.timeline_spacing, y=10)
                         if block.from_timeline:
                             block.name_entry.place(x=(i + 1) * app.timeline_spacing, y=75)
-                    insert_component(drag_data["label"], drag_data["color"],drag_data["component_type"],index=index)
+
+                    insert_component(
+                        drag_data["label"], drag_data["color"], drag_data["component_type"], index=index
+                    )
+
                 
             drag_data["temp"].destroy()
             drag_data["temp"] = None

@@ -12,7 +12,6 @@ class ComponentBlock(tk.Frame):
         self.attachment = attachment  # can be another ComponentBlock or None
         self.component_type = component_type or label
 
-
         self.label_offset_y = 65  # vertical offset for text below the block
 
         # Hidden internal label inside block
@@ -80,7 +79,13 @@ def show_editor_screen(app):
     start_block = ComponentBlock(app.timeline_frame, "Start", "green", x=0, y=10, from_timeline=True,component_type="Start")
     app.timeline_components.append(start_block)
     start_block.name_entry.place(x=0, y=75)
-    
+
+    def render_timeline():
+        for i, block in enumerate(app.timeline_components):
+            block.place(x=i * app.timeline_spacing, y=10)
+            if block.from_timeline:
+                block.name_entry.place(x=i * app.timeline_spacing, y=75)
+
     def reorder_component(component):
         x = component.winfo_x()
         new_index = x // app.timeline_spacing
@@ -107,10 +112,7 @@ def show_editor_screen(app):
             app.timeline_components.remove(component)
             app.timeline_components.insert(new_index, component)
             # Rerender all components
-            for i, block in enumerate(app.timeline_components):
-                block.place(x=i * app.timeline_spacing, y=10)
-                if block.from_timeline:
-                    block.name_entry.place(x=i * app.timeline_spacing, y=75)
+            render_timeline()
             return
 
         # Prevent dropping after End
@@ -138,10 +140,7 @@ def show_editor_screen(app):
                         
                 app.timeline_components.insert(i, component)
                 # Rerender after safe insert
-                for j, block in enumerate(app.timeline_components):
-                    block.place(x=j * app.timeline_spacing, y=10)
-                    if block.from_timeline:
-                        block.name_entry.place(x=j * app.timeline_spacing, y=75)
+                render_timeline()
                 return
         if component not in app.timeline_components:
             return
@@ -149,36 +148,33 @@ def show_editor_screen(app):
         if component_type == "Stimulus notification":
             # Search for Stimulus directly after intended drop position
             if new_index < len(app.timeline_components):
-                candidate = app.timeline_components[new_index+1]
+                candidate = app.timeline_components[new_index + 1]
                 if candidate.component_type == "Stimulus" and candidate.attachment is None:
-                    # Update attachments
-                    # Remove from old stimulus if attached
-                    for block in app.timeline_components:
-                        if block.component_type == "Stimulus" and block.attachment == component:
-                            block.attachment = None
-                            break
-                    # Attach to new one
-                    candidate.attachment = component
+                    # Detach from previous stimulus if attached
+                    if component.attachment:
+                        component.attachment.attachment = None
 
+                    # Attach to new Stimulus
+                    candidate.attachment = component
+                    component.attachment = candidate  # Keep track on the notification too if needed
+                    # Adjust new_index if component came from later in the list
+                    if new_index < current_index:
+                        new_index += 1
                     app.timeline_components.remove(component)
                     app.timeline_components.insert(new_index, component)
 
-                    # Rerender
-                    for i, block in enumerate(app.timeline_components):
-                        block.place(x=i * app.timeline_spacing, y=10)
-                        if block.from_timeline:
-                            block.name_entry.place(x=i * app.timeline_spacing, y=75)
+                    render_timeline()
                     return
                 else:
                     print("Stimulus notification can only be moved before a free Stimulus.")
-                    component.place(x=current_index * app.timeline_spacing, y=10)
-                    component.name_entry.place(x=current_index * app.timeline_spacing, y=75)
-                    return
             else:
                 print("Drop must be before a Stimulus.")
-                component.place(x=current_index * app.timeline_spacing, y=10)
-                component.name_entry.place(x=current_index * app.timeline_spacing, y=75)
-                return
+
+            # Restore previous position
+            component.place(x=current_index * app.timeline_spacing, y=10)
+            component.name_entry.place(x=current_index * app.timeline_spacing, y=75)
+            return
+
 
         # Stimulus with notification — move both together
         if component_type == "Stimulus" and component.attachment:
@@ -208,11 +204,7 @@ def show_editor_screen(app):
             app.timeline_components.insert(new_index + 1, component)
 
             # Rerender
-            for i, block in enumerate(app.timeline_components):
-                block.place(x=i * app.timeline_spacing, y=10)
-                if block.from_timeline:
-                    block.name_entry.place(x=i * app.timeline_spacing, y=75)
-
+            render_timeline()
             return
 
         if new_index < current_index:
@@ -222,10 +214,7 @@ def show_editor_screen(app):
         app.timeline_components.insert(new_index, component)
 
         # Rerender
-        for i, block in enumerate(app.timeline_components):
-            block.place(x=i * app.timeline_spacing, y=10)
-            if block.from_timeline:
-                block.name_entry.place(x=i * app.timeline_spacing, y=75)
+        render_timeline()
 
     app.timeline_frame.reorder_component = reorder_component
 
@@ -288,12 +277,8 @@ def show_editor_screen(app):
             app.timeline_components.insert(stimulus_index, notification)
 
             # Rerender
-            for i, block in enumerate(app.timeline_components):
-                block.place(x=i * app.timeline_spacing, y=10)
-                if block.from_timeline:
-                    block.name_entry.place(x=i * app.timeline_spacing, y=75)
-
-            return  # Done
+            render_timeline()
+            return 
         
         if index == 0 and component_type != "Start":
             index = 1
@@ -302,10 +287,7 @@ def show_editor_screen(app):
         app.timeline_components.insert(index, new_block)
 
         # Rerender
-        for i, block in enumerate(app.timeline_components):
-            block.place(x=i * app.timeline_spacing, y=10)
-            if block.from_timeline:
-                block.name_entry.place(x=i * app.timeline_spacing, y=75)
+        render_timeline()
 
 
     # Back button
@@ -415,10 +397,7 @@ def show_editor_screen(app):
                             app.timeline_components.insert(index, notification)
 
                             # Rerender
-                            for i, block in enumerate(app.timeline_components):
-                                block.place(x=i * app.timeline_spacing, y=10)
-                                if block.from_timeline:
-                                    block.name_entry.place(x=i * app.timeline_spacing, y=75)
+                            render_timeline()
                         else:
                             print("Drop must be before a free Stimulus.")
                     else:

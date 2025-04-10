@@ -146,6 +146,39 @@ def show_editor_screen(app):
         if component not in app.timeline_components:
             return
 
+        if component_type == "Stimulus notification":
+            # Search for Stimulus directly after intended drop position
+            if new_index < len(app.timeline_components):
+                candidate = app.timeline_components[new_index+1]
+                if candidate.component_type == "Stimulus" and candidate.attachment is None:
+                    # Update attachments
+                    # Remove from old stimulus if attached
+                    for block in app.timeline_components:
+                        if block.component_type == "Stimulus" and block.attachment == component:
+                            block.attachment = None
+                            break
+                    # Attach to new one
+                    candidate.attachment = component
+
+                    app.timeline_components.remove(component)
+                    app.timeline_components.insert(new_index, component)
+
+                    # Rerender
+                    for i, block in enumerate(app.timeline_components):
+                        block.place(x=i * app.timeline_spacing, y=10)
+                        if block.from_timeline:
+                            block.name_entry.place(x=i * app.timeline_spacing, y=75)
+                    return
+                else:
+                    print("Stimulus notification can only be moved before a free Stimulus.")
+                    component.place(x=current_index * app.timeline_spacing, y=10)
+                    component.name_entry.place(x=current_index * app.timeline_spacing, y=75)
+                    return
+            else:
+                print("Drop must be before a Stimulus.")
+                component.place(x=current_index * app.timeline_spacing, y=10)
+                component.name_entry.place(x=current_index * app.timeline_spacing, y=75)
+                return
 
         # Stimulus with notification — move both together
         if component_type == "Stimulus" and component.attachment:

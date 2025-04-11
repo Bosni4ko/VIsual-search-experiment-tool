@@ -69,22 +69,74 @@ def show_editor_screen(app):
     app.timeline_components = []
     app.timeline_spacing = 100  # horizontal space between blocks
 
+    # # Timeline drop zone
+    # timeline_frame = tk.Frame(app.root, bg="white", bd=2, relief="flat", height=80)
+    # timeline_frame.place(relx=0.025, rely=0.7, relwidth=0.7, relheight=0.2)
+    # app.timeline_frame = timeline_frame
 
-    # Timeline drop zone
-    timeline_frame = tk.Frame(app.root, bg="white", bd=2, relief="flat", height=80)
-    timeline_frame.place(relx=0.025, rely=0.7, relwidth=0.7, relheight=0.2)
-    app.timeline_frame = timeline_frame
 
+   # Create a canvas that will act as a horizontally scrollable container
+    timeline_canvas = tk.Canvas(app.root, bg="white", bd=2, relief="flat", height=80)
+    timeline_canvas.place(relx=0.025, rely=0.7, relwidth=0.7, relheight=0.2)
+
+    # Create a horizontal scrollbar linked to the canvas
+    scrollbar = tk.Scrollbar(app.root, orient="horizontal", command=timeline_canvas.xview)
+    # Place the scrollbar at the bottom of the canvas
+    scrollbar.place(relx=0.025, rely=0.9, relwidth=0.7)
+    timeline_canvas.configure(xscrollcommand=scrollbar.set)
+
+    timeline_container = tk.Frame(timeline_canvas, bg="white", width=600, height=100)
+    timeline_canvas.create_window((0, 0), window=timeline_container, anchor="nw")
+
+    # Update the scroll region whenever the size of timeline_container changes
+    timeline_container.bind(
+        "<Configure>",
+        lambda e: timeline_canvas.configure(scrollregion=timeline_canvas.bbox("all"))
+    )
+    app.timeline_container = timeline_container
+    def update_timeline_container_size():
+        # Make sure all geometry calculations are up-to-date
+        app.timeline_container.update_idletasks()
+        
+        # Calculate the required width: For example, get the rightmost component's x position plus its width
+        max_width = 100
+        for child in app.timeline_container.winfo_children():
+            x = child.winfo_x()
+            w = child.winfo_width()
+            max_width = max(max_width, x + w)
+            
+        # Optionally, add some padding
+        new_width = max_width + 20  
+        app.timeline_container.config(width=new_width)
+        
+        # Update the canvas scroll region in case it changed
+        app.timeline_container.event_generate("<Configure>")
+
+    # Function to render timeline content horizontally
+    def render_timeline():
+    # Iterate over 15 items or however many rectangles you want to add.
+        update_timeline_container_size()
+        # Iterate over each timeline component and position it inside the scrollable container.
+        for i, block in enumerate(app.timeline_components):
+            # Place each block in the timeline container using absolute positioning.
+            block.place(in_=app.timeline_container, x=i * app.timeline_spacing, y=10)
+            # If the block is from the timeline and has an entry widget, position it as well.
+            if block.from_timeline and hasattr(block, 'name_entry'):
+                block.name_entry.place(in_=app.timeline_container, x=i * app.timeline_spacing, y=75)
+        update_timeline_container_size()
+    
+    render_timeline()
+    
     # Automatically add Start block at index 0
-    start_block = ComponentBlock(app.timeline_frame, "Start", "green", x=0, y=10, from_timeline=True,component_type="Start")
+    start_block = ComponentBlock(app.timeline_container, "Start", "green", x=0, y=10, from_timeline=True,component_type="Start")
     app.timeline_components.append(start_block)
     start_block.name_entry.place(x=0, y=75)
 
-    def render_timeline():
-        for i, block in enumerate(app.timeline_components):
-            block.place(x=i * app.timeline_spacing, y=10)
-            if block.from_timeline:
-                block.name_entry.place(x=i * app.timeline_spacing, y=75)
+    # def render_timeline():
+    #     for i, block in enumerate(app.timeline_components):
+    #         block.place(x=i * app.timeline_spacing, y=10)
+    #         if block.from_timeline:
+    #             block.name_entry.place(x=i * app.timeline_spacing, y=75)
 
     def reorder_component(component):
         x = component.winfo_x()
@@ -92,7 +144,6 @@ def show_editor_screen(app):
         new_index = max(0, min(new_index, len(app.timeline_components) - 1))
         current_index = app.timeline_components.index(component)
         component_type = component.component_type
-        print(new_index)
         # Prevent Start from being moved
         if component_type == "Start" and new_index != 0:
             component.place(x=current_index * app.timeline_spacing, y=10)
@@ -175,7 +226,6 @@ def show_editor_screen(app):
             component.name_entry.place(x=current_index * app.timeline_spacing, y=75)
             return
 
-
         # Stimulus with notification — move both together
         if component_type == "Stimulus" and component.attachment:
             notification = component.attachment
@@ -216,7 +266,7 @@ def show_editor_screen(app):
         # Rerender
         render_timeline()
 
-    app.timeline_frame.reorder_component = reorder_component
+    app.timeline_container.reorder_component = reorder_component
 
     def insert_component(label, color, component_type, index=None ):
         if index == None: 
@@ -262,7 +312,7 @@ def show_editor_screen(app):
 
             # Create the notification and attach it
             notification = ComponentBlock(
-                app.timeline_frame,
+                app.timeline_container,
                 label,
                 color,
                 x=stimulus_index * app.timeline_spacing,
@@ -283,7 +333,7 @@ def show_editor_screen(app):
         if index == 0 and component_type != "Start":
             index = 1
         # Create and insert block
-        new_block = ComponentBlock(app.timeline_frame, label, color, x=index * app.timeline_spacing, y=10, from_timeline=True,component_type=component_type)
+        new_block = ComponentBlock(app.timeline_container, label, color, x=index * app.timeline_spacing, y=10, from_timeline=True,component_type=component_type)
         app.timeline_components.insert(index, new_block)
 
         # Rerender
@@ -306,8 +356,6 @@ def show_editor_screen(app):
         ("Stimulus notification", "purple","Stimulus notification"),
         ("End", "red","End")
     ]
-
-
 
     drag_data = {
         "start_x": 0,
@@ -351,8 +399,8 @@ def show_editor_screen(app):
         component_type = drag_data["component_type"]
         if drag_data["dragging"] and drag_data["temp"]:
             x_root = event.x_root
-            timeline_x = app.timeline_frame.winfo_rootx()
-            timeline_w = app.timeline_frame.winfo_width()
+            timeline_x = app.timeline_container.winfo_rootx()
+            timeline_w = app.timeline_container.winfo_width()
 
             if timeline_x <= x_root <= timeline_x + timeline_w:
                 drop_x = x_root - timeline_x
@@ -384,7 +432,7 @@ def show_editor_screen(app):
                         if stimulus_candidate.component_type == "Stimulus" and stimulus_candidate.attachment is None:
                             # Valid: insert and attach
                             notification = ComponentBlock(
-                                app.timeline_frame,
+                                app.timeline_container,
                                 label,
                                 color,
                                 x=index * app.timeline_spacing,
@@ -457,9 +505,9 @@ def show_editor_screen(app):
 
 
 
-    # Optional top editor space
-    editor_frame = tk.Frame(app.root, bg="white", bd=2, relief="flat")
-    editor_frame.place(relx=0.025, rely=0.025, relwidth=0.7, relheight=0.65)
+    # # Optional top editor space
+    # editor_frame = tk.Frame(app.root, bg="white", bd=2, relief="flat")
+    # editor_frame.place(relx=0.025, rely=0.025, relwidth=0.7, relheight=0.65)
 
     create_button = tk.Button(app.root, text="Create", font=("Segoe UI", 12), bg="#fef6f6", width=12)
     create_button.place(relx=0.82, rely=0.8)

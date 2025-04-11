@@ -50,12 +50,36 @@ class ComponentBlock(tk.Frame):
             self.name_entry.lift()
 
     def on_drag(self, event):
+        # Compute new x position using the drag delta
         dx = event.x - self.start_x
         new_x = self.winfo_x() + dx
         self.place(x=new_x, y=10)
 
         if self.from_timeline and not self.preview:
             self.name_entry.place(x=new_x, y=10 + self.label_offset_y)
+
+        # Auto-scroll functionality:
+        # If you stored the canvas in the app, use it. Otherwise, if you are sure that
+        # self.master is the timeline_container and its parent is the canvas, you might use:
+        try:
+            canvas = app.timeline_canvas  # Make sure app.timeline_canvas is set when you create the canvas.
+        except NameError:
+            # Fallback: use self.master.master if available
+            canvas = self.master.master
+
+        # Get screen coordinates of the canvas’s left and right borders.
+        canvas_left = canvas.winfo_rootx()
+        canvas_right = canvas_left + canvas.winfo_width()
+        auto_scroll_margin = 20  # margin in pixels
+
+        # Check if pointer is near the left or right border.
+        if event.x_root < canvas_left + auto_scroll_margin:
+            # Scroll left by 1 unit (you can adjust the amount if needed)
+            canvas.xview_scroll(-1, "units")
+        elif event.x_root > canvas_right - auto_scroll_margin:
+            # Scroll right by 1 unit
+            canvas.xview_scroll(1, "units")
+
 
     def on_drop(self, event):
         if self.from_timeline and not self.preview:
@@ -69,12 +93,6 @@ def show_editor_screen(app):
     app.timeline_components = []
     app.timeline_spacing = 100  # horizontal space between blocks
 
-    # # Timeline drop zone
-    # timeline_frame = tk.Frame(app.root, bg="white", bd=2, relief="flat", height=80)
-    # timeline_frame.place(relx=0.025, rely=0.7, relwidth=0.7, relheight=0.2)
-    # app.timeline_frame = timeline_frame
-
-
    # Create a canvas that will act as a horizontally scrollable container
     timeline_canvas = tk.Canvas(app.root, bg="white", bd=2, relief="flat", height=80)
     timeline_canvas.place(relx=0.025, rely=0.7, relwidth=0.7, relheight=0.2)
@@ -85,14 +103,15 @@ def show_editor_screen(app):
     scrollbar.place(relx=0.025, rely=0.9, relwidth=0.7)
     timeline_canvas.configure(xscrollcommand=scrollbar.set)
 
-    timeline_container = tk.Frame(timeline_canvas, bg="white", width=600, height=100)
-    timeline_canvas.create_window((0, 0), window=timeline_container, anchor="nw")
+    timeline_container = tk.Frame(timeline_canvas, bg="white", width=580, height=100)
+    timeline_canvas.create_window((10, 0), window=timeline_container, anchor="nw")
 
     # Update the scroll region whenever the size of timeline_container changes
     timeline_container.bind(
         "<Configure>",
         lambda e: timeline_canvas.configure(scrollregion=timeline_canvas.bbox("all"))
     )
+    app.timeline_canvas = timeline_canvas
     app.timeline_container = timeline_container
     def update_timeline_container_size():
         # Make sure all geometry calculations are up-to-date
@@ -131,12 +150,6 @@ def show_editor_screen(app):
     start_block = ComponentBlock(app.timeline_container, "Start", "green", x=0, y=10, from_timeline=True,component_type="Start")
     app.timeline_components.append(start_block)
     start_block.name_entry.place(x=0, y=75)
-
-    # def render_timeline():
-    #     for i, block in enumerate(app.timeline_components):
-    #         block.place(x=i * app.timeline_spacing, y=10)
-    #         if block.from_timeline:
-    #             block.name_entry.place(x=i * app.timeline_spacing, y=75)
 
     def reorder_component(component):
         x = component.winfo_x()
@@ -381,17 +394,33 @@ def show_editor_screen(app):
 
         if not drag_data["dragging"] and (abs(dx) > 5 or abs(dy) > 5):
             drag_data["dragging"] = True
-            drag_data["temp"] = ComponentBlock(app.root, drag_data["label"], drag_data["color"], preview=True,component_type=label)
+            # Create a temporary preview component for dragging.
+            drag_data["temp"] = ComponentBlock(app.root, drag_data["label"], drag_data["color"],
+                                                preview=True, component_type=drag_data["component_type"])
             drag_data["temp"].lift()
-            app.root.config(cursor="none")  # hide mouse
+            app.root.config(cursor="none")  # Hide mouse cursor during drag
 
         if drag_data["dragging"] and drag_data["temp"]:
             # Convert absolute mouse position to app.root-relative coordinates
             x_local = event.x_root - app.root.winfo_rootx()
             y_local = event.y_root - app.root.winfo_rooty()
-
-            # Place centered under cursor
+            # Place the temporary component centered under the cursor
             drag_data["temp"].place(x=x_local - 40, y=y_local - 30)
+
+            # --- Auto-scrolling logic for dragging new components ---
+            # Get the timeline canvas (ensure you stored it as app.timeline_canvas)
+            canvas = app.timeline_canvas  
+            # Determine canvas boundaries in screen coordinates
+            canvas_left = canvas.winfo_rootx()
+            canvas_right = canvas_left + canvas.winfo_width()
+            auto_scroll_margin = 20  # pixels from the edge
+
+            # If the mouse is near the left border, scroll left; if near right, scroll right.
+            if event.x_root < canvas_left + auto_scroll_margin:
+                canvas.xview_scroll(-1, "units")
+            elif event.x_root > canvas_right - auto_scroll_margin:
+                canvas.xview_scroll(1, "units")
+
 
 
     def on_template_release(event):

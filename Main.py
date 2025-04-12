@@ -123,7 +123,8 @@ class ExperimentApp:
     def add_metadata_row(self, initial_data=None):
         """
         Adds a metadata row that allows entering a metadata name and choosing whether its value is a
-        single entry or a list of items.
+        single entry (Value) or a list of items (List). Both the white placeholder (for Value)
+        and the list container (for List) are created; we show one and hide the other.
         """
         row_frame = tk.Frame(self.metadata_frame, bg="#ffffff")
         row_frame.pack(fill="x", pady=5)
@@ -134,7 +135,7 @@ class ExperimentApp:
         if initial_data and "name" in initial_data:
             name_entry.insert(0, initial_data["name"])
 
-        # Combobox to select type: "Value" or "List"
+        # Combobox for selecting type: "Value" or "List"
         type_var = tk.StringVar(value="Value")
         type_combobox = ttk.Combobox(
             row_frame,
@@ -145,66 +146,75 @@ class ExperimentApp:
         )
         type_combobox.pack(side="left", padx=5)
 
-        # Content frame that will hold either a single value entry or list items
+        # Content frame that will hold either the white placeholder or list input controls.
         content_frame = tk.Frame(row_frame, bg="#ffffff")
         content_frame.pack(side="left", padx=5, fill="x", expand=True)
 
-        # When metadata type is "List", create list input controls.
-        # Otherwise (for "Value"), create a single value entry widget.
-        if initial_data and initial_data.get("type", "Value") == "List":
+        # Create the white rectangle placeholder (for Value mode)
+        placeholder = tk.Frame(content_frame, bg="white", width=200, height=30)
+        placeholder.pack_propagate(False)
+
+        # Create the list container (for List mode) along with an "Add Item" button.
+        list_container = tk.Frame(content_frame, bg="#ffffff")
+        list_entries = []
+        add_item_button = ttk.Button(
+            content_frame,
+            text="+ Add Item",
+            style="AddItem.TButton",
+            command=lambda: self._add_list_item(list_container, list_entries)
+        )
+
+        # Determine the initial mode (default to "Value")
+        initial_mode = initial_data.get("type", "Value") if initial_data else "Value"
+        if initial_mode == "List":
             type_var.set("List")
-            list_container = tk.Frame(content_frame, bg="#ffffff")
-            list_container.pack(fill="x")
-            list_entries = []
-            for item in initial_data.get("value", []):
-                entry = self._create_list_item(list_container, initial_text=item)
-                list_entries.append(entry)
+            # Populate list container with provided data if available.
+            if initial_data and "value" in initial_data:
+                for item in initial_data["value"]:
+                    entry = self._create_list_item(list_container, initial_text=item)
+                    list_entries.append(entry)
+            # If no initial list items, create an empty one.
             if not list_entries:
                 entry = self._create_list_item(list_container)
                 list_entries.append(entry)
-            add_item_button = ttk.Button(
-                content_frame,
-                text="+ Add Item",
-                style="AddItem.TButton",  # Use the custom smaller style
-                command=lambda: self._add_list_item(list_container, list_entries)
-            )
-            add_item_button.pack(pady=5)
-            row_data = {
-                "frame": row_frame,
-                "name_entry": name_entry,
-                "type_combobox": type_combobox,
-                "content_frame": content_frame,
-                "list_container": list_container,
-                "list_entries": list_entries,
-                "value_entry": None  # No separate value entry in List mode
-            }
+            # Show list container and add item button
+            list_container.pack(side="left", fill="x", padx=5, pady=5)
+            add_item_button.pack(side="left", padx=5, pady=5)
+            # Hide the placeholder
+            placeholder.pack_forget()
         else:
-            # For "Value" mode, create a white rectangle placeholder.
+            # Mode is "Value": show the placeholder and hide list elements.
             type_var.set("Value")
-            placeholder = tk.Frame(content_frame, bg="white", width=200, height=30)  # adjust size as desired
             placeholder.pack(side="left", padx=5, pady=5)
-            placeholder.pack_propagate(False)  # Prevent it from resizing to its contents
-            
-            # Instead of a value entry, store the placeholder.
-            row_data = {
-                "frame": row_frame,
-                "name_entry": name_entry,
-                "type_combobox": type_combobox,
-                "content_frame": content_frame,
-                "list_container": None,
-                "list_entries": [],
-                "value_entry": None,   # No entry widget since it is just a placeholder.
-                "value_placeholder": placeholder
-            }
-        # Remove metadata button for this row
-        remove_btn = ttk.Button(row_frame, text="Remove", command=lambda: self.remove_metadata_row(row_frame),
-                                  style="Small.TButton")
+            list_container.pack_forget()
+            add_item_button.pack_forget()
+
+        # Store widget references in a dictionary.
+        row_data = {
+            "frame": row_frame,
+            "name_entry": name_entry,
+            "type_combobox": type_combobox,
+            "content_frame": content_frame,
+            "value_placeholder": placeholder,
+            "list_container": list_container,
+            "list_entries": list_entries,
+            "add_item_button": add_item_button
+        }
+
+        # Remove metadata button for this row.
+        remove_btn = ttk.Button(
+            row_frame,
+            text="Remove",
+            command=lambda: self.remove_metadata_row(row_frame),
+            style="Small.TButton"
+        )
         remove_btn.pack(side="left", padx=5)
 
-        # Bind a callback when the type is changed to update the content frame accordingly.
+        # Bind a callback when the type is changed.
         type_combobox.bind("<<ComboboxSelected>>", lambda event, d=row_data: self._on_type_change(d))
 
         self.metadata_entries.append(row_data)
+
 
     def _create_list_item(self, container, initial_text=""):
         """
@@ -232,46 +242,18 @@ class ExperimentApp:
         This method clears the current content and recreates the appropriate widget(s).
         """
         type_val = row_data["type_combobox"].get()
-        # Clear any children from the content frame.
-        for widget in row_data["content_frame"].winfo_children():
-            widget.destroy()
-
         if type_val == "Value":
-            # First, clear any existing widgets from the content frame.
-            for widget in row_data["content_frame"].winfo_children():
-                widget.destroy()
-
-            # Create a white rectangle placeholder.
-            placeholder = tk.Frame(row_data["content_frame"], bg="white", width=200, height=30)  # adjust size as needed
-            placeholder.pack(side="left", padx=5, pady=5)
-            # Prevent the placeholder frame from shrinking to fit its contents.
-            placeholder.pack_propagate(False)
-            
-            # Store the placeholder widget for later reference, if needed.
-            row_data["value_placeholder"] = placeholder
-
-            # Optionally reset list-related data.
-            row_data["list_container"] = None
-            row_data["list_entries"] = []
-
+            # Show the white placeholder.
+            row_data["value_placeholder"].pack(side="left", padx=5, pady=5)
+            # Hide the list container and its add button.
+            row_data["list_container"].pack_forget()
+            row_data["add_item_button"].pack_forget()
         elif type_val == "List":
-            list_container = tk.Frame(row_data["content_frame"], bg="#ffffff")
-            list_container.pack(fill="x")
-            list_entries = []
-            # Create an initial list item entry
-            entry = self._create_list_item(list_container)
-            list_entries.append(entry)
-            # Use the custom style for the add item button here as well
-            add_item_button = ttk.Button(
-                row_data["content_frame"],
-                text="+ Add Item",
-                style="AddItem.TButton",
-                command=lambda: self._add_list_item(list_container, list_entries)
-            )
-            add_item_button.pack(pady=5)
-            row_data["value_entry"] = None
-            row_data["list_container"] = list_container
-            row_data["list_entries"] = list_entries
+            # Hide the white placeholder.
+            row_data["value_placeholder"].pack_forget()
+            # Show the list container and its add button.
+            row_data["list_container"].pack(side="left", fill="x", padx=5, pady=5)
+            row_data["add_item_button"].pack(side="left", padx=5, pady=5)
 
     def remove_metadata_row(self, row_frame):
         row_frame.destroy()

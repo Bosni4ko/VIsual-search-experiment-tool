@@ -104,8 +104,12 @@ class ExperimentApp:
                                        padx=10, pady=10, width=500)
         self.metadata_frame.pack(anchor="center", fill="x")
         
-        # Add an initial metadata row
-        self.add_metadata_row()
+        # Load saved metadata rows if available; otherwise add an empty row.
+        if self.saved_metadata:
+            for md in self.saved_metadata:
+                self.add_metadata_row(initial_data=md)
+        else:
+            self.add_metadata_row()
 
         # Button to add more metadata rows
         add_button = ttk.Button(main_frame, text="+ Add Metadata", command=self.add_metadata_row)
@@ -115,7 +119,8 @@ class ExperimentApp:
         action_frame = tk.Frame(main_frame, bg="#f0f0f0")
         action_frame.pack(pady=20)
         
-        back_button = ttk.Button(action_frame, text="Back", command=self.show_main_screen)
+        # Instead of calling show_main_screen directly, call a helper that saves current state before going back.
+        back_button = ttk.Button(action_frame, text="Back", command=self.back_to_main)
         back_button.grid(row=0, column=0, padx=20)
         create_button = ttk.Button(action_frame, text="Create", command=self.validate_and_proceed)
         create_button.grid(row=0, column=1, padx=20)
@@ -215,7 +220,6 @@ class ExperimentApp:
 
         self.metadata_entries.append(row_data)
 
-
     def _create_list_item(self, container, initial_text=""):
         """
         Creates a single list item entry within a metadata row (for list-type metadata).
@@ -284,8 +288,8 @@ class ExperimentApp:
 
             type_val = row["type_combobox"].get()
             if type_val == "Value":
-                # In your code the "Value" mode uses a placeholder. If you later add an input widget for this mode,
-                # replace the next line with the widget's content.
+                # In your code the "Value" mode uses a placeholder.
+                # If you later add an input widget for this mode, replace "N/A" with its content.
                 value = "N/A"
                 metadata_item = {"name": name, "type": "Value", "value": value}
             else:  # When in "List" mode.
@@ -300,7 +304,31 @@ class ExperimentApp:
         # Proceed with the editor screen using the collected information.
         show_editor_screen(self)
 
+    def save_current_create_screen_state(self):
+        """
+        Captures the current data from the experiment name, participant name, and all metadata rows,
+        then stores them in the appropriate instance variables.
+        """
+        self.saved_exp_name = self.exp_name_entry.get().strip()
+        self.saved_participant_name = self.participant_entry.get().strip()
+        new_metadata = []
+        for row in self.metadata_entries:
+            name = row["name_entry"].get().strip()
+            type_val = row["type_combobox"].get()
+            if type_val == "Value":
+                value = "N/A"  # Change this if you add a dedicated widget for value entry
+                new_metadata.append({"name": name, "type": type_val, "value": value})
+            elif type_val == "List":
+                list_values = [entry.get().strip() for entry in row["list_entries"] if entry.get().strip()]
+                new_metadata.append({"name": name, "type": type_val, "value": list_values})
+        self.saved_metadata = new_metadata
 
+    def back_to_main(self):
+        """
+        Saves the current create screen state and then returns to the main screen.
+        """
+        self.save_current_create_screen_state()
+        self.show_main_screen()
 
 if __name__ == "__main__":
     root = tk.Tk()

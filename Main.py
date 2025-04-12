@@ -267,7 +267,8 @@ class ExperimentApp:
             self.error_label.config(text="Please fill in both the experiment name and participant name.")
             return
 
-        self.error_label.config(text="")  # Clear error message
+        # Clear any previous error message
+        self.error_label.config(text="")
 
         # Save experiment and participant info and collect metadata details.
         self.saved_exp_name = exp_name
@@ -276,19 +277,30 @@ class ExperimentApp:
 
         for row in self.metadata_entries:
             name = row["name_entry"].get().strip()
+            # Validate the main metadata field is not empty.
+            if not name:
+                self.error_label.config(text="Metadata field names cannot be empty.")
+                return
+
             type_val = row["type_combobox"].get()
             if type_val == "Value":
-                # Retrieve value from the entry; if none, set to empty.
-                value = row["value_entry"].get().strip() if row["value_entry"] else ""
+                # In your code the "Value" mode uses a placeholder. If you later add an input widget for this mode,
+                # replace the next line with the widget's content.
+                value = "N/A"
                 metadata_item = {"name": name, "type": "Value", "value": value}
-            else:
+            else:  # When in "List" mode.
                 # Get all non-empty list item entries.
                 list_values = [entry.get().strip() for entry in row["list_entries"] if entry.get().strip()]
+                if not list_values:
+                    self.error_label.config(text=f"Please fill in at least one list item for the metadata field '{name}'.")
+                    return
                 metadata_item = {"name": name, "type": "List", "value": list_values}
             self.saved_metadata.append(metadata_item)
 
-        # Proceed with the editor screen using collected information.
+        # Proceed with the editor screen using the collected information.
         show_editor_screen(self)
+
+
 
 if __name__ == "__main__":
     root = tk.Tk()

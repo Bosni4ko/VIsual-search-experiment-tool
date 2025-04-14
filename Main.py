@@ -150,7 +150,6 @@ class ExperimentApp:
             width=6
         )
         type_combobox.pack(side="left", padx=5)
-
         # Content frame that will hold either the white placeholder or list input controls.
         content_frame = tk.Frame(row_frame, bg="#ffffff")
         content_frame.pack(side="left", padx=5, fill="x", expand=True)

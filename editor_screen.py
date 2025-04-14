@@ -352,11 +352,6 @@ def show_editor_screen(app):
         # Rerender
         render_timeline()
 
-
-    # Back button
-    back_btn = tk.Button(app.root, text="←", font=("Arial", 16), bg="#fef6f6", command=app.show_create_screen)
-    back_btn.place(x=10, y=10)
-
     # Component palette
     components_panel = tk.Frame(app.root, bg="white", bd=2, relief="flat")
     components_panel.place(relx=0.75, rely=0.025, relwidth=0.22, relheight=0.65)
@@ -532,12 +527,44 @@ def show_editor_screen(app):
         block.bind("<B1-Motion>", on_template_motion)
         block.bind("<ButtonRelease-1>", on_template_release)
 
+    # Define the overall area that the two regions should occupy
+    overall_relx = 0.025
+    overall_rely = 0.025
+    overall_relwidth = 0.7
+    overall_relheight = 0.65
+
+    # Define the proportions for each region within the overall area.
+    # Left panel takes 1/3 of the overall width.
+    left_panel_relwidth = overall_relwidth * (1/3)
+
+    # Define a gap between the two panels (in relative coordinates)
+    gap = 0.02
+
+    # Place the left panel
+    left_panel = tk.Frame(app.root, bg="white", bd=2, relief="flat")
+    left_panel.place(relx=overall_relx, 
+                    rely=overall_rely, 
+                    relwidth=left_panel_relwidth, 
+                    relheight=overall_relheight)
+
+    # Calculate the main panel's x start and width taking the gap into account
+    main_panel_relx = overall_relx + left_panel_relwidth + gap
+    main_panel_relwidth = overall_relwidth - left_panel_relwidth - gap
+
+    # Place the main panel
+    main_panel = tk.Frame(app.root, bg="white", bd=2, relief="flat")
+    main_panel.place(relx=main_panel_relx, 
+                    rely=overall_rely, 
+                    relwidth=main_panel_relwidth, 
+                    relheight=overall_relheight)
 
 
-    # # Optional top editor space
-    # editor_frame = tk.Frame(app.root, bg="white", bd=2, relief="flat")
-    # editor_frame.place(relx=0.025, rely=0.025, relwidth=0.7, relheight=0.65)
-
+    # Create the Create button as before.
     create_button = tk.Button(app.root, text="Create", font=("Segoe UI", 12), bg="#fef6f6", width=12)
     create_button.place(relx=0.82, rely=0.8)
+
+    # Move the back button under the Create button.
+    back_btn = tk.Button(app.root, text="←", font=("Arial", 16), bg="#fef6f6", command=app.show_create_screen)
+    back_btn.place(relx=0.82, rely=0.9)
+
 

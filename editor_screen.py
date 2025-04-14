@@ -1,5 +1,4 @@
 import tkinter as tk
-from tkinter import font as tkfont, colorchooser
 from component_block import ComponentBlock
 from palette import setup_components_palette
 from text_editor import setup_text_editor, setup_text_options,update_component_text

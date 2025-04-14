@@ -160,7 +160,6 @@ def update_component_text(comp, text_editor):
     # Save the plain text.
     new_text = text_editor.get("1.0", "end-1c")
     comp.label_text = new_text
-    comp.label_widget.config(text=new_text)
     
     # Save formatting information.
     comp.text_styles = {}  # clear previous styles

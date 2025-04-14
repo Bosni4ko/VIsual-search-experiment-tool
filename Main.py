@@ -5,6 +5,7 @@ from editor_screen import show_editor_screen
 class ExperimentApp:
     def __init__(self, root):
         self.root = root
+        self.root.app = self
         self.root.title("Emotional Visual Search Experiment Launcher")
         self.root.geometry("1200x800")
         self.root.minsize(600, 400)

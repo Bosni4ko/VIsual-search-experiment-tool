@@ -1,8 +1,13 @@
 import tkinter as tk
 
+import tkinter as tk
+
 class ComponentBlock(tk.Frame):
-    def __init__(self, parent, label, color, x=0, y=0, from_timeline=False, preview=False, attachment=None, component_type=None):
-        super().__init__(parent, width=80, height=60, bg=color, highlightbackground="black", highlightthickness=1)
+    def __init__(self, app, parent, label, color, x=0, y=0, 
+                 from_timeline=False, preview=False, attachment=None, component_type=None):
+        super().__init__(parent, width=80, height=60, bg=color, 
+                         highlightbackground="black", highlightthickness=1)
+        self.app = app  # Store a reference to the application
         self.label_text = label
         self.color = color
         self.from_timeline = from_timeline
@@ -21,65 +26,79 @@ class ComponentBlock(tk.Frame):
         if self.from_timeline and not self.preview:
             # Editable entry for timeline blocks
             self.name_var = tk.StringVar(value=self.label_text)
-            self.name_entry = tk.Entry(parent, textvariable=self.name_var, font=("Segoe UI", 9), width=10, justify="center")
+            self.name_entry = tk.Entry(parent, textvariable=self.name_var, 
+                                       font=("Segoe UI", 9), width=10, justify="center")
             self.name_entry.place(x=x, y=y + self.label_offset_y)
             self.name_entry.bind("<Return>", self.update_label)
             self.name_entry.bind("<FocusOut>", self.update_label)
-
         elif not self.from_timeline and not self.preview:
             # Static label for sidebar components only
-            self.name_label = tk.Label(parent, text=self.label_text, font=("Segoe UI", 9), bg="white")
+            self.name_label = tk.Label(parent, text=self.label_text, 
+                                       font=("Segoe UI", 9), bg="white")
             self.name_label.place(x=x, y=y + self.label_offset_y)
 
+        # Bind unified mouse event handlers for timeline components.
         if self.from_timeline and not self.preview:
-            # Make draggable if it's in the timeline (not preview)
-            self.bind("<Button-1>", self.on_start_drag)
-            self.bind("<B1-Motion>", self.on_drag)
-            self.bind("<ButtonRelease-1>", self.on_drop)
-            self.label_widget.bind("<Button-1>", self.on_start_drag)
-            self.label_widget.bind("<B1-Motion>", self.on_drag)
-            self.label_widget.bind("<ButtonRelease-1>", self.on_drop)
+            self.bind("<Button-1>", self.on_button_press)
+            self.bind("<B1-Motion>", self.on_motion)
+            self.bind("<ButtonRelease-1>", self.on_button_release)
+            self.label_widget.bind("<Button-1>", self.on_button_press)
+            self.label_widget.bind("<B1-Motion>", self.on_motion)
+            self.label_widget.bind("<ButtonRelease-1>", self.on_button_release)
 
+        # Store the starting mouse coordinates
         self.start_x = 0
         self.start_y = 0
+        # Flag indicating whether a drag movement occurred.
+        self._is_dragging = False
 
-    def on_start_drag(self, event):
+    def on_button_press(self, event):
+        # Record where the press occurred and reset the dragging flag.
         self.start_x = event.x
+        self.start_y = event.y
+        self._is_dragging = False
         self.lift()
-        if self.from_timeline and not self.preview:
+        if self.from_timeline and not self.preview and hasattr(self, "name_entry"):
             self.name_entry.lift()
 
-    def on_drag(self, event):
-        # Compute new x position using the drag delta
+    def on_motion(self, event):
+        # Calculate movement relative to press.
         dx = event.x - self.start_x
-        new_x = self.winfo_x() + dx
-        self.place(x=new_x, y=10)
+        dy = event.y - self.start_y
+        threshold = 5  # pixels movement threshold
+        if not self._is_dragging and (abs(dx) > threshold or abs(dy) > threshold):
+            self._is_dragging = True
+        if self._is_dragging:
+            # Update x position; here we're only moving horizontally.
+            new_x = self.winfo_x() + dx
+            self.place(x=new_x, y=10)
+            if self.from_timeline and not self.preview and hasattr(self, "name_entry"):
+                self.name_entry.place(x=new_x, y=10 + self.label_offset_y)
 
-        if self.from_timeline and not self.preview:
-            self.name_entry.place(x=new_x, y=10 + self.label_offset_y)
+            # Auto-scroll logic for the timeline canvas:
+            try:
+                canvas = self.app.timeline_canvas  # app.timeline_canvas must be set.
+            except NameError:
+                canvas = self.master.master  # Fallback in case
+            canvas_left = canvas.winfo_rootx()
+            canvas_right = canvas_left + canvas.winfo_width()
+            auto_scroll_margin = 20
+            if event.x_root < canvas_left + auto_scroll_margin:
+                canvas.xview_scroll(-1, "units")
+            elif event.x_root > canvas_right - auto_scroll_margin:
+                canvas.xview_scroll(1, "units")
 
-        # Auto-scroll functionality:
-        # If you stored the canvas in the app, use it. Otherwise, if you are sure that
-        # self.master is the timeline_container and its parent is the canvas, you might use:
-        try:
-            canvas = app.timeline_canvas  # Make sure app.timeline_canvas is set when you create the canvas.
-        except NameError:
-            # Fallback: use self.master.master if available
-            canvas = self.master.master
-
-        # Get screen coordinates of the canvas’s left and right borders.
-        canvas_left = canvas.winfo_rootx()
-        canvas_right = canvas_left + canvas.winfo_width()
-        auto_scroll_margin = 20  # margin in pixels
-
-        # Check if pointer is near the left or right border.
-        if event.x_root < canvas_left + auto_scroll_margin:
-            # Scroll left by 1 unit (you can adjust the amount if needed)
-            canvas.xview_scroll(-1, "units")
-        elif event.x_root > canvas_right - auto_scroll_margin:
-            # Scroll right by 1 unit
-            canvas.xview_scroll(1, "units")
-
+    def on_button_release(self, event):
+        # If a drag was detected, finalize the drop.
+        if self._is_dragging:
+            self.on_drop(event)
+        else:
+            # If no drag occurred, it was simply a click.
+            # Only for text components do we select them on click.
+            if self.component_type == "Text":
+                self.app.select_component(self)
+        # Reset dragging state.
+        self._is_dragging = False
 
     def on_drop(self, event):
         if self.from_timeline and not self.preview:
@@ -87,6 +106,8 @@ class ComponentBlock(tk.Frame):
 
     def update_label(self, event=None):
         self.label_text = self.name_var.get()
+
+
 
 def show_editor_screen(app):
     app.clear_screen()
@@ -147,9 +168,110 @@ def show_editor_screen(app):
     render_timeline()
     
     # Automatically add Start block at index 0
-    start_block = ComponentBlock(app.timeline_container, "Start", "green", x=0, y=10, from_timeline=True,component_type="Start")
+    start_block = ComponentBlock(app,app.timeline_container, "Start", "green", x=0, y=10, from_timeline=True,component_type="Start")
     app.timeline_components.append(start_block)
     start_block.name_entry.place(x=0, y=75)
+
+    # Define the overall area for the two regions (example values as before)
+    overall_relx = 0.025
+    overall_rely = 0.025
+    overall_relwidth = 0.7
+    overall_relheight = 0.65
+    left_panel_relwidth = overall_relwidth * (1/3)
+    gap = 0.02
+
+    # Place the left panel
+    left_panel = tk.Frame(app.root, bg="white", bd=2, relief="flat")
+    left_panel.place(relx=overall_relx, rely=overall_rely, relwidth=left_panel_relwidth, relheight=overall_relheight)
+
+    # Place the main panel (for text editing)
+    main_panel_relx = overall_relx + left_panel_relwidth + gap
+    main_panel_relwidth = overall_relwidth - left_panel_relwidth - gap
+    main_panel = tk.Frame(app.root, bg="white", bd=2, relief="flat")
+    main_panel.place(relx=main_panel_relx, rely=overall_rely, relwidth=main_panel_relwidth, relheight=overall_relheight)
+
+        # This function is used to mark a component as selected and set up the editor panels accordingly.
+    def select_component(comp):
+        app.selected_component = comp
+        # Clear the left and main panels (assuming they already exist)
+        for widget in left_panel.winfo_children():
+            widget.destroy()
+        for widget in main_panel.winfo_children():
+            widget.destroy()
+        if comp.component_type == "Text":
+            setup_text_editor(comp)
+            setup_text_options(comp)
+        else:
+            tk.Label(main_panel, text="No text options available for this component").pack()
+
+    app.select_component = select_component  # Make the function accessible to ComponentBlock.on_drop
+
+    # Create a text editor in the main panel for editing the Text component.
+    def setup_text_editor(comp):
+        text_editor = tk.Text(main_panel)
+        text_editor.pack(expand=True, fill="both")
+        text_editor.delete("1.0", tk.END)
+        text_editor.insert("1.0", comp.label_text)
+        # When focus leaves, update the component's text.
+        text_editor.bind("<FocusOut>", lambda e: update_component_text(comp, text_editor))
+        app.text_editor = text_editor
+
+    # Create text styling options in the left panel.
+    def setup_text_options(comp):
+        tk.Label(left_panel, text="Text Options", font=("Segoe UI", 12, "bold")).pack(pady=5)
+        # Define style option variables.
+        font_var = tk.StringVar(value="Arial")
+        size_var = tk.IntVar(value=12)
+        bold_var = tk.BooleanVar(value=False)
+        italic_var = tk.BooleanVar(value=False)
+        align_var = tk.StringVar(value="left")
+        color_var = tk.StringVar(value="black")
+        
+        # Function to update text style in the editor.
+        def update_text_style():
+            weight = "bold" if bold_var.get() else "normal"
+            slant = "italic" if italic_var.get() else "roman"
+            f = tkfont.Font(family=font_var.get(), size=size_var.get(), weight=weight, slant=slant)
+            app.text_editor.config(font=f, fg=color_var.get())
+            app.text_editor.tag_configure("align", justify=align_var.get())
+            app.text_editor.tag_add("align", "1.0", tk.END)
+        
+        # --- Font Option ---
+        tk.Label(left_panel, text="Font:").pack(anchor="w", padx=5)
+        fonts = ["Arial", "Times New Roman", "Courier", "Helvetica"]
+        tk.OptionMenu(left_panel, font_var, *fonts, command=lambda x: update_text_style()).pack(fill="x", padx=5)
+        
+        # --- Size ---
+        tk.Label(left_panel, text="Size:").pack(anchor="w", padx=5)
+        tk.Spinbox(left_panel, from_=8, to=72, textvariable=size_var, command=update_text_style).pack(fill="x", padx=5)
+        
+        # --- Bold / Italic ---
+        tk.Checkbutton(left_panel, text="Bold", variable=bold_var, command=update_text_style).pack(anchor="w", padx=5)
+        tk.Checkbutton(left_panel, text="Italic", variable=italic_var, command=update_text_style).pack(anchor="w", padx=5)
+        
+        # --- Alignment ---
+        tk.Label(left_panel, text="Alignment:").pack(anchor="w", padx=5)
+        align_frame = tk.Frame(left_panel)
+        align_frame.pack(anchor="w", padx=5)
+        tk.Radiobutton(align_frame, text="Left", variable=align_var, value="left", command=update_text_style).pack(side="left")
+        tk.Radiobutton(align_frame, text="Center", variable=align_var, value="center", command=update_text_style).pack(side="left")
+        tk.Radiobutton(align_frame, text="Right", variable=align_var, value="right", command=update_text_style).pack(side="left")
+        
+        # --- Color chooser ---
+        def choose_color():
+            color = colorchooser.askcolor()[1]
+            if color:
+                color_var.set(color)
+                update_text_style()
+        tk.Button(left_panel, text="Text Color", command=choose_color).pack(pady=5, padx=5, fill="x")
+        
+        tk.Button(left_panel, text="Apply Style", command=update_text_style).pack(pady=5, padx=5, fill="x")
+
+    # When leaving the text editor, update the component's text.
+    def update_component_text(comp, text_editor):
+        new_text = text_editor.get("1.0", tk.END).strip()
+        comp.label_text = new_text
+        comp.label_widget.config(text=new_text)
 
     def reorder_component(component):
         x = component.winfo_x()
@@ -325,6 +447,7 @@ def show_editor_screen(app):
 
             # Create the notification and attach it
             notification = ComponentBlock(
+                app,
                 app.timeline_container,
                 label,
                 color,
@@ -346,7 +469,7 @@ def show_editor_screen(app):
         if index == 0 and component_type != "Start":
             index = 1
         # Create and insert block
-        new_block = ComponentBlock(app.timeline_container, label, color, x=index * app.timeline_spacing, y=10, from_timeline=True,component_type=component_type)
+        new_block = ComponentBlock(app,app.timeline_container, label, color, x=index * app.timeline_spacing, y=10, from_timeline=True,component_type=component_type)
         app.timeline_components.insert(index, new_block)
 
         # Rerender
@@ -390,7 +513,7 @@ def show_editor_screen(app):
         if not drag_data["dragging"] and (abs(dx) > 5 or abs(dy) > 5):
             drag_data["dragging"] = True
             # Create a temporary preview component for dragging.
-            drag_data["temp"] = ComponentBlock(app.root, drag_data["label"], drag_data["color"],
+            drag_data["temp"] = ComponentBlock(app,app.root, drag_data["label"], drag_data["color"],
                                                 preview=True, component_type=drag_data["component_type"])
             drag_data["temp"].lift()
             app.root.config(cursor="none")  # Hide mouse cursor during drag
@@ -456,6 +579,7 @@ def show_editor_screen(app):
                         if stimulus_candidate.component_type == "Stimulus" and stimulus_candidate.attachment is None:
                             # Valid: insert and attach
                             notification = ComponentBlock(
+                                app,
                                 app.timeline_container,
                                 label,
                                 color,
@@ -527,37 +651,6 @@ def show_editor_screen(app):
         block.bind("<B1-Motion>", on_template_motion)
         block.bind("<ButtonRelease-1>", on_template_release)
 
-    # Define the overall area that the two regions should occupy
-    overall_relx = 0.025
-    overall_rely = 0.025
-    overall_relwidth = 0.7
-    overall_relheight = 0.65
-
-    # Define the proportions for each region within the overall area.
-    # Left panel takes 1/3 of the overall width.
-    left_panel_relwidth = overall_relwidth * (1/3)
-
-    # Define a gap between the two panels (in relative coordinates)
-    gap = 0.02
-
-    # Place the left panel
-    left_panel = tk.Frame(app.root, bg="white", bd=2, relief="flat")
-    left_panel.place(relx=overall_relx, 
-                    rely=overall_rely, 
-                    relwidth=left_panel_relwidth, 
-                    relheight=overall_relheight)
-
-    # Calculate the main panel's x start and width taking the gap into account
-    main_panel_relx = overall_relx + left_panel_relwidth + gap
-    main_panel_relwidth = overall_relwidth - left_panel_relwidth - gap
-
-    # Place the main panel
-    main_panel = tk.Frame(app.root, bg="white", bd=2, relief="flat")
-    main_panel.place(relx=main_panel_relx, 
-                    rely=overall_rely, 
-                    relwidth=main_panel_relwidth, 
-                    relheight=overall_relheight)
-
 
     # Create the Create button as before.
     create_button = tk.Button(app.root, text="Create", font=("Segoe UI", 12), bg="#fef6f6", width=12)
@@ -566,5 +659,3 @@ def show_editor_screen(app):
     # Move the back button under the Create button.
     back_btn = tk.Button(app.root, text="←", font=("Arial", 16), bg="#fef6f6", command=app.show_create_screen)
     back_btn.place(relx=0.82, rely=0.9)
-
-

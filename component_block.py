@@ -15,7 +15,7 @@ class ComponentBlock(tk.Frame):
         self.place(x=x, y=y)
         self.attachment = attachment  # can be another ComponentBlock or None
         self.component_type = component_type or label
-
+        self.text_styles = {}    # new dictionary to store styles
         self.label_offset_y = 65  # vertical offset for text below the block
 
         # Hidden internal label inside block

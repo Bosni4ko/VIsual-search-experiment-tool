@@ -3,10 +3,27 @@ from tkinter import font as tkfont, colorchooser
 def setup_text_editor(app, main_panel, comp):
     text_editor = tk.Text(main_panel)
     text_editor.pack(expand=True, fill="both")
-    text_editor.delete("1.0", tk.END)
+    text_editor.delete("1.0", "end")
     text_editor.insert("1.0", comp.label_text)
+    
+    # Reapply stored formatting styles if available.
+    if hasattr(comp, "text_styles") and comp.text_styles:
+        for tag, data in comp.text_styles.items():
+            # Configure the tag using the stored configuration.
+            text_editor.tag_configure(tag,
+                                        font=data["config"].get("font"),
+                                        foreground=data["config"].get("foreground"),
+                                        justify=data["config"].get("justify"))
+            # Reapply the tag over each stored range.
+            for start, end in data["ranges"]:
+                # Note: if the text was modified since saving, these indexes might not match exactly.
+                text_editor.tag_add(tag, start, end)
+    
+    # Bind update on focus loss.
     text_editor.bind("<FocusOut>", lambda e: update_component_text(comp, text_editor))
     app.text_editor = text_editor
+
+
 
 def setup_text_options(app, left_panel, comp):
     """
@@ -140,6 +157,29 @@ def setup_text_options(app, left_panel, comp):
 
 
 def update_component_text(comp, text_editor):
-    new_text = text_editor.get("1.0", tk.END).strip()
+    # Save the plain text.
+    new_text = text_editor.get("1.0", "end-1c")
     comp.label_text = new_text
     comp.label_widget.config(text=new_text)
+    
+    # Save formatting information.
+    comp.text_styles = {}  # clear previous styles
+
+    # Loop over each tag that starts with "styled_"
+    for tag in text_editor.tag_names():
+        if tag.startswith("styled_"):
+            # Get all ranges for this tag.
+            ranges = text_editor.tag_ranges(tag)
+            if ranges and len(ranges) >= 2:
+                range_list = []
+                for i in range(0, len(ranges), 2):
+                    start = text_editor.index(ranges[i])
+                    end   = text_editor.index(ranges[i+1])
+                    range_list.append((start, end))
+                # Save configuration details.
+                config = {
+                    "font": text_editor.tag_cget(tag, "font"),
+                    "foreground": text_editor.tag_cget(tag, "foreground"),
+                    "justify": text_editor.tag_cget(tag, "justify")
+                }
+                comp.text_styles[tag] = {"ranges": range_list, "config": config}

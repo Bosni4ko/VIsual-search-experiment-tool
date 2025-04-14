@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import font as tkfont, colorchooser
 from component_block import ComponentBlock
 from palette import setup_components_palette
-from text_editor import setup_text_editor, setup_text_options
+from text_editor import setup_text_editor, setup_text_options,update_component_text
 
 def show_editor_screen(app):
     app.clear_screen()
@@ -90,6 +90,9 @@ def show_editor_screen(app):
 
         # This function is used to mark a component as selected and set up the editor panels accordingly.
     def select_component(comp):
+        if hasattr(app, "text_editor") and app.text_editor:
+            update_component_text(app.selected_component, app.text_editor)
+        
         app.selected_component = comp
 
         # Clear the left and main panels

@@ -16,6 +16,7 @@ class ComponentBlock(tk.Frame):
         self.attachment = attachment  # can be another ComponentBlock or None
         self.component_type = component_type or label
         self.text_styles = {}    # new dictionary to store styles
+        self.data = {}
         self.label_offset_y = 65  # vertical offset for text below the block
 
         # Hidden internal label inside block
@@ -92,10 +93,7 @@ class ComponentBlock(tk.Frame):
         if self._is_dragging:
             self.on_drop(event)
         else:
-            # If no drag occurred, it was simply a click.
-            # Only for text components do we select them on click.
-            if self.component_type == "Text":
-                self.app.select_component(self)
+            self.app.select_component(self)
         # Reset dragging state.
         self._is_dragging = False
 

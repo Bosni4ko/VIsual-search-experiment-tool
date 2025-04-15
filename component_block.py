@@ -68,8 +68,9 @@ class ComponentBlock(tk.Frame):
         threshold = 5  # pixels movement threshold
         if not self._is_dragging and (abs(dx) > threshold or abs(dy) > threshold):
             self._is_dragging = True
+
         if self._is_dragging:
-            # Update x position; here we're only moving horizontally.
+            # Update x position; only moving horizontally.
             new_x = self.winfo_x() + dx
             self.place(x=new_x, y=10)
             if self.from_timeline and not self.preview and hasattr(self, "name_entry"):
@@ -77,16 +78,25 @@ class ComponentBlock(tk.Frame):
 
             # Auto-scroll logic for the timeline canvas:
             try:
-                canvas = self.app.timeline_canvas  # app.timeline_canvas must be set.
+                canvas = self.app.timeline_canvas
             except NameError:
-                canvas = self.master.master  # Fallback in case
+                canvas = self.master.master  # Fallback
+
             canvas_left = canvas.winfo_rootx()
             canvas_right = canvas_left + canvas.winfo_width()
             auto_scroll_margin = 20
-            if event.x_root < canvas_left + auto_scroll_margin:
-                canvas.xview_scroll(-1, "units")
-            elif event.x_root > canvas_right - auto_scroll_margin:
-                canvas.xview_scroll(1, "units")
+
+            scroll_region = canvas.bbox("all")
+            if scroll_region and (scroll_region[2] - scroll_region[0]) > canvas.winfo_width():
+                # Only scroll if canvas content exceeds visible area
+                if event.x_root < canvas_left + auto_scroll_margin:
+                    canvas.xview_scroll(-1, "units")
+                elif event.x_root > canvas_right - auto_scroll_margin:
+                    canvas.xview_scroll(1, "units")
+            else:
+                # Lock scroll if not needed (prevents visual jump)
+                canvas.xview_moveto(0)
+
 
     def on_button_release(self, event):
         # If a drag was detected, finalize the drop.

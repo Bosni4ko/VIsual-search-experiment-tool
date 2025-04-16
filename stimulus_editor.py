@@ -305,30 +305,44 @@ def setup_stimulus_options(app, left_panel, comp):
     stim_set_var.trace_add("write", lambda *_: comp.data.update({"stimulus_set": stim_set_var.get()}))
 
     # ---------- Target Type ----------
+   # ---------- Target Type ----------
     add_label("Target Type")
     target_type_var = tk.StringVar(value=comp.data.get("target_type", "positive"))
-    dropdown = add_dropdown(target_type_var, ["positive", "negative", "neutral"])
-    dropdown.pack(anchor="w", padx=10, fill="x")
+    target_type_menu = add_dropdown(target_type_var, ["positive", "negative", "neutral"])  # Save return value here.
+    target_type_menu.pack(anchor="w", padx=10, fill="x")
     target_type_var.trace_add("write", lambda *_: comp.data.update({"target_type": target_type_var.get()}))
 
-    # ---------- No Target ----------
-    no_target_var = tk.BooleanVar(value=comp.data.get("no_target", False))
-    tk.Checkbutton(left_panel, text="No Target", variable=no_target_var,
-                   command=lambda: comp.data.update({"no_target": no_target_var.get()})).pack(anchor="w", padx=10, pady=(5, 0))
 
     # ---------- Selected Target ----------
     add_label("Selected Target")
     selected_target_var = tk.StringVar(value=comp.data.get("selected_target", "Random"))
-    dropdown = add_dropdown(selected_target_var, ["Random", "Select from list"])
-    dropdown.pack(anchor="w", padx=10, fill="x")
-
+    selected_target_menu = add_dropdown(selected_target_var, ["Random", "Select from list"])  # Save reference here.
+    selected_target_menu.pack(anchor="w", padx=10, fill="x")
     def handle_target_select(*_):
         comp.data["selected_target"] = selected_target_var.get()
         if selected_target_var.get() == "Select from list" and stim_set_var.get() == "Faces":
             open_image_selector(comp, target_type_var.get())
-
     selected_target_var.trace_add("write", handle_target_select)
 
+        # ---------- No Target ----------
+    no_target_var = tk.BooleanVar(value=comp.data.get("no_target", False))
+    no_target_chk = tk.Checkbutton(left_panel, text="No Target", variable=no_target_var)
+    no_target_chk.pack(anchor="w", padx=10, pady=(5, 0))
+
+    # Function to toggle lock status of target type and selected target.
+    def toggle_target_lock():
+        no_target = no_target_var.get()
+        comp.data.update({"no_target": no_target})
+        if no_target:
+            target_type_menu.config(state="disabled")
+            selected_target_menu.config(state="disabled")
+        else:
+            target_type_menu.config(state="normal")
+            selected_target_menu.config(state="normal")
+
+    # Set the initial state based on the value of no_target_var and bind the toggle.
+    toggle_target_lock()
+    no_target_chk.config(command=toggle_target_lock)
 
     # ---------- Distractor Type ----------
     add_label("Distractor Type")

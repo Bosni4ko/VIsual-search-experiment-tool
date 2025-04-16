@@ -19,7 +19,6 @@ import tkinter as tk
 from tkinter import Toplevel, Label, Scrollbar, Frame, Button
 from PIL import Image, ImageTk
 
-
 def open_image_selector(comp, target_type):
     # Get the currently selected stimulus set.
     stimulus_set = comp.data.get("stimulus_set", "Faces")
@@ -525,9 +524,20 @@ def setup_stimulus_options(app, left_panel, comp):
     # ---------- Stimulus Set ----------
     add_label("Stimulus Set")
     stim_set_var = tk.StringVar(value=comp.data.get("stimulus_set", "Images"))
-    # Start with the default options.
+    # Default options.
     stimulus_options = ["Images", "Faces", "Import"]
-    stim_dropdown = tk.OptionMenu(left_panel, stim_set_var, *stimulus_options)  # use a unique name
+
+    # Initialize app.imported_stimulus_sets if not already present.
+    if not hasattr(app, "imported_stimulus_sets"):
+        app.imported_stimulus_sets = {}
+
+    # Append any previously imported stimulus sets into the options.
+    # Insert them before "Import" so that "Import" remains at the end.
+    for imported in app.imported_stimulus_sets:
+        stimulus_options.insert(-1, imported)
+
+    # Create an OptionMenu with the combined options.
+    stim_dropdown = tk.OptionMenu(left_panel, stim_set_var, *stimulus_options)
     stim_dropdown.pack(anchor="w", padx=10, fill="x")
 
     def open_import_window():
@@ -539,8 +549,7 @@ def setup_stimulus_options(app, left_panel, comp):
         name_entry = tk.Entry(import_win)
         name_entry.pack(pady=(0, 10))
         
-        Button(import_win, text="Browse Folder", 
-            command=lambda: browse_folder()).pack(pady=(0, 5))
+        Button(import_win, text="Browse Folder", command=lambda: browse_folder()).pack(pady=(0, 5))
         folder_entry = tk.Entry(import_win, width=50)
         folder_entry.pack(pady=(0, 10))
         
@@ -553,14 +562,15 @@ def setup_stimulus_options(app, left_panel, comp):
             new_name = name_entry.get().strip()
             folder_path = folder_entry.get().strip()
             if new_name and folder_path:
-                # Save the imported stimulus set in comp.data
-                if "imported_stimulus_sets" not in comp.data:
-                    comp.data["imported_stimulus_sets"] = {}
-                comp.data["imported_stimulus_sets"][new_name] = folder_path
+                # Save in the application-level dictionary.
+                app.imported_stimulus_sets[new_name] = folder_path
+                # Also store in comp.data so that selectors can access it.
+                comp.data.setdefault("imported_stimulus_sets", {})[new_name] = folder_path
                 
-                # Add the new option to the Stimulus Set dropdown menu.
-                menu = stim_dropdown["menu"]  # use our unique stim_dropdown
-                menu.add_command(label=new_name, command=lambda: stim_set_var.set(new_name))
+                # Add the new option to the Stimulus Set OptionMenu.
+                menu = stim_dropdown["menu"]
+                # Insert the new option before the "Import" option.
+                menu.insert_command(0, label=new_name, command=lambda opt=new_name: stim_set_var.set(opt))
                 
                 # Set the current selection to the newly imported set.
                 stim_set_var.set(new_name)
@@ -576,8 +586,6 @@ def setup_stimulus_options(app, left_panel, comp):
             comp.data["stimulus_set"] = selection
 
     stim_set_var.trace_add("write", handle_stim_set)
-
-
 
     # ---------- Target Type ----------
     add_label("Target Type")

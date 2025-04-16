@@ -35,6 +35,8 @@ class ExperimentApp:
         # List to store metadata rows (each row is represented as a dictionary of widget references)
         self.metadata_entries = []
 
+        self.imported_stimulus_sets = {}
+
         self.show_main_screen()
 
     def clear_screen(self):

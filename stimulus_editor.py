@@ -198,6 +198,201 @@ def open_image_selector(comp, target_type):
     # Run an initial lazy loading pass.
     lazy_load_images()
 
+def open_distractor_selector(comp, distractor_type):
+    # Only proceed if the stimulus set is Faces.
+    if comp.data.get("stimulus_set") != "Faces":
+        return
+
+    stimulus_set = comp.data.get("stimulus_set")
+    # Create a unique key for this stimulus set and distractor type.
+    prev_key = (stimulus_set, distractor_type)
+    # Ensure that a dictionary for remembering distractor selections exists.
+    comp.data.setdefault("last_distractors", {})
+
+    base_path = os.path.join("images", "faces")
+    if distractor_type == "positive":
+        categories = {"happy": os.path.join(base_path, "positive", "happy")}
+    elif distractor_type == "neutral":
+        categories = {"neutral": os.path.join(base_path, "neutral", "neutral")}
+    elif distractor_type == "negative":
+        categories = {
+            "angry": os.path.join(base_path, "negative", "angry"),
+            "disgust": os.path.join(base_path, "negative", "disgust"),
+            "fear": os.path.join(base_path, "negative", "fear"),
+            "sad": os.path.join(base_path, "negative", "sad")
+        }
+    else:
+        return
+
+    selector_win = Toplevel()
+    selector_win.title("Select Distractor Images")
+    selector_win.geometry("800x500")
+    selector_win.image_refs = []  # Prevent image garbage collection
+
+    # Label to show how many images are selected.
+    selected_label = Label(selector_win, text="Selected: 0 images")
+    selected_label.pack(pady=5)
+
+    # Create a scrollable canvas.
+    canvas = tk.Canvas(selector_win)
+    canvas.pack(side="left", fill="both", expand=True)
+
+    scrollbar = Scrollbar(selector_win, orient="vertical", command=canvas.yview)
+    scrollbar.pack(side="right", fill="y")
+    canvas.configure(yscrollcommand=scrollbar.set)
+
+    content_frame = Frame(canvas)
+    canvas.create_window((0, 0), window=content_frame, anchor="nw")
+
+    def on_frame_configure(event):
+        canvas.configure(scrollregion=canvas.bbox("all"))
+    content_frame.bind("<Configure>", on_frame_configure)
+
+    def _on_mousewheel(event):
+        canvas.yview_scroll(-1 * (event.delta // 120), "units")
+        lazy_load_images()
+    canvas.bind_all("<MouseWheel>", _on_mousewheel)
+
+    # For multi-selection, we use a set to store selected distractor image paths.
+    selected_distractors = set()
+    # To allow shift-selection, we store the key (a tuple like (category, index)) of the last clicked image.
+    last_clicked = {"key": None}
+
+    # Dictionaries for lazy loading.
+    placeholders = {}
+    loaded_images = set()
+
+    def is_visible(widget):
+        try:
+            widget_top = widget.winfo_rooty()
+            widget_bottom = widget_top + widget.winfo_height()
+            canvas_top = canvas.winfo_rooty()
+            canvas_bottom = canvas_top + canvas.winfo_height()
+            return (widget_bottom > canvas_top) and (widget_top < canvas_bottom)
+        except:
+            return False
+
+    def lazy_load_images():
+        for img_id, widget in placeholders.items():
+            if img_id in loaded_images:
+                continue
+            if is_visible(widget["container"]):
+                try:
+                    img = Image.open(widget["path"]).convert("RGB")
+                    img.thumbnail((90, 90), Image.Resampling.LANCZOS)
+                    img_tk = ImageTk.PhotoImage(img)
+                    selector_win.image_refs.append(img_tk)
+                    widget["placeholder"].config(image=img_tk, text="")
+                    widget["placeholder"].image = img_tk
+                    loaded_images.add(img_id)
+                except Exception as e:
+                    print(f"Could not load {widget['path']}: {e}")
+
+    # Toggle selection for multi-select.
+    # event: the click event
+    # key: a tuple (cat, i) identifying the image in placeholders
+    # path: image file path; container: the widget frame for the image.
+    def toggle_selection(event, key, path, container):
+        nonlocal selected_distractors
+        # Check if Shift is held down.
+        if event.state & 0x0001:
+            if last_clicked["key"] is not None:
+                # Create an ordered list (using the insertion order) of keys.
+                ordered_keys = list(placeholders.keys())
+                try:
+                    anchor_index = ordered_keys.index(last_clicked["key"])
+                    current_index = ordered_keys.index(key)
+                except ValueError:
+                    anchor_index = 0
+                    current_index = 0
+                start = min(anchor_index, current_index)
+                end = max(anchor_index, current_index)
+                # Determine base action: if the current image is selected, we deselect the range, otherwise select it.
+                base_action = "deselect" if path in selected_distractors else "select"
+                for k in ordered_keys[start:end+1]:
+                    widget = placeholders[k]
+                    if base_action == "select":
+                        if widget["path"] not in selected_distractors:
+                            selected_distractors.add(widget["path"])
+                            widget["container"].config(bg="lightblue")
+                    else:
+                        if widget["path"] in selected_distractors:
+                            selected_distractors.remove(widget["path"])
+                            widget["container"].config(bg="SystemButtonFace")
+            else:
+                # If no anchor exists, do a normal toggle.
+                if path in selected_distractors:
+                    selected_distractors.remove(path)
+                    container.config(bg="SystemButtonFace")
+                else:
+                    selected_distractors.add(path)
+                    container.config(bg="lightblue")
+        else:
+            # Normal (non-shift) click toggles single selection.
+            if path in selected_distractors:
+                selected_distractors.remove(path)
+                container.config(bg="SystemButtonFace")
+            else:
+                selected_distractors.add(path)
+                container.config(bg="lightblue")
+            # Update the last clicked anchor only if shift is not held.
+            last_clicked["key"] = key
+
+        selected_label.config(text=f"Selected: {len(selected_distractors)} images")
+
+    # Build a stable grid layout (fixed number of columns).
+    images_per_row = 5
+    for cat, folder in categories.items():
+        Label(content_frame, text=cat.capitalize(),
+              font=("Segoe UI", 10, "bold")).pack(anchor="w", padx=10, pady=(10, 0))
+        img_grid = Frame(content_frame)
+        img_grid.pack(anchor="w", padx=10, pady=5)
+        try:
+            images = [f for f in os.listdir(folder)
+                      if f.lower().endswith((".jpg", ".png", ".jpeg", ".bmp", ".gif"))]
+        except FileNotFoundError:
+            images = []
+        for i, img_name in enumerate(images):
+            path = os.path.join(folder, img_name)
+            row_base = (i // images_per_row) * 2  # using two grid rows per image cell.
+            col = i % images_per_row
+            # Fixed-size container.
+            container = Frame(img_grid, bd=2, relief="solid", width=100, height=100)
+            container.grid_propagate(False)
+            container.grid(row=row_base, column=col, padx=5, pady=5)
+            placeholder = Label(container, text="Loading...")
+            placeholder.place(relx=0.5, rely=0.5, anchor="center")
+            caption = Label(img_grid, text=img_name, wraplength=90)
+            caption.grid(row=row_base+1, column=col, padx=5, pady=(0, 5))
+            # Bind both container and placeholder. Pass the event, key, path, and container.
+            container.bind("<Button-1>", lambda e, p=path, c=container, key=(cat, i): toggle_selection(e, key, p, c))
+            placeholder.bind("<Button-1>", lambda e, p=path, c=container, key=(cat, i): toggle_selection(e, key, p, c))
+            placeholders[(cat, i)] = {
+                "container": container,
+                "placeholder": placeholder,
+                "caption": caption,
+                "path": path
+            }
+
+    # Preselect previously confirmed distractor images (if any exist).
+    previous_distractors = comp.data["last_distractors"].get(prev_key, [])
+    if previous_distractors:
+        # For each placeholder whose path is in previous_distractors, mark it as selected.
+        for key, widget in placeholders.items():
+            if widget["path"] in previous_distractors:
+                # We use the same toggle_selection function without needing shift.
+                # Here we simulate a normal click event (state 0).
+                fake_event = type("Event", (object,), {"state": 0})()
+                toggle_selection(fake_event, key, widget["path"], widget["container"])
+
+    def on_confirm():
+        # Save the list of selected distractor image paths.
+        comp.data["last_distractors"][prev_key] = list(selected_distractors)
+        selector_win.destroy()
+
+    Button(selector_win, text="Confirm", command=on_confirm).pack(pady=10)
+    lazy_load_images()
+
 
 
 
@@ -356,5 +551,14 @@ def setup_stimulus_options(app, left_panel, comp):
     distractor_set_var = tk.StringVar(value=comp.data.get("distractor_set", "All"))
     dropdown = add_dropdown(distractor_set_var, ["All", "Random", "Select set from list"])
     dropdown.pack(anchor="w", padx=10, fill="x")
-    distractor_set_var.trace_add("write", lambda *_: comp.data.update({"distractor_set": distractor_set_var.get()}))
+
+    def handle_distractor_set(*args):
+        selection = distractor_set_var.get()
+        comp.data["distractor_set"] = selection
+        if selection == "Select set from list" and comp.data.get("stimulus_set") == "Faces":
+            # Call the distractor selector.
+            open_distractor_selector(comp, comp.data.get("distractor_type", "positive"))
+
+    distractor_set_var.trace_add("write", handle_distractor_set)
+
 

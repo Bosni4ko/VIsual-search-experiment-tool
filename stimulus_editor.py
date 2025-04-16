@@ -248,10 +248,16 @@ def open_distractor_selector(comp, distractor_type):
         canvas.configure(scrollregion=canvas.bbox("all"))
     content_frame.bind("<Configure>", on_frame_configure)
 
+        # Optional mouse wheel scrolling (with lazy loading)
     def _on_mousewheel(event):
         canvas.yview_scroll(-1 * (event.delta // 120), "units")
         lazy_load_images()
     canvas.bind_all("<MouseWheel>", _on_mousewheel)
+
+    # When the distractor selection window is destroyed, remove the global mouse wheel binding.
+    def on_destroy(event):
+        canvas.unbind_all("<MouseWheel>")
+    selector_win.bind("<Destroy>", on_destroy)
 
     # For multi-selection, we use a set to store selected distractor image paths.
     selected_distractors = set()

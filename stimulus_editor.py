@@ -20,8 +20,15 @@ from tkinter import Toplevel, Label, Scrollbar, Frame, Button
 from PIL import Image, ImageTk
 
 def open_image_selector(comp, target_type):
+    # Only proceed if the stimulus set is Faces.
     if comp.data.get("stimulus_set") != "Faces":
         return
+
+    stimulus_set = comp.data.get("stimulus_set")
+    # Create a unique key for this stimulus set and target type
+    prev_key = (stimulus_set, target_type)
+    # Ensure that a dictionary for remembering selections exists.
+    comp.data.setdefault("last_selections", {})
 
     base_path = os.path.join("images", "faces")
 
@@ -42,11 +49,12 @@ def open_image_selector(comp, target_type):
     selector_win = Toplevel()
     selector_win.title("Select Target Image")
     selector_win.geometry("800x500")
-    selector_win.image_refs = []  # Prevent garbage collection of image references
+    selector_win.image_refs = []  # Prevent image garbage collection
 
     selected_label = Label(selector_win, text="No image selected.")
     selected_label.pack(pady=5)
 
+    # Create scrollable canvas
     canvas = tk.Canvas(selector_win)
     canvas.pack(side="left", fill="both", expand=True)
 
@@ -61,24 +69,28 @@ def open_image_selector(comp, target_type):
         canvas.configure(scrollregion=canvas.bbox("all"))
     content_frame.bind("<Configure>", on_frame_configure)
 
+    # Optional mouse wheel scrolling (with lazy loading)
     def _on_mousewheel(event):
         canvas.yview_scroll(-1 * (event.delta // 120), "units")
         lazy_load_images()
     canvas.bind_all("<MouseWheel>", _on_mousewheel)
 
     selected_frame = {"ref": None}
-    # placeholders will hold image container, placeholder label and caption label.
+    # Store references for image placeholders for lazy loading
     placeholders = {}
     loaded_images = set()
 
+    # -------------------------------
+    # Lazy loading logic
+    # -------------------------------
     def is_visible(widget):
         try:
             widget_top = widget.winfo_rooty()
             widget_bottom = widget_top + widget.winfo_height()
             canvas_top = canvas.winfo_rooty()
             canvas_bottom = canvas_top + canvas.winfo_height()
-            return widget_bottom > canvas_top and widget_top < canvas_bottom
-        except Exception:
+            return (widget_bottom > canvas_top) and (widget_top < canvas_bottom)
+        except:
             return False
 
     def lazy_load_images():
@@ -88,7 +100,6 @@ def open_image_selector(comp, target_type):
             if is_visible(widget["container"]):
                 try:
                     img = Image.open(widget["path"]).convert("RGB")
-                    # Create a thumbnail that will fit nicely within the fixed container.
                     img.thumbnail((90, 90), Image.Resampling.LANCZOS)
                     img_tk = ImageTk.PhotoImage(img)
                     selector_win.image_refs.append(img_tk)
@@ -98,57 +109,64 @@ def open_image_selector(comp, target_type):
                 except Exception as e:
                     print(f"Could not load {widget['path']}: {e}")
 
+    # -------------------------------
+    # Image selection callback
+    # -------------------------------
     def select_image(path, name, container):
+        # Save the current selected image path in comp.data.
         comp.data["target_image"] = path
         selected_label.config(text=f"Selected: {name}")
+        # Un-highlight previous selection
         if selected_frame["ref"]:
             selected_frame["ref"].config(bg="SystemButtonFace")
         container.config(bg="lightblue")
         selected_frame["ref"] = container
 
-    # For each category, create a separate image grid.
-    for cat, folder in categories.items():
-        Label(content_frame, text=cat.capitalize(), font=("Segoe UI", 10, "bold")).pack(anchor="w", padx=10, pady=(10, 0))
+    # -------------------------------
+    # Build a stable grid layout (no dynamic reflow)
+    # -------------------------------
+    # In this example we choose a fixed number of columns.
+    images_per_row = 5
 
-        # Create a frame for this category's images.
+    # Loop through categories. (If you have multiple categories,
+    # each will appear with a separate label and grid.)
+    for cat, folder in categories.items():
+        Label(content_frame, text=cat.capitalize(),
+              font=("Segoe UI", 10, "bold")).pack(anchor="w", padx=10, pady=(10, 0))
         img_grid = Frame(content_frame)
         img_grid.pack(anchor="w", padx=10, pady=5)
 
         try:
-            images = [f for f in os.listdir(folder) if f.lower().endswith((".jpg", ".png", ".jpeg", ".bmp", ".gif"))]
+            images = [f for f in os.listdir(folder)
+                      if f.lower().endswith((".jpg", ".png", ".jpeg", ".bmp", ".gif"))]
         except FileNotFoundError:
             images = []
 
-        # Force an update so that we get a valid window width
-        selector_win.update_idletasks()
-        images_per_row = max(selector_win.winfo_width() // 120, 1)
-
-        # Create each image's widgets.
         for i, img_name in enumerate(images):
             path = os.path.join(folder, img_name)
-            # Compute grid position for this image; note that each image occupies two rows (container and caption).
+            # Each image occupies two grid rows (one for the container and one for the caption)
             row_base = (i // images_per_row) * 2  
             col = i % images_per_row
 
-            # Create a fixed-size container for the image.
+            # Create a fixed-size container for the image
             container = Frame(img_grid, bd=2, relief="solid", width=100, height=100)
-            container.grid_propagate(False)  # Prevent the container from shrinking to fit its content
+            container.grid_propagate(False)
             container.grid(row=row_base, column=col, padx=5, pady=5)
 
-            # Create a placeholder label inside the container.
-            placeholder = Label(container, text="Loading...", justify="center", anchor="center")
-            # Use .place() to center the placeholder within the fixed container.
+            # Placeholder label inside the container (centered)
+            placeholder = Label(container, text="Loading...")
             placeholder.place(relx=0.5, rely=0.5, anchor="center")
 
-            # Create a caption label (for the filename) below the container.
+            # Caption label below for the filename
             caption = Label(img_grid, text=img_name, wraplength=90)
             caption.grid(row=row_base + 1, column=col, padx=5, pady=(0, 5))
 
-            # Bind clicking (on both container and placeholder) to select the image.
-            container.bind("<Button-1>", lambda e, p=path, n=img_name, c=container: select_image(p, n, c))
-            placeholder.bind("<Button-1>", lambda e, p=path, n=img_name, c=container: select_image(p, n, c))
+            # Bind clicks on both container and placeholder to the select callback.
+            container.bind("<Button-1>",
+                           lambda e, p=path, n=img_name, c=container: select_image(p, n, c))
+            placeholder.bind("<Button-1>",
+                             lambda e, p=path, n=img_name, c=container: select_image(p, n, c))
 
-            # Store references for lazy loading and re-layout.
             placeholders[(cat, i)] = {
                 "container": container,
                 "placeholder": placeholder,
@@ -156,24 +174,29 @@ def open_image_selector(comp, target_type):
                 "path": path
             }
 
-    def update_wrapping():
-        # Recalculate images per row when the window resizes.
-        width = selector_win.winfo_width()
-        computed_images_per_row = max(width // 120, 1)
-        for cat in categories.keys():
-            # For each image in this category, recompute grid coordinates.
-            for (cat_key, i), widget in placeholders.items():
-                if cat_key == cat:
-                    row_base = (i // computed_images_per_row) * 2
-                    col = i % computed_images_per_row
-                    widget["container"].grid_configure(row=row_base, column=col, padx=5, pady=5)
-                    widget["caption"].grid_configure(row=row_base + 1, column=col, padx=5, pady=(0, 5))
+    # -------------------------------
+    # Preselect the previous image (if one was confirmed before)
+    # -------------------------------
+    previous_selected_path = comp.data["last_selections"].get(prev_key)
+    if previous_selected_path:
+        for key, widget in placeholders.items():
+            if widget["path"] == previous_selected_path:
+                select_image(widget["path"], widget["caption"].cget("text"), widget["container"])
+                break
 
-    # Bind window resize to update the grid layout.
-    selector_win.bind("<Configure>", lambda e: update_wrapping())
+    # -------------------------------
+    # Confirm button: Remember selection and close
+    # -------------------------------
+    def on_confirm():
+        # Save the current selection (if any) for this stimulus set and target type.
+        if comp.data.get("target_image"):
+            comp.data["last_selections"][prev_key] = comp.data["target_image"]
+        selector_win.destroy()
 
-    lazy_load_images()  # Initial lazy loading call.
-    Button(selector_win, text="Confirm", command=selector_win.destroy).pack(pady=10)
+    Button(selector_win, text="Confirm", command=on_confirm).pack(pady=10)
+
+    # Run an initial lazy loading pass.
+    lazy_load_images()
 
 
 

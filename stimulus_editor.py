@@ -19,30 +19,41 @@ import tkinter as tk
 from tkinter import Toplevel, Label, Scrollbar, Frame, Button
 from PIL import Image, ImageTk
 
+
 def open_image_selector(comp, target_type):
-    # Only proceed if the stimulus set is Faces.
-    if comp.data.get("stimulus_set") != "Faces":
+    # Get the currently selected stimulus set.
+    stimulus_set = comp.data.get("stimulus_set", "Faces")
+    # Allow the selector if the current stimulus set is either "Faces" or an imported set.
+    if stimulus_set != "Faces" and stimulus_set not in comp.data.get("imported_stimulus_sets", {}):
         return
 
-    stimulus_set = comp.data.get("stimulus_set")
+    # Set the base path according to the stimulus set.
+    if stimulus_set == "Faces":
+        base_path = os.path.join("images", "faces")
+    else:
+        base_path = comp.data["imported_stimulus_sets"][stimulus_set]
+
     # Create a unique key for this stimulus set and target type
     prev_key = (stimulus_set, target_type)
     # Ensure that a dictionary for remembering selections exists.
     comp.data.setdefault("last_selections", {})
 
-    base_path = os.path.join("images", "faces")
-
-    if target_type == "positive":
-        categories = {"happy": os.path.join(base_path, "positive", "happy")}
-    elif target_type == "neutral":
-        categories = {"neutral": os.path.join(base_path, "neutral", "neutral")}
-    elif target_type == "negative":
-        categories = {
-            "angry": os.path.join(base_path, "negative", "angry"),
-            "disgust": os.path.join(base_path, "negative", "disgust"),
-            "fear": os.path.join(base_path, "negative", "fear"),
-            "sad": os.path.join(base_path, "negative", "sad")
-        }
+    def get_categories(base_path, target_type):
+        """Return a dictionary mapping subfolder names to their full paths 
+        for a given target type folder inside base_path.
+        """
+        target_dir = os.path.join(base_path, target_type)
+        if os.path.isdir(target_dir):
+            subdirs = [d for d in os.listdir(target_dir) 
+                    if os.path.isdir(os.path.join(target_dir, d))]
+            if subdirs:
+                return {d: os.path.join(target_dir, d) for d in subdirs}
+            else:
+                return {target_type: target_dir}
+        return {}
+    
+    if target_type in ["positive", "neutral", "negative"]:
+        categories = get_categories(base_path, target_type)
     else:
         return
 
@@ -199,28 +210,41 @@ def open_image_selector(comp, target_type):
     lazy_load_images()
 
 def open_distractor_selector(comp, distractor_type):
-    # Only proceed if the stimulus set is Faces.
-    if comp.data.get("stimulus_set") != "Faces":
+    # Get the current stimulus set.
+    stimulus_set = comp.data.get("stimulus_set", "Faces")
+    # Proceed only if it's "Faces" or an imported set.
+    if stimulus_set != "Faces" and stimulus_set not in comp.data.get("imported_stimulus_sets", {}):
+        print("returned")
         return
 
-    stimulus_set = comp.data.get("stimulus_set")
+    # Determine the base folder.
+    if stimulus_set == "Faces":
+        base_path = os.path.join("images", "faces")
+    else:
+        base_path = comp.data["imported_stimulus_sets"][stimulus_set]
+    print(base_path)
+
     # Create a unique key for this stimulus set and distractor type.
     prev_key = (stimulus_set, distractor_type)
     # Ensure that a dictionary for remembering distractor selections exists.
     comp.data.setdefault("last_distractors", {})
 
-    base_path = os.path.join("images", "faces")
-    if distractor_type == "positive":
-        categories = {"happy": os.path.join(base_path, "positive", "happy")}
-    elif distractor_type == "neutral":
-        categories = {"neutral": os.path.join(base_path, "neutral", "neutral")}
-    elif distractor_type == "negative":
-        categories = {
-            "angry": os.path.join(base_path, "negative", "angry"),
-            "disgust": os.path.join(base_path, "negative", "disgust"),
-            "fear": os.path.join(base_path, "negative", "fear"),
-            "sad": os.path.join(base_path, "negative", "sad")
-        }
+    def get_categories(base_path, distractor_type):
+            """Return a dictionary mapping subfolder names to their full paths 
+            for a given target type folder inside base_path.
+            """
+            target_dir = os.path.join(base_path, distractor_type)
+            if os.path.isdir(target_dir):
+                subdirs = [d for d in os.listdir(target_dir) 
+                        if os.path.isdir(os.path.join(target_dir, d))]
+                if subdirs:
+                    return {d: os.path.join(target_dir, d) for d in subdirs}
+                else:
+                    return {distractor_type: target_dir}
+            return {}
+    
+    if distractor_type in ["positive", "neutral", "negative"]:
+        categories = get_categories(base_path, distractor_type)
     else:
         return
 
@@ -501,12 +525,61 @@ def setup_stimulus_options(app, left_panel, comp):
     # ---------- Stimulus Set ----------
     add_label("Stimulus Set")
     stim_set_var = tk.StringVar(value=comp.data.get("stimulus_set", "Images"))
-    dropdown = add_dropdown(stim_set_var, ["Images", "Faces", "Import"])
-    dropdown.pack(anchor="w", padx=10, fill="x")
-    stim_set_var.trace_add("write", lambda *_: comp.data.update({"stimulus_set": stim_set_var.get()}))
+    # Start with the default options.
+    stimulus_options = ["Images", "Faces", "Import"]
+    stim_dropdown = tk.OptionMenu(left_panel, stim_set_var, *stimulus_options)  # use a unique name
+    stim_dropdown.pack(anchor="w", padx=10, fill="x")
+
+    def open_import_window():
+        # Open a new window for importing a new stimulus set.
+        import_win = Toplevel(left_panel)
+        import_win.title("Import Stimulus Set")
+        
+        Label(import_win, text="Stimulus Set Name:").pack(pady=(10, 5))
+        name_entry = tk.Entry(import_win)
+        name_entry.pack(pady=(0, 10))
+        
+        Button(import_win, text="Browse Folder", 
+            command=lambda: browse_folder()).pack(pady=(0, 5))
+        folder_entry = tk.Entry(import_win, width=50)
+        folder_entry.pack(pady=(0, 10))
+        
+        def browse_folder():
+            folder = filedialog.askdirectory(title="Select Stimulus Set Folder")
+            folder_entry.delete(0, tk.END)
+            folder_entry.insert(0, folder)
+        
+        def add_stimulus_set():
+            new_name = name_entry.get().strip()
+            folder_path = folder_entry.get().strip()
+            if new_name and folder_path:
+                # Save the imported stimulus set in comp.data
+                if "imported_stimulus_sets" not in comp.data:
+                    comp.data["imported_stimulus_sets"] = {}
+                comp.data["imported_stimulus_sets"][new_name] = folder_path
+                
+                # Add the new option to the Stimulus Set dropdown menu.
+                menu = stim_dropdown["menu"]  # use our unique stim_dropdown
+                menu.add_command(label=new_name, command=lambda: stim_set_var.set(new_name))
+                
+                # Set the current selection to the newly imported set.
+                stim_set_var.set(new_name)
+                import_win.destroy()
+        
+        Button(import_win, text="Add", command=add_stimulus_set).pack(pady=(0, 10))
+
+    def handle_stim_set(*args):
+        selection = stim_set_var.get()
+        if selection == "Import":
+            open_import_window()
+        else:
+            comp.data["stimulus_set"] = selection
+
+    stim_set_var.trace_add("write", handle_stim_set)
+
+
 
     # ---------- Target Type ----------
-   # ---------- Target Type ----------
     add_label("Target Type")
     target_type_var = tk.StringVar(value=comp.data.get("target_type", "positive"))
     target_type_menu = add_dropdown(target_type_var, ["positive", "negative", "neutral"])  # Save return value here.
@@ -521,7 +594,7 @@ def setup_stimulus_options(app, left_panel, comp):
     selected_target_menu.pack(anchor="w", padx=10, fill="x")
     def handle_target_select(*_):
         comp.data["selected_target"] = selected_target_var.get()
-        if selected_target_var.get() == "Select from list" and stim_set_var.get() == "Faces":
+        if selected_target_var.get() == "Select from list":
             open_image_selector(comp, target_type_var.get())
     selected_target_var.trace_add("write", handle_target_select)
 
@@ -555,13 +628,13 @@ def setup_stimulus_options(app, left_panel, comp):
     # ---------- Distractor Set ----------
     add_label("Distractor Set")
     distractor_set_var = tk.StringVar(value=comp.data.get("distractor_set", "All"))
-    dropdown = add_dropdown(distractor_set_var, ["All", "Random", "Select set from list"])
-    dropdown.pack(anchor="w", padx=10, fill="x")
+    distractor_dropdown = add_dropdown(distractor_set_var, ["All", "Random", "Select set from list"])  # use a unique name for distractor set
+    distractor_dropdown.pack(anchor="w", padx=10, fill="x")
 
     def handle_distractor_set(*args):
         selection = distractor_set_var.get()
         comp.data["distractor_set"] = selection
-        if selection == "Select set from list" and comp.data.get("stimulus_set") == "Faces":
+        if selection == "Select set from list":
             # Call the distractor selector.
             open_distractor_selector(comp, comp.data.get("distractor_type", "positive"))
 

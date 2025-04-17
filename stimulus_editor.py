@@ -661,7 +661,10 @@ def setup_stimulus_options(app, left_panel,main_panel,comp):
     target_type_var = tk.StringVar(value=comp.data.get("target_type", "positive"))
     target_type_menu = add_dropdown(target_type_var, ["positive", "negative", "neutral"])  # Save return value here.
     target_type_menu.pack(anchor="w", padx=10, fill="x")
-    target_type_var.trace_add("write", lambda *_: comp.data.update({"target_type": target_type_var.get()}))
+    def on_target_type_change(*_):
+        comp.data["target_type"] = target_type_var.get()
+        setup_field_grid(main_panel, comp)
+    target_type_var.trace_add("write", on_target_type_change)
 
 
     # ---------- Selected Target ----------
@@ -675,7 +678,7 @@ def setup_stimulus_options(app, left_panel,main_panel,comp):
             open_image_selector(comp, target_type_var.get())
     selected_target_var.trace_add("write", handle_target_select)
 
-        # ---------- No Target ----------
+    # ---------- No Target ----------
     no_target_var = tk.BooleanVar(value=comp.data.get("no_target", False))
     no_target_chk = tk.Checkbutton(left_panel, text="No Target", variable=no_target_var)
     no_target_chk.pack(anchor="w", padx=10, pady=(5, 0))
@@ -690,6 +693,7 @@ def setup_stimulus_options(app, left_panel,main_panel,comp):
         else:
             target_type_menu.config(state="normal")
             selected_target_menu.config(state="normal")
+        setup_field_grid(main_panel, comp)
 
     # Set the initial state based on the value of no_target_var and bind the toggle.
     toggle_target_lock()
@@ -700,7 +704,11 @@ def setup_stimulus_options(app, left_panel,main_panel,comp):
     distractor_type_var = tk.StringVar(value=comp.data.get("distractor_type", "positive"))
     dropdown = add_dropdown(distractor_type_var, ["positive", "negative", "neutral"])
     dropdown.pack(anchor="w", padx=10, fill="x")
-    distractor_type_var.trace_add("write", lambda *_: comp.data.update({"distractor_type": distractor_type_var.get()}))
+    def on_distractor_type_change(*_):
+        comp.data["distractor_type"] = distractor_type_var.get()
+        setup_field_grid(main_panel, comp)
+
+    distractor_type_var.trace_add("write", on_distractor_type_change)
 
     # ---------- Distractor Set ----------
     add_label("Distractor Set")
@@ -714,7 +722,7 @@ def setup_stimulus_options(app, left_panel,main_panel,comp):
         if selection == "Select set from list":
             # Call the distractor selector.
             open_distractor_selector(comp, comp.data.get("distractor_type", "positive"))
-
+    
     distractor_set_var.trace_add("write", handle_distractor_set)
 
 

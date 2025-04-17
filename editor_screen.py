@@ -1,6 +1,5 @@
 import tkinter as tk
 from component_block import ComponentBlock
-from tkinter import filedialog
 from palette import setup_components_palette
 from text_editor import setup_text_editor, setup_text_options,save_formatting
 from stimulus_editor import setup_stimulus_options
@@ -95,7 +94,7 @@ def show_editor_screen(app):
         prev = getattr(app, 'selected_component', None)
         if prev and prev.component_type == "Text":
             save_formatting(prev) 
-            
+
         app.selected_component = comp
 
         # Clear the left and main panels
@@ -321,6 +320,53 @@ def show_editor_screen(app):
     # Create the Create button as before.
     create_button = tk.Button(app.root, text="Create", font=("Segoe UI", 12), bg="#fef6f6", width=12)
     create_button.place(relx=0.82, rely=0.8)
+
+# --- Added: removal logic and button ---
+    def remove_selected_component():
+        comp = getattr(app, 'selected_component', None)
+        if not comp or comp.component_type == "Start":
+            return  # nothing to remove or protected
+
+        # If removing a Stimulus with a notification, delete the notification too
+        if comp.component_type == "Stimulus" and getattr(comp, 'attachment', None):
+            notif = comp.attachment
+            if notif in app.timeline_components:
+                app.timeline_components.remove(notif)
+                notif.destroy()
+                if hasattr(notif, 'name_entry'):
+                    notif.name_entry.destroy()
+            comp.attachment = None
+
+        # If removing a Stimulus notification, detach it from its Stimulus
+        if comp.component_type == "Stimulus notification" and getattr(comp, 'attachment', None):
+            stim = comp.attachment
+            stim.attachment = None
+
+        # Remove the component itself
+        if comp in app.timeline_components:
+            app.timeline_components.remove(comp)
+        comp.destroy()
+        if hasattr(comp, 'name_entry'):
+            comp.name_entry.destroy()
+        app.selected_component = None
+
+        # --- Clear editing panels ---
+        for widget in left_panel.winfo_children():
+            widget.destroy()
+        for widget in main_panel.winfo_children():
+           widget.destroy()
+        render_timeline()
+
+    remove_button = tk.Button(
+        app.root,
+        text="Remove",
+        font=("Segoe UI", 12),
+        bg="#fdecea",
+        width=12,
+        command=remove_selected_component
+    )
+    remove_button.place(relx=0.82, rely=0.85)
+    # --- end added ---
 
     # Move the back button under the Create button.
     back_btn = tk.Button(app.root, text="←", font=("Arial", 16), bg="#fef6f6", command=app.show_create_screen)

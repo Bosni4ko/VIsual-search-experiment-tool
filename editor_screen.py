@@ -3,13 +3,64 @@ from component_block import ComponentBlock
 from palette import setup_components_palette
 from text_editor import setup_text_editor, setup_text_options,save_formatting
 from stimulus_editor import setup_stimulus_options
+import json
+import os
+STATE_FILE = "timeline_state.json"
+
+def save_timeline_state(app):
+    # Commit any in‑progress Text edits so saved_text isn’t empty
+    sel = getattr(app, 'selected_component', None)
+    if sel and sel.component_type == "Text":
+        try:
+            save_formatting(sel)
+        except Exception:
+            pass
+
+    state = []
+    for block in app.timeline_components:
+        entry = {
+            "type":       block.component_type,
+            "label":      block.label_text,
+            "color":      block.color,
+            "index":      app.timeline_components.index(block),
+        }
+        if block.component_type == "Text":
+            # now these will be non‑empty if the user edited
+            entry["saved_text"] = block.saved_text
+            entry["saved_tags"] = block.saved_tags
+        state.append(entry)
+
+    with open(STATE_FILE, "w") as f:
+        json.dump(state, f, indent=2)
+
+def load_timeline_state(app):
+    if not os.path.exists(STATE_FILE):
+        return
+    with open(STATE_FILE, "r") as f:
+        state = json.load(f)
+
+    app.timeline_components.clear()
+    for item in sorted(state, key=lambda x: x["index"]):
+        # recreate the block
+        app.insert_component(
+            label=item["label"],
+            color=item["color"],
+            component_type=item["type"]
+        )
+        # restore Text‑specific data
+        block = app.timeline_components[-1]
+        if block.component_type == "Text":
+            block.saved_text = item.get("saved_text", "")
+            block.saved_tags = item.get("saved_tags", [])
+        print(block.saved_text)
+        print(block.saved_tags)
 
 
 def show_editor_screen(app):
     app.clear_screen()
     app.timeline_components = []
     app.timeline_spacing = 100  # horizontal space between blocks
-
+    app.selected_component = None
    # Create a canvas that will act as a horizontally scrollable container
     timeline_canvas = tk.Canvas(app.root, bg="white", bd=2, relief="flat", height=80)
     timeline_canvas.place(relx=0.025, rely=0.7, relwidth=0.7, relheight=0.2)
@@ -92,8 +143,13 @@ def show_editor_screen(app):
     # This function is used to mark a component as selected and set up the editor panels accordingly.
     def select_component(comp):
         prev = getattr(app, 'selected_component', None)
-        if prev and prev.component_type == "Text":
-            save_formatting(prev) 
+        # only save if previous Text block is still in the timeline
+        if prev and prev.component_type == "Text" and prev in app.timeline_components:
+            try:
+                save_formatting(prev)
+            except tk.TclError:
+                # underlying Text widget was already destroyed
+                pass 
 
         app.selected_component = comp
 
@@ -317,6 +373,8 @@ def show_editor_screen(app):
         render_timeline()
 
     app.insert_component = insert_component
+    load_timeline_state(app)
+    render_timeline()
     # Create the Create button as before.
     create_button = tk.Button(app.root, text="Create", font=("Segoe UI", 12), bg="#fef6f6", width=12)
     create_button.place(relx=0.82, rely=0.8)
@@ -367,7 +425,11 @@ def show_editor_screen(app):
     )
     remove_button.place(relx=0.82, rely=0.85)
     # --- end added ---
+    
+    # Back buttton
+    def on_back():
+        save_timeline_state(app)
+        app.show_create_screen()
 
-    # Move the back button under the Create button.
-    back_btn = tk.Button(app.root, text="←", font=("Arial", 16), bg="#fef6f6", command=app.show_create_screen)
+    back_btn = tk.Button(app.root, text="←", font=("Arial", 16), bg="#fef6f6", command=on_back)
     back_btn.place(relx=0.82, rely=0.9)

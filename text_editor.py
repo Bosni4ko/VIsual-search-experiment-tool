@@ -2,206 +2,11 @@ import tkinter as tk
 from tkinter import ttk, font, colorchooser
 import uuid
 import tkinter.font as tkfont
-# def setup_text_editor(app, main_panel, comp):
-#     # pull saved family/size (or fall back to your defaults)
-#     default_family = getattr(comp, "font_family", "Arial")
-#     default_size   = getattr(comp, "font_size", 12)
-
-#     # create the widget with that font
-#     text_editor = tk.Text(main_panel, font=(default_family, default_size))
-#     text_editor.pack(expand=True, fill="both")
-#     text_editor.delete("1.0", "end")
-#     text_editor.insert("1.0", comp.label_text)
-
-#     # Reapply stored formatting styles if available.
-#     if hasattr(comp, "text_styles") and comp.text_styles:
-#         for tag, data in comp.text_styles.items():
-#             # Configure the tag using the stored configuration.
-#             text_editor.tag_configure(tag,
-#                                       font=data["config"].get("font"),
-#                                       foreground=data["config"].get("foreground"),
-#                                       justify=data["config"].get("justify"))
-#             # Reapply the tag over each stored range.
-#             for start, end in data["ranges"]:
-#                 text_editor.tag_add(tag, start, end)
-
-#     # Bind update on focus loss.
-#     text_editor.bind("<FocusOut>", lambda e: update_component_text(comp, text_editor))
-#     app.text_editor = text_editor
-
-
-
-# def setup_text_options(app, left_panel, comp):
-#     """
-#     Sets up the left panel with text formatting options.
-#     When the user clicks in the text editor, the options update based on the formatting
-#     at the current caret position.
-#     Changes in the options update the style immediately on the selected text.
-#     Each applied style uses a unique tag.
-#     """
-#     global style_counter  # Global counter for unique style tags.
-#     style_counter = 0
-    
-#     # --- Create a label for the options panel ---
-#     tk.Label(left_panel, text="Text Options", font=("Segoe UI", 12, "bold")).pack(pady=5)
-    
-#     # Variables to store style options.
-#     font_var   = tk.StringVar(value="Arial")
-#     size_var   = tk.IntVar(value=12)
-#     bold_var   = tk.BooleanVar(value=False)
-#     italic_var = tk.BooleanVar(value=False)
-#     align_var  = tk.StringVar(value="left")
-#     color_var  = tk.StringVar(value="black")
-    
-#     # --- Function to update the left-panel controls based on the text at the insertion point ---
-#     def update_options_from_cursor(event=None):
-#         # Get the index of the current insertion (caret) point.
-#         index = app.text_editor.index("insert")
-#         tags_at_index = app.text_editor.tag_names(index)
-#         # Filter for tags that start with "styled_"
-#         styled_tags = [tag for tag in tags_at_index if tag.startswith("styled_")]
-        
-#         # If no styled tag is found at "insert", try one character back.
-#         if not styled_tags:
-#             try:
-#                 index_before = app.text_editor.index(f"{index} - 1c")
-#             except tk.TclError:
-#                 index_before = index
-#             tags_at_before = app.text_editor.tag_names(index_before)
-#             styled_tags = [tag for tag in tags_at_before if tag.startswith("styled_")]
-        
-#         if styled_tags:
-#             # Use the last styled tag found.
-#             tag = styled_tags[-1]
-#             tag_font    = app.text_editor.tag_cget(tag, "font")
-#             tag_fg      = app.text_editor.tag_cget(tag, "foreground")
-#             tag_justify = app.text_editor.tag_cget(tag, "justify")
-#             if tag_font:
-#                 current_font   = tkfont.Font(font=tag_font)
-#                 current_family = current_font.actual("family")
-#                 current_size   = current_font.actual("size")
-#                 current_weight = current_font.actual("weight")
-#                 current_slant  = current_font.actual("slant")
-#             else:
-#                 current_family, current_size, current_weight, current_slant = "Arial", 12, "normal", "roman"
-#             font_var.set(current_family)
-#             size_var.set(current_size)
-#             bold_var.set(current_weight == "bold")
-#             italic_var.set(current_slant == "italic")
-#             align_var.set(tag_justify if tag_justify else "left")
-#             color_var.set(tag_fg if tag_fg else "black")
-#         else:
-#             # No styled tag found at the insertion point; revert to defaults.
-#             font_var.set("Arial")
-#             size_var.set(12)
-#             bold_var.set(False)
-#             italic_var.set(False)
-#             align_var.set("left")
-#             color_var.set("black")
-    
-#     # Bind the update_options_from_cursor function to cursor movement events.
-#     def local_update_options(event):
-#         update_options_from_cursor()
-#     app.text_editor.bind("<ButtonRelease-1>", local_update_options)
-#     app.text_editor.bind("<KeyRelease>", local_update_options)
-    
-#     # --- Function to apply style only to the selected text immediately ---
-#     def update_text_style():
-#         global style_counter
-#         weight = "bold" if bold_var.get() else "normal"
-#         slant  = "italic" if italic_var.get() else "roman"
-#         f = tkfont.Font(family=font_var.get(), size=size_var.get(), weight=weight, slant=slant)
-#         # Get the currently selected text range.
-#         sel_ranges = app.text_editor.tag_ranges("sel")
-#         if len(sel_ranges) < 2:
-#             return  # No selection; do nothing.
-#         start, end = sel_ranges[0], sel_ranges[1]
-#         # Generate a unique tag name.
-#         style_counter += 1
-#         tag_name = f"styled_{style_counter}"
-#         # Configure the new tag with the current style options.
-#         app.text_editor.tag_configure(tag_name,
-#                                       font=f,
-#                                       foreground=color_var.get(),
-#                                       justify=align_var.get())
-#         # Apply the new tag only to the selected text.
-#         app.text_editor.tag_add(tag_name, start, end)
-    
-#     # --- Now create the UI controls for each style option.
-    
-#     # Font OptionMenu with immediate update:
-#     tk.Label(left_panel, text="Font:").pack(anchor="w", padx=5)
-#     fonts = ["Arial", "Times New Roman", "Courier", "Helvetica"]
-#     tk.OptionMenu(left_panel, font_var, *fonts, command=lambda x: update_text_style()).pack(fill="x", padx=5)
-    
-#     # Font Size Spinbox with immediate update:
-#     tk.Label(left_panel, text="Size:").pack(anchor="w", padx=5)
-#     size_spin = tk.Spinbox(left_panel, from_=8, to=72, textvariable=size_var, command=update_text_style)
-#     size_spin.pack(fill="x", padx=5)
-#     # Bind key release in case the user types a value manually.
-#     size_spin.bind("<KeyRelease>", lambda e: update_text_style())
-    
-#     # Bold and Italic Checkbuttons with immediate update:
-#     tk.Checkbutton(left_panel, text="Bold", variable=bold_var, command=update_text_style).pack(anchor="w", padx=5)
-#     tk.Checkbutton(left_panel, text="Italic", variable=italic_var, command=update_text_style).pack(anchor="w", padx=5)
-    
-#     # Alignment Radiobuttons with immediate update:
-#     tk.Label(left_panel, text="Alignment:").pack(anchor="w", padx=5)
-#     align_frame = tk.Frame(left_panel)
-#     align_frame.pack(anchor="w", padx=5)
-#     tk.Radiobutton(align_frame, text="Left", variable=align_var, value="left", command=update_text_style).pack(side="left")
-#     tk.Radiobutton(align_frame, text="Center", variable=align_var, value="center", command=update_text_style).pack(side="left")
-#     tk.Radiobutton(align_frame, text="Right", variable=align_var, value="right", command=update_text_style).pack(side="left")
-    
-#     # Color chooser button with immediate update:
-#     def choose_color():
-#         chosen = colorchooser.askcolor()[1]
-#         if chosen:
-#             color_var.set(chosen)
-#             update_text_style()
-#     tk.Button(left_panel, text="Text Color", command=choose_color).pack(pady=5, padx=5, fill="x")
-
-
-# def update_component_text(comp, text_editor):
-#     # Save the plain text.
-#     new_text = text_editor.get("1.0", "end-1c")
-#     comp.label_text = new_text
-
-#     # now grab the widget’s current font and size …
-#     editor_font = text_editor.cget("font")
-#     f = tkfont.Font(font=editor_font)
-#     comp.font_family = f.actual("family")
-#     comp.font_size   = f.actual("size")
-
-#     # DEBUG:
-#     print(f"[DEBUG] Saved component.font_family = {comp.font_family!r}, font_size = {comp.font_size}")
-#     # Save formatting information.
-#     comp.text_styles = {}  # clear previous styles
-#     for tag in text_editor.tag_names():
-#         if tag.startswith("styled_"):
-#             ranges = text_editor.tag_ranges(tag)
-#             if ranges and len(ranges) >= 2:
-#                 range_list = []
-#                 for i in range(0, len(ranges), 2):
-#                     start = text_editor.index(ranges[i])
-#                     end   = text_editor.index(ranges[i+1])
-#                     range_list.append((start, end))
-#                 config = {
-#                     "font": text_editor.tag_cget(tag, "font"),
-#                     "foreground": text_editor.tag_cget(tag, "foreground"),
-#                     "justify": text_editor.tag_cget(tag, "justify")
-#                 }
-#                 comp.text_styles[tag] = {"ranges": range_list, "config": config}
-
-#     # --- now also save the editor’s default font + size ---
-#     editor_font = text_editor.cget("font")
-#     f = tkfont.Font(font=editor_font)
-#     comp.font_family = f.actual("family")
-#     comp.font_size   = f.actual("size")
 
 import tkinter as tk
 from tkinter import ttk, font, colorchooser
 import uuid
+import tkinter.font as tkfont
 
 
 def setup_text_editor(app, main_panel, comp):
@@ -235,6 +40,7 @@ def setup_text_options(app, left_panel, comp):
       - Text alignment (left, center, right)
 
     Uses record_selection to capture selected range before any control steals focus.
+    Also binds cursor events to refresh formatting controls after options exist.
     """
     def record_selection(event=None):
         try:
@@ -326,6 +132,12 @@ def setup_text_options(app, left_panel, comp):
         )
         rb.pack(side=tk.LEFT, padx=5)
         rb.bind('<Button-1>', record_selection)
+
+    # Bind events for refreshing controls now that vars exist
+    comp.text_widget.bind('<KeyRelease>', lambda e: refresh_formatting_options(comp))
+    comp.text_widget.bind('<ButtonRelease-1>', lambda e: refresh_formatting_options(comp))
+    # Initial sync of controls
+    refresh_formatting_options(comp)
 
 
 def update_font(comp):
@@ -453,6 +265,72 @@ def load_formatting(comp):
             text.tag_add(name, start, end)
 
     text.focus_set()
+
+
+def refresh_formatting_options(comp,
+                                default_family='Courier',
+                                default_size=12,
+                                default_color='#000000',
+                                default_align='left'):
+    """
+    Resets the formatting controls to match the style at the cursor position.
+    If the cursor is at whitespace or before the first character, reverts to defaults.
+    """
+    text = comp.text_widget
+    idx = text.index('insert')
+    try:
+        prev = text.index(f"{idx} -1c")
+    except tk.TclError:
+        prev = None
+    at_space = True
+    if prev:
+        ch = text.get(prev)
+        at_space = ch.isspace()
+
+    if at_space:
+        # revert to defaults
+        comp.font_family_var.set(default_family)
+        comp.font_size_var.set(default_size)
+        comp.bold_var.set(False)
+        comp.italic_var.set(False)
+        comp.color_var.set(default_color)
+        comp.color_preview.config(bg=default_color)
+        comp.align_var.set(default_align)
+    else:
+        # probe tags at prev pos
+        fam = default_family
+        size = default_size
+        weight = 'normal'
+        slant = 'roman'
+        fg = None
+        just = default_align
+        for tag in text.tag_names(prev):
+            fnt_name = text.tag_cget(tag, 'font')
+            if fnt_name:
+                try:
+                    fobj = tkfont.nametofont(fnt_name)
+                except tk.TclError:
+                    fobj = tkfont.Font(font=fnt_name)
+                fam = fobj.actual('family')
+                size = fobj.actual('size')
+                weight = fobj.actual('weight')
+                slant = fobj.actual('slant')
+            c = text.tag_cget(tag, 'foreground')
+            if c:
+                fg = c
+            j = text.tag_cget(tag, 'justify')
+            if j:
+                just = j
+        comp.font_family_var.set(fam)
+        comp.font_size_var.set(size)
+        comp.bold_var.set(weight == 'bold')
+        comp.italic_var.set(slant == 'italic')
+        if fg:
+            comp.color_var.set(fg)
+        comp.color_preview.config(bg=comp.color_var.get())
+        comp.align_var.set(just)
+
+
 
 
 

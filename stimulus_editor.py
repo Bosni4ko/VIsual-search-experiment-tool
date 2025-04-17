@@ -437,11 +437,15 @@ def setup_stimulus_options(app, left_panel,main_panel,comp):
 
     def save_field_size(*_):
         # read raw
+        # --- store old values so we only redraw on real change ---
+        old_x = comp.data.get("field_x", 10)
+        old_y = comp.data.get("field_y", 10)
+    
         try:
             raw_x = int(field_x.get())
             raw_y = int(field_y.get())
         except ValueError:
-            # non‑integer → reset to last valid
+            # non‑integer → reset UI to old and skip redraw
             field_x.delete(0, "end")
             field_x.insert(0, str(comp.data.get("field_x", 10)))
             field_y.delete(0, "end")
@@ -461,9 +465,11 @@ def setup_stimulus_options(app, left_panel,main_panel,comp):
             field_y.insert(0, str(y))
 
         # save and rebuild
-        comp.data["field_x"] = x
-        comp.data["field_y"] = y
-        setup_field_grid(main_panel, comp)
+        # only save & redraw if something actually changed
+        if x != old_x or y != old_y:
+            comp.data["field_x"] = x
+            comp.data["field_y"] = y
+            setup_field_grid(main_panel, comp)
 
     # bind on focus‑out
     field_x.bind("<FocusOut>", save_field_size)
@@ -513,18 +519,21 @@ def setup_stimulus_options(app, left_panel,main_panel,comp):
 
             def save_fixed(event=None):
                 # parse or fallback
+                old = comp.data.get("fixed_amount", 2)
                 try:
                     raw = int(amt_e.get())
                 except ValueError:
                     raw = comp.data.get("fixed_amount", 2)
                 # clamp into [2, total]
                 val = clamp(raw, 2, total)
-                comp.data["fixed_amount"] = val
                 # reflect clamp back into the UI
                 amt_e.delete(0, "end")
                 amt_e.insert(0, str(val))
-                # redraw grid
-                setup_field_grid(main_panel, comp)
+
+                if val != old:
+                    comp.data["fixed_amount"] = val
+                    setup_field_grid(main_panel, comp)
+
 
             amt_e.bind("<FocusOut>", save_fixed)
 
@@ -539,6 +548,9 @@ def setup_stimulus_options(app, left_panel,main_panel,comp):
             end_e.pack(side="left")
 
             def save_range(event=None):
+                # store old so we only redraw on change
+                old_s = comp.data.get("range_start", 2)
+                old_e = comp.data.get("range_end", total)
                 # parse or fallback
                 try:
                     raw_s = int(start_e.get())
@@ -556,15 +568,18 @@ def setup_stimulus_options(app, left_panel,main_panel,comp):
                 if e < s:
                     e = s
 
-                comp.data["range_start"] = s
-                comp.data["range_end"]   = e
+                # only save & redraw if either end changed
+                if s != old_s or e != old_e:
+                    comp.data["range_start"] = s
+                    comp.data["range_end"]   = e
+                    # redraw grid
+                    setup_field_grid(main_panel, comp)
 
                 # reflect clamp back into the UI
                 start_e.delete(0, "end"); start_e.insert(0, str(s))
                 end_e.delete(0,   "end"); end_e.insert(0,   str(e))
 
-                # redraw grid
-                setup_field_grid(main_panel, comp)
+
 
             start_e.bind("<FocusOut>", save_range)
             end_e.bind(  "<FocusOut>", save_range)

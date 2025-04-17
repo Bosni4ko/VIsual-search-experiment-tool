@@ -198,6 +198,10 @@ import uuid
 #     comp.font_family = f.actual("family")
 #     comp.font_size   = f.actual("size")
 
+import tkinter as tk
+from tkinter import ttk, font, colorchooser
+import uuid
+
 
 def setup_text_editor(app, main_panel, comp):
     """
@@ -207,7 +211,7 @@ def setup_text_editor(app, main_panel, comp):
     """
     comp.text_widget = tk.Text(
         main_panel,
-        wrap='none',
+        wrap='word',  # break long words to new line
         undo=True,
         font=('Courier', 12),
         exportselection=False
@@ -221,7 +225,7 @@ def setup_text_options(app, left_panel, comp):
       - Font family selector
       - Font size spinbox
       - Bold and Italic toggles
-      - Font color chooser
+      - Font color chooser + preview
       - Text alignment (left, center, right)
 
     Uses record_selection to capture selected range before any control steals focus.
@@ -281,13 +285,27 @@ def setup_text_options(app, left_panel, comp):
     italic_check.pack(anchor='w', pady=2)
     italic_check.bind('<Button-1>', record_selection)
 
-    # Font color chooser
+    # Font color chooser + preview
+    comp.color_var = tk.StringVar(value='#000000')
+    color_frame = tk.Frame(left_panel)
+    color_frame.pack(fill=tk.X, pady=2)
     color_button = ttk.Button(
-        left_panel,
+        color_frame,
         text='Font Color',
+        width=12,
         command=lambda: (record_selection(), choose_color(comp))
     )
-    color_button.pack(fill=tk.X, pady=2)
+    color_button.pack(side=tk.LEFT)
+    comp.color_preview = tk.Label(
+        color_frame,
+        text='   ',
+        bg=comp.color_var.get(),
+        width=4,
+        height=2,
+        relief='solid',
+        borderwidth=1
+    )
+    comp.color_preview.pack(side=tk.LEFT, padx=8)
 
     # Text alignment options
     comp.align_var = tk.StringVar(value='left')
@@ -307,7 +325,7 @@ def setup_text_options(app, left_panel, comp):
 
 def update_font(comp):
     """
-    Applies the selected font attributes only to the recorded selection range.
+    Applies the selected font attributes and current color to the recorded selection range.
     Uses a unique tag per application so previous ranges aren’t affected.
     """
     text = comp.text_widget
@@ -319,9 +337,11 @@ def update_font(comp):
     size = comp.font_size_var.get()
     weight = 'bold' if comp.bold_var.get() else 'normal'
     slant = 'italic' if comp.italic_var.get() else 'roman'
+    color = comp.color_var.get()
     fnt = font.Font(family=fam, size=size, weight=weight, slant=slant)
     tag_name = f"font_{uuid.uuid4().hex}"
-    text.tag_configure(tag_name, font=fnt)
+    # include both font and color in this tag
+    text.tag_configure(tag_name, font=fnt, foreground=color)
     text.tag_add(tag_name, start, end)
     text.focus_set()
 
@@ -329,12 +349,14 @@ def update_font(comp):
 def choose_color(comp):
     """
     Opens a color chooser and applies the selected color only to the recorded selection.
-    Uses a unique tag per application so previous ranges aren’t affected.
+    Updates the preview box and uses a unique tag so previous ranges aren’t affected.
     """
     text = comp.text_widget
     color = colorchooser.askcolor(title='Choose font color')[1]
     if not color:
         return
+    comp.color_var.set(color)
+    comp.color_preview.config(bg=color)
     start = getattr(comp, '_sel_start', None)
     end = getattr(comp, '_sel_end', None)
     if not start:
@@ -360,4 +382,7 @@ def set_alignment(comp):
     text.tag_configure(tag_name, justify=align)
     text.tag_add(tag_name, start, end)
     text.focus_set()
+
+
+
 

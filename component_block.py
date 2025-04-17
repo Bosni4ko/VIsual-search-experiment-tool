@@ -15,13 +15,11 @@ class ComponentBlock(tk.Frame):
         self.place(x=x, y=y)
         self.attachment = attachment  # can be another ComponentBlock or None
         self.component_type = component_type or label
-        self.text_styles = {}    # new dictionary to store styles
-        self.data = {}
         self.label_offset_y = 65  # vertical offset for text below the block
-
+        self.data = {}
         self.saved_text = ""
         self.saved_tags = []
-        
+
         # Hidden internal label inside block
         self.label_widget = tk.Label(self, text="", bg=color)
         self.label_widget.place(relx=0.5, rely=0.5, anchor="center")

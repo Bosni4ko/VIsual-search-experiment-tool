@@ -3,21 +3,53 @@
     "type": "Start",
     "label": "Start",
     "color": "green",
-    "index": 0
+    "index": 0,
+    "data": {},
+    "last_selections": [],
+    "last_distractors": []
   },
   {
     "type": "Text",
     "label": "1",
     "color": "gray",
     "index": 1,
-    "saved_text": "\n\n\n\n\n\nASDASDASD",
+    "saved_text": "\n\n1",
     "saved_tags": [
       {
-        "name": "align_257f1369813c4e8a821064fb80795982",
+        "name": "align_c90992917c3c4c0aa3723640ded540d8",
         "ranges": [
           [
-            "1.0",
-            "8.0"
+            "3.0",
+            "3.1"
+          ]
+        ],
+        "font_info": {
+          "family": "Arial",
+          "size": 12,
+          "weight": "normal",
+          "slant": "roman"
+        },
+        "foreground": "",
+        "justify": "right"
+      }
+    ],
+    "data": {},
+    "last_selections": [],
+    "last_distractors": []
+  },
+  {
+    "type": "Text",
+    "label": "Buga",
+    "color": "gray",
+    "index": 2,
+    "saved_text": "\n\n\nAbuuga\n\nBuga buga\n",
+    "saved_tags": [
+      {
+        "name": "align_be8637279b5f44b08e788bd4e64c7a00",
+        "ranges": [
+          [
+            "4.0",
+            "4.6"
           ]
         ],
         "font_info": {
@@ -30,147 +62,11 @@
         "justify": "center"
       },
       {
-        "name": "font_787b01327c1045a5964e2df01b28c18c",
+        "name": "color_92808b1f881b44c3aa8b05390bfc4966",
         "ranges": [
           [
-            "7.0",
-            "7.9"
-          ]
-        ],
-        "font_info": {
-          "family": "Courier New",
-          "size": 13,
-          "weight": "normal",
-          "slant": "roman"
-        },
-        "foreground": "SystemHighlightText",
-        "justify": ""
-      },
-      {
-        "name": "font_5b033a5723f44baaba655e29035c71d0",
-        "ranges": [
-          [
-            "7.0",
-            "7.9"
-          ]
-        ],
-        "font_info": {
-          "family": "Courier New",
-          "size": 14,
-          "weight": "normal",
-          "slant": "roman"
-        },
-        "foreground": "SystemHighlightText",
-        "justify": ""
-      },
-      {
-        "name": "font_df13fec41549458ab1535c8936975c19",
-        "ranges": [
-          [
-            "7.0",
-            "7.9"
-          ]
-        ],
-        "font_info": {
-          "family": "Courier New",
-          "size": 15,
-          "weight": "normal",
-          "slant": "roman"
-        },
-        "foreground": "SystemHighlightText",
-        "justify": ""
-      },
-      {
-        "name": "font_a361c9fa9d56455b9d13a33bee35803f",
-        "ranges": [
-          [
-            "7.0",
-            "7.9"
-          ]
-        ],
-        "font_info": {
-          "family": "Courier New",
-          "size": 16,
-          "weight": "normal",
-          "slant": "roman"
-        },
-        "foreground": "SystemHighlightText",
-        "justify": ""
-      },
-      {
-        "name": "font_9ac3b1b6d1524589bbeeb909ea2e7d1d",
-        "ranges": [
-          [
-            "7.0",
-            "7.9"
-          ]
-        ],
-        "font_info": {
-          "family": "Courier New",
-          "size": 17,
-          "weight": "normal",
-          "slant": "roman"
-        },
-        "foreground": "SystemHighlightText",
-        "justify": ""
-      },
-      {
-        "name": "font_9df4ea6dc84846ea84a8b66ccd68c436",
-        "ranges": [
-          [
-            "7.0",
-            "7.9"
-          ]
-        ],
-        "font_info": {
-          "family": "Courier New",
-          "size": 18,
-          "weight": "normal",
-          "slant": "roman"
-        },
-        "foreground": "SystemHighlightText",
-        "justify": ""
-      },
-      {
-        "name": "font_6591b42cd862465f973b00abde1069dd",
-        "ranges": [
-          [
-            "7.0",
-            "7.9"
-          ]
-        ],
-        "font_info": {
-          "family": "Courier New",
-          "size": 19,
-          "weight": "normal",
-          "slant": "roman"
-        },
-        "foreground": "SystemHighlightText",
-        "justify": ""
-      },
-      {
-        "name": "font_b4bc2b07e95d4a018e74ce6fecaec204",
-        "ranges": [
-          [
-            "7.0",
-            "7.9"
-          ]
-        ],
-        "font_info": {
-          "family": "Courier New",
-          "size": 20,
-          "weight": "normal",
-          "slant": "roman"
-        },
-        "foreground": "SystemHighlightText",
-        "justify": ""
-      },
-      {
-        "name": "color_2f20db5c93cd4fb7888121c85177dd16",
-        "ranges": [
-          [
-            "7.0",
-            "7.9"
+            "4.0",
+            "4.6"
           ]
         ],
         "font_info": {
@@ -183,325 +79,510 @@
         "justify": ""
       },
       {
-        "name": "font_3299a6334f9e4873865e48b1ff1f705d",
+        "name": "font_47539179b8104d6990c19e563e0b096a",
         "ranges": [
           [
-            "7.0",
-            "7.9"
+            "4.0",
+            "4.6"
           ]
         ],
         "font_info": {
-          "family": "Ebrima",
-          "size": 20,
-          "weight": "normal",
-          "slant": "roman"
-        },
-        "foreground": "#000000",
-        "justify": ""
-      },
-      {
-        "name": "font_00932422682b43af897109d9796a2ec1",
-        "ranges": [
-          [
-            "7.0",
-            "7.9"
-          ]
-        ],
-        "font_info": {
-          "family": "Ebrima",
-          "size": 20,
-          "weight": "bold",
-          "slant": "roman"
-        },
-        "foreground": "#000000",
-        "justify": ""
-      },
-      {
-        "name": "font_3fbe291052254d9dbed2f647bc020aea",
-        "ranges": [
-          [
-            "7.0",
-            "7.9"
-          ]
-        ],
-        "font_info": {
-          "family": "Ebrima",
-          "size": 20,
-          "weight": "bold",
-          "slant": "italic"
-        },
-        "foreground": "#000000",
-        "justify": ""
-      },
-      {
-        "name": "color_7afa7e5f759b423f92400b4d6ef2a3ad",
-        "ranges": [
-          [
-            "7.0",
-            "7.9"
-          ]
-        ],
-        "font_info": {
-          "family": "Arial",
-          "size": 12,
-          "weight": "normal",
-          "slant": "roman"
-        },
-        "foreground": "#00ff00",
-        "justify": ""
-      },
-      {
-        "name": "font_e41784ac01ee4b25a9b1afd9c447cd7a",
-        "ranges": [
-          [
-            "7.0",
-            "7.9"
-          ]
-        ],
-        "font_info": {
-          "family": "Arial",
+          "family": "Courier New",
           "size": 13,
           "weight": "normal",
           "slant": "roman"
         },
-        "foreground": "#00ff00",
+        "foreground": "#000000",
         "justify": ""
       },
       {
-        "name": "font_7caf5e027f0d44709d184349e84d6dfc",
+        "name": "font_de51037147bd4e00b7447844e3f1ffe9",
         "ranges": [
           [
-            "7.0",
-            "7.9"
+            "4.0",
+            "4.6"
           ]
         ],
         "font_info": {
-          "family": "Arial",
+          "family": "Courier New",
           "size": 14,
           "weight": "normal",
           "slant": "roman"
         },
-        "foreground": "#00ff00",
+        "foreground": "#000000",
         "justify": ""
       },
       {
-        "name": "font_62cb48edc72b4b5cb19c82b6447c0647",
+        "name": "font_37d68c2a0ff342f19289c6282f4f0ae6",
         "ranges": [
           [
-            "7.0",
-            "7.9"
+            "4.0",
+            "4.6"
           ]
         ],
         "font_info": {
-          "family": "Arial",
+          "family": "Courier New",
           "size": 15,
           "weight": "normal",
           "slant": "roman"
         },
-        "foreground": "#00ff00",
+        "foreground": "#000000",
         "justify": ""
       },
       {
-        "name": "font_195596b15724406793e2ee8c030bd900",
+        "name": "font_8bcc84341e534b11bd7e4e10821b445e",
         "ranges": [
           [
-            "7.0",
-            "7.9"
+            "4.0",
+            "4.6"
           ]
         ],
         "font_info": {
-          "family": "Arial",
+          "family": "Courier New",
           "size": 16,
           "weight": "normal",
           "slant": "roman"
         },
-        "foreground": "#00ff00",
+        "foreground": "#000000",
         "justify": ""
       },
       {
-        "name": "font_56ae37d636644727be6dfd6364a51697",
+        "name": "font_a23022798a24490e9b39217d94e70d53",
         "ranges": [
           [
-            "7.0",
-            "7.9"
+            "4.0",
+            "4.6"
           ]
         ],
         "font_info": {
-          "family": "Arial",
+          "family": "Courier New",
           "size": 17,
           "weight": "normal",
           "slant": "roman"
         },
-        "foreground": "#00ff00",
+        "foreground": "#000000",
         "justify": ""
       },
       {
-        "name": "font_d412aef5a227432e81ec0bdffe9fa6c6",
+        "name": "font_3b035e7ee4b8439b8f4a8815821054f3",
         "ranges": [
           [
-            "7.0",
-            "7.9"
+            "4.0",
+            "4.6"
           ]
         ],
         "font_info": {
-          "family": "Arial",
+          "family": "Courier New",
           "size": 18,
           "weight": "normal",
           "slant": "roman"
         },
-        "foreground": "#00ff00",
+        "foreground": "#000000",
         "justify": ""
       },
       {
-        "name": "font_491a12433e094ca3945b3389a3ba7349",
+        "name": "font_6087aec6abbe47cfa59bb6dcc0d2437e",
         "ranges": [
           [
-            "7.0",
-            "7.9"
+            "4.0",
+            "4.6"
           ]
         ],
         "font_info": {
-          "family": "Arial",
+          "family": "Courier New",
           "size": 19,
           "weight": "normal",
           "slant": "roman"
         },
-        "foreground": "#00ff00",
+        "foreground": "#000000",
         "justify": ""
       },
       {
-        "name": "font_34cdb14fde064f6dace5094bced7559a",
+        "name": "font_5cee14d77a674ee6829e6c54501bc8d2",
         "ranges": [
           [
-            "7.0",
-            "7.9"
+            "4.0",
+            "4.6"
           ]
         ],
         "font_info": {
-          "family": "Arial",
+          "family": "Courier New",
           "size": 20,
           "weight": "normal",
           "slant": "roman"
         },
-        "foreground": "#00ff00",
+        "foreground": "#000000",
         "justify": ""
       },
       {
-        "name": "font_4d42cba31fef4628ae91daa7a2b4024b",
+        "name": "font_6deeda2179b14a1aa97ae2030ba02baa",
         "ranges": [
           [
-            "7.0",
-            "7.9"
+            "4.0",
+            "4.6"
           ]
         ],
         "font_info": {
-          "family": "Arial",
+          "family": "Courier New",
           "size": 21,
           "weight": "normal",
           "slant": "roman"
         },
-        "foreground": "#00ff00",
+        "foreground": "#000000",
         "justify": ""
       },
       {
-        "name": "font_af129f22a7be44e1a0eef01330cc67c7",
+        "name": "font_6a787df3f8844329a9979eacd38c33fc",
         "ranges": [
           [
-            "7.0",
-            "7.9"
+            "4.0",
+            "4.6"
           ]
         ],
         "font_info": {
-          "family": "Arial",
+          "family": "Courier New",
           "size": 22,
           "weight": "normal",
           "slant": "roman"
         },
-        "foreground": "#00ff00",
+        "foreground": "#000000",
         "justify": ""
       },
       {
-        "name": "font_20b19dd685634bb08e81e37bffa54032",
+        "name": "font_d70824c6f9044e57b9ed5cd1bf077810",
         "ranges": [
           [
-            "7.0",
-            "7.9"
+            "4.0",
+            "4.6"
           ]
         ],
         "font_info": {
-          "family": "Arial",
-          "size": 22,
+          "family": "Courier New",
+          "size": 23,
           "weight": "normal",
           "slant": "roman"
         },
-        "foreground": "#00ff00",
+        "foreground": "#000000",
         "justify": ""
       },
       {
-        "name": "font_93c371db56684011b4499e84cfe4f1f2",
+        "name": "font_a2a64dea6a9c46b9a8bfd970d3e22055",
         "ranges": [
           [
-            "7.0",
-            "7.9"
+            "4.0",
+            "4.6"
           ]
         ],
         "font_info": {
-          "family": "Arvo",
-          "size": 22,
+          "family": "Courier New",
+          "size": 24,
           "weight": "normal",
           "slant": "roman"
         },
-        "foreground": "#00ff00",
+        "foreground": "#000000",
         "justify": ""
       },
       {
-        "name": "font_5efe3d60c4fb4917aa8e071647c6b363",
+        "name": "font_c8577dfbb44742f192603b5124ae942a",
         "ranges": [
           [
-            "7.0",
-            "7.9"
+            "4.0",
+            "4.6"
           ]
         ],
         "font_info": {
-          "family": "Arvo",
-          "size": 22,
+          "family": "Courier New",
+          "size": 25,
+          "weight": "normal",
+          "slant": "roman"
+        },
+        "foreground": "#000000",
+        "justify": ""
+      },
+      {
+        "name": "font_0527b4fa962145b393c5212275c804d8",
+        "ranges": [
+          [
+            "4.0",
+            "4.6"
+          ]
+        ],
+        "font_info": {
+          "family": "Ebrima",
+          "size": 25,
+          "weight": "normal",
+          "slant": "roman"
+        },
+        "foreground": "#000000",
+        "justify": ""
+      },
+      {
+        "name": "font_0f5a3c4c3e884e2184599e78fcdcd55e",
+        "ranges": [
+          [
+            "4.0",
+            "4.6"
+          ]
+        ],
+        "font_info": {
+          "family": "Ebrima",
+          "size": 25,
           "weight": "bold",
           "slant": "roman"
         },
-        "foreground": "#00ff00",
+        "foreground": "#000000",
         "justify": ""
       },
       {
-        "name": "font_7a5a31e782c741679ea040f77e16215c",
+        "name": "font_dd79408474114d09be9c30c26e9e8308",
         "ranges": [
           [
-            "7.0",
-            "7.9"
+            "4.0",
+            "4.6"
           ]
         ],
         "font_info": {
-          "family": "Arvo",
-          "size": 22,
+          "family": "Ebrima",
+          "size": 25,
           "weight": "bold",
           "slant": "italic"
         },
-        "foreground": "#00ff00",
+        "foreground": "#000000",
+        "justify": ""
+      },
+      {
+        "name": "color_58923e86851b43b785cc6aebcbc524f9",
+        "ranges": [
+          [
+            "4.0",
+            "4.6"
+          ]
+        ],
+        "font_info": {
+          "family": "Arial",
+          "size": 12,
+          "weight": "normal",
+          "slant": "roman"
+        },
+        "foreground": "#008000",
+        "justify": ""
+      },
+      {
+        "name": "font_35db505ad240462bac7adf2d9c5203dd",
+        "ranges": [
+          [
+            "4.0",
+            "4.6"
+          ]
+        ],
+        "font_info": {
+          "family": "Arial",
+          "size": 12,
+          "weight": "bold",
+          "slant": "roman"
+        },
+        "foreground": "#008000",
+        "justify": ""
+      },
+      {
+        "name": "font_812a4dd2842442258041015a3e537d77",
+        "ranges": [
+          [
+            "4.0",
+            "4.6"
+          ]
+        ],
+        "font_info": {
+          "family": "Arial",
+          "size": 12,
+          "weight": "bold",
+          "slant": "italic"
+        },
+        "foreground": "#008000",
+        "justify": ""
+      },
+      {
+        "name": "font_1bd874defd774ba9af006a380fe84f9c",
+        "ranges": [
+          [
+            "4.0",
+            "4.6"
+          ]
+        ],
+        "font_info": {
+          "family": "Arial",
+          "size": 13,
+          "weight": "bold",
+          "slant": "italic"
+        },
+        "foreground": "#008000",
+        "justify": ""
+      },
+      {
+        "name": "font_35ec4566934344b4976cd71502cd92ac",
+        "ranges": [
+          [
+            "4.0",
+            "4.6"
+          ]
+        ],
+        "font_info": {
+          "family": "Arial",
+          "size": 14,
+          "weight": "bold",
+          "slant": "italic"
+        },
+        "foreground": "#008000",
+        "justify": ""
+      },
+      {
+        "name": "font_3c54fbc312b644b4bb0d11a31f593cba",
+        "ranges": [
+          [
+            "4.0",
+            "4.6"
+          ]
+        ],
+        "font_info": {
+          "family": "Arial",
+          "size": 15,
+          "weight": "bold",
+          "slant": "italic"
+        },
+        "foreground": "#008000",
+        "justify": ""
+      },
+      {
+        "name": "font_e843eba46f4a4d8e90a67b2194a4e753",
+        "ranges": [
+          [
+            "4.0",
+            "4.6"
+          ]
+        ],
+        "font_info": {
+          "family": "Arial",
+          "size": 16,
+          "weight": "bold",
+          "slant": "italic"
+        },
+        "foreground": "#008000",
+        "justify": ""
+      },
+      {
+        "name": "font_4a8868a920a848c1a6ae00b06f415159",
+        "ranges": [
+          [
+            "4.0",
+            "4.6"
+          ]
+        ],
+        "font_info": {
+          "family": "Arial",
+          "size": 17,
+          "weight": "bold",
+          "slant": "italic"
+        },
+        "foreground": "#008000",
+        "justify": ""
+      },
+      {
+        "name": "font_e5e43a7bab1442dba07c29bea0afbcfa",
+        "ranges": [
+          [
+            "4.0",
+            "4.6"
+          ]
+        ],
+        "font_info": {
+          "family": "Arial",
+          "size": 18,
+          "weight": "bold",
+          "slant": "italic"
+        },
+        "foreground": "#008000",
+        "justify": ""
+      },
+      {
+        "name": "font_ed3abdab106f4bde9da56b1cee9ac229",
+        "ranges": [
+          [
+            "4.0",
+            "4.6"
+          ]
+        ],
+        "font_info": {
+          "family": "Arial",
+          "size": 19,
+          "weight": "bold",
+          "slant": "italic"
+        },
+        "foreground": "#008000",
+        "justify": ""
+      },
+      {
+        "name": "font_40d2af6ac7dd4147987388888ba630c5",
+        "ranges": [
+          [
+            "4.0",
+            "4.6"
+          ]
+        ],
+        "font_info": {
+          "family": "Arial",
+          "size": 20,
+          "weight": "bold",
+          "slant": "italic"
+        },
+        "foreground": "#008000",
         "justify": ""
       }
-    ]
+    ],
+    "data": {},
+    "last_selections": [],
+    "last_distractors": []
   },
   {
     "type": "Stimulus",
     "label": "Stimulus",
     "color": "yellow",
-    "index": 2
-  },
-  {
-    "type": "Text",
-    "label": "2",
-    "color": "gray",
     "index": 3,
-    "saved_text": "",
-    "saved_tags": []
+    "data": {
+      "stimulus_size_mode": "random in range",
+      "no_target": false,
+      "field_x": 4,
+      "field_y": 5,
+      "distractor_type": "negative",
+      "distractor_set": "Select set from list",
+      "stimulus_set": "Faces",
+      "selected_target": "Select from list",
+      "target_image": "images\\faces\\positive\\happy\\0_30.jpg"
+    },
+    "last_selections": [
+      {
+        "stimulus_set": "Faces",
+        "stimulus_type": "positive",
+        "path": "images\\faces\\positive\\happy\\0_30.jpg"
+      }
+    ],
+    "last_distractors": [
+      {
+        "stimulus_set": "Faces",
+        "distractor_type": "negative",
+        "paths": [
+          "images\\faces\\negative\\angry\\0_25.jpg",
+          "images\\faces\\negative\\angry\\101_3.jpg",
+          "images\\faces\\negative\\angry\\102_20.jpg",
+          "images\\faces\\negative\\angry\\100_24.jpg",
+          "images\\faces\\negative\\angry\\0_29.jpg",
+          "images\\faces\\negative\\angry\\100_22.jpg",
+          "images\\faces\\negative\\angry\\0_0.jpg",
+          "images\\faces\\negative\\angry\\102_34.jpg",
+          "images\\faces\\negative\\angry\\103_23.jpg",
+          "images\\faces\\negative\\angry\\103_16.jpg",
+          "images\\faces\\negative\\angry\\103_32.jpg"
+        ]
+      }
+    ]
   }
 ]

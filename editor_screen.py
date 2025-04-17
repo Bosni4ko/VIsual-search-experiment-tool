@@ -8,8 +8,8 @@ import os
 STATE_FILE = "timeline_state.json"
 
 def save_timeline_state(app):
-    # Commit any in‑progress Text edits so saved_text isn’t empty
-    sel = getattr(app, 'selected_component', None)
+    # Commit any in‑progress Text edits
+    sel = getattr(app, "selected_component", None)
     if sel and sel.component_type == "Text":
         try:
             save_formatting(sel)
@@ -17,43 +17,82 @@ def save_timeline_state(app):
             pass
 
     state = []
-    for block in app.timeline_components:
+    for idx, block in enumerate(app.timeline_components):
         entry = {
-            "type":       block.component_type,
-            "label":      block.label_text,
-            "color":      block.color,
-            "index":      app.timeline_components.index(block),
+            "type":  block.component_type,
+            "label": block.label_text,
+            "color": block.color,
+            "index": idx,
         }
         if block.component_type == "Text":
-            # now these will be non‑empty if the user edited
             entry["saved_text"] = block.saved_text
             entry["saved_tags"] = block.saved_tags
+
+        raw_data = getattr(block, "data", {}) or {}
+        # main data sans transient maps
+        main_data = {k: v for k, v in raw_data.items()
+                     if k not in ("last_selections", "last_distractors")}
+        entry["data"] = main_data
+
+        # serialize last_selections as list to avoid tuple keys
+        last_sel = raw_data.get("last_selections", {})
+        entry["last_selections"] = [
+            {"stimulus_set": key[0],
+             "stimulus_type": key[1],
+             "path": value}
+            for key, value in last_sel.items()
+        ]
+        # serialize last_distractors similarly
+        last_dist = raw_data.get("last_distractors", {})
+        entry["last_distractors"] = [
+            {"stimulus_set": key[0],
+             "distractor_type": key[1],
+             "paths": value}
+            for key, value in last_dist.items()
+        ]
+
         state.append(entry)
 
     with open(STATE_FILE, "w") as f:
         json.dump(state, f, indent=2)
 
+
 def load_timeline_state(app):
     if not os.path.exists(STATE_FILE):
         return
+
     with open(STATE_FILE, "r") as f:
         state = json.load(f)
 
     app.timeline_components.clear()
     for item in sorted(state, key=lambda x: x["index"]):
-        # recreate the block
         app.insert_component(
             label=item["label"],
             color=item["color"],
             component_type=item["type"]
         )
-        # restore Text‑specific data
         block = app.timeline_components[-1]
+
         if block.component_type == "Text":
             block.saved_text = item.get("saved_text", "")
             block.saved_tags = item.get("saved_tags", [])
-        print(block.saved_text)
-        print(block.saved_tags)
+
+        # restore main data
+        block.data = item.get("data", {})
+
+        # rebuild last_selections map with tuple keys
+        block.data["last_selections"] = {}
+        for rec in item.get("last_selections", []):
+            key = (rec.get("stimulus_set"), rec.get("stimulus_type"))
+            block.data["last_selections"][key] = rec.get("path")
+
+        # rebuild last_distractors map
+        block.data["last_distractors"] = {}
+        for rec in item.get("last_distractors", []):
+            key = (rec.get("stimulus_set"), rec.get("distractor_type"))
+            block.data["last_distractors"][key] = rec.get("paths")
+
+
 
 
 def show_editor_screen(app):

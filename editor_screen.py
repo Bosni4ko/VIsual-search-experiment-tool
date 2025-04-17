@@ -2,7 +2,7 @@ import tkinter as tk
 from component_block import ComponentBlock
 from tkinter import filedialog
 from palette import setup_components_palette
-from text_editor import setup_text_editor, setup_text_options,update_component_text
+from text_editor import setup_text_editor, setup_text_options
 from stimulus_editor import setup_stimulus_options
 
 
@@ -90,10 +90,10 @@ def show_editor_screen(app):
     main_panel = tk.Frame(app.root, bg="white", bd=2, relief="flat")
     main_panel.place(relx=main_panel_relx, rely=overall_rely, relwidth=main_panel_relwidth, relheight=overall_relheight)
 
-        # This function is used to mark a component as selected and set up the editor panels accordingly.
+    # This function is used to mark a component as selected and set up the editor panels accordingly.
     def select_component(comp):
-        if hasattr(app, "text_editor") and app.text_editor and app.text_editor.winfo_exists():
-            update_component_text(app.selected_component, app.text_editor)
+        # if hasattr(app, "text_editor") and app.text_editor and app.text_editor.winfo_exists():
+        #     update_component_text(app.selected_component, app.text_editor)
 
         
         app.selected_component = comp

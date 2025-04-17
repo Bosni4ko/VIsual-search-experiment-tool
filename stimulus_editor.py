@@ -1,23 +1,9 @@
 import tkinter as tk
 import os
-from tkinter import Toplevel, Listbox, Scrollbar, Label, Button, filedialog
+from tkinter import Toplevel, Scrollbar, Label, Button, filedialog
 from PIL import Image, ImageTk
+from grid import setup_field_grid
 
-import os
-import tkinter as tk
-from tkinter import Toplevel, Label, Frame, Button, Scrollbar
-from PIL import Image, ImageTk
-from functools import partial
-
-import os
-import tkinter as tk
-from tkinter import Toplevel, Label, Frame, Button, Scrollbar
-from PIL import Image, ImageTk
-
-import os
-import tkinter as tk
-from tkinter import Toplevel, Label, Scrollbar, Frame, Button
-from PIL import Image, ImageTk
 
 def open_image_selector(comp, target_type):
     # Get the currently selected stimulus set.
@@ -72,7 +58,7 @@ def open_image_selector(comp, target_type):
     scrollbar.pack(side="right", fill="y")
     canvas.configure(yscrollcommand=scrollbar.set)
 
-    content_frame = Frame(canvas)
+    content_frame = tk.Frame(canvas)
     canvas.create_window((0, 0), window=content_frame, anchor="nw")
 
     def on_frame_configure(event):
@@ -143,7 +129,7 @@ def open_image_selector(comp, target_type):
     for cat, folder in categories.items():
         Label(content_frame, text=cat.capitalize(),
               font=("Segoe UI", 10, "bold")).pack(anchor="w", padx=10, pady=(10, 0))
-        img_grid = Frame(content_frame)
+        img_grid = tk.Frame(content_frame)
         img_grid.pack(anchor="w", padx=10, pady=5)
 
         try:
@@ -159,7 +145,7 @@ def open_image_selector(comp, target_type):
             col = i % images_per_row
 
             # Create a fixed-size container for the image
-            container = Frame(img_grid, bd=2, relief="solid", width=100, height=100)
+            container = tk.Frame(img_grid, bd=2, relief="solid", width=100, height=100)
             container.grid_propagate(False)
             container.grid(row=row_base, column=col, padx=5, pady=5)
 
@@ -264,7 +250,7 @@ def open_distractor_selector(comp, distractor_type):
     scrollbar.pack(side="right", fill="y")
     canvas.configure(yscrollcommand=scrollbar.set)
 
-    content_frame = Frame(canvas)
+    content_frame = tk.Frame(canvas)
     canvas.create_window((0, 0), window=content_frame, anchor="nw")
 
     def on_frame_configure(event):
@@ -374,7 +360,7 @@ def open_distractor_selector(comp, distractor_type):
     for cat, folder in categories.items():
         Label(content_frame, text=cat.capitalize(),
               font=("Segoe UI", 10, "bold")).pack(anchor="w", padx=10, pady=(10, 0))
-        img_grid = Frame(content_frame)
+        img_grid = tk.Frame(content_frame)
         img_grid.pack(anchor="w", padx=10, pady=5)
         try:
             images = [f for f in os.listdir(folder)
@@ -386,7 +372,7 @@ def open_distractor_selector(comp, distractor_type):
             row_base = (i // images_per_row) * 2  # using two grid rows per image cell.
             col = i % images_per_row
             # Fixed-size container.
-            container = Frame(img_grid, bd=2, relief="solid", width=100, height=100)
+            container = tk.Frame(img_grid, bd=2, relief="solid", width=100, height=100)
             container.grid_propagate(False)
             container.grid(row=row_base, column=col, padx=5, pady=5)
             placeholder = Label(container, text="Loading...")
@@ -425,12 +411,13 @@ def open_distractor_selector(comp, distractor_type):
 
 
 
-def setup_stimulus_options(app, left_panel, comp):
+def setup_stimulus_options(app, left_panel,main_panel,comp):
     def add_label(text, pady=8):
         return tk.Label(left_panel, text=text, font=("Segoe UI", 10, "bold")).pack(anchor="w", padx=10, pady=(pady, 2))
 
     def add_dropdown(var, options):
         return tk.OptionMenu(left_panel, var, *options)
+    
 
     # ---------- Field Size ----------
     add_label("Field Size")
@@ -440,6 +427,7 @@ def setup_stimulus_options(app, left_panel, comp):
     field_x = tk.Entry(field_frame, width=5)
     field_y = tk.Entry(field_frame, width=5)
 
+    # initialize from comp.data (with safe defaults)
     field_x.insert(0, str(comp.data.get("field_x", 10)))
     field_y.insert(0, str(comp.data.get("field_y", 10)))
 
@@ -448,18 +436,48 @@ def setup_stimulus_options(app, left_panel, comp):
     field_y.pack(side="left")
 
     def save_field_size(*_):
+        # read raw
         try:
-            comp.data["field_x"] = int(field_x.get())
-            comp.data["field_y"] = int(field_y.get())
+            raw_x = int(field_x.get())
+            raw_y = int(field_y.get())
         except ValueError:
-            pass
+            # non‑integer → reset to last valid
+            field_x.delete(0, "end")
+            field_x.insert(0, str(comp.data.get("field_x", 10)))
+            field_y.delete(0, "end")
+            field_y.insert(0, str(comp.data.get("field_y", 10)))
+            return
 
+        # clamp to [2,20]
+        x = max(2, min(20, raw_x))
+        y = max(2, min(20, raw_y))
+
+        # if they typed out-of-bounds, reset the entries to the clamped values
+        if raw_x != x:
+            field_x.delete(0, "end")
+            field_x.insert(0, str(x))
+        if raw_y != y:
+            field_y.delete(0, "end")
+            field_y.insert(0, str(y))
+
+        # save and rebuild
+        comp.data["field_x"] = x
+        comp.data["field_y"] = y
+        setup_field_grid(main_panel, comp)
+
+    # bind on focus‑out
     field_x.bind("<FocusOut>", save_field_size)
     field_y.bind("<FocusOut>", save_field_size)
 
-    # ---------- Stimulus Set Size ----------
-    add_label("Stimulus Set Size")
+    # initial draw
+    setup_field_grid(main_panel, comp)
 
+    # helper to clamp a value into [lo, hi]
+    def clamp(val, lo, hi):
+        return max(lo, min(val, hi))
+
+    # --------- Stimulus Set Size ----------
+    add_label("Stimulus Set Size")
     size_var = tk.StringVar(value=comp.data.get("stimulus_size_mode", "random"))
     size_menu = add_dropdown(size_var, ["random", "fixed", "random in range"])
     size_menu.pack(anchor="w", padx=10, fill="x")
@@ -468,58 +486,94 @@ def setup_stimulus_options(app, left_panel, comp):
     amount_frame.pack(anchor="w", padx=10, pady=(5, 0))
 
     def update_amount_input(*args):
-        for widget in amount_frame.winfo_children():
-            widget.destroy()
+        # wipe out any old widgets
+        for w in amount_frame.winfo_children():
+            w.destroy()
 
-        selection = size_var.get()
-        comp.data["stimulus_size_mode"] = selection
+        mode = size_var.get()
+        comp.data["stimulus_size_mode"] = mode
 
-        tk.Label(amount_frame, text="Amount:").pack(side="left", padx=(0, 5))
+        tk.Label(amount_frame, text="Amount:").pack(side="left", padx=(0,5))
 
-        if selection == "random":
-            dash_entry = tk.Entry(amount_frame, width=7, state="readonly", justify="center")
-            dash_entry.insert(0, "-")
-            dash_entry.pack(side="left")
+        # the maximum possible stimuli
+        total = comp.data.get("field_x", 10) * comp.data.get("field_y", 10)
 
-        elif selection == "fixed":
-            amount_entry = tk.Entry(amount_frame, width=7)
-            amount_entry.insert(0, str(comp.data.get("fixed_amount", "")))
-            amount_entry.pack(side="left")
+        if mode == "random":
+            # readonly dash, then rebuild grid
+            dash = tk.Entry(amount_frame, width=7, state="readonly", justify="center")
+            dash.insert(0, "-")
+            dash.pack(side="left")
+            setup_field_grid(main_panel, comp)
 
-            def save_fixed_amount(*_):
+        elif mode == "fixed":
+            # show an entry for fixed amount
+            amt_e = tk.Entry(amount_frame, width=7)
+            amt_e.insert(0, str(comp.data.get("fixed_amount", 2)))
+            amt_e.pack(side="left")
+
+            def save_fixed(event=None):
+                # parse or fallback
                 try:
-                    comp.data["fixed_amount"] = int(amount_entry.get())
+                    raw = int(amt_e.get())
                 except ValueError:
-                    comp.data["fixed_amount"] = None
+                    raw = comp.data.get("fixed_amount", 2)
+                # clamp into [2, total]
+                val = clamp(raw, 2, total)
+                comp.data["fixed_amount"] = val
+                # reflect clamp back into the UI
+                amt_e.delete(0, "end")
+                amt_e.insert(0, str(val))
+                # redraw grid
+                setup_field_grid(main_panel, comp)
 
-            amount_entry.bind("<FocusOut>", save_fixed_amount)
+            amt_e.bind("<FocusOut>", save_fixed)
 
-        elif selection == "random in range":
-            range_start = tk.Entry(amount_frame, width=5)
-            range_end = tk.Entry(amount_frame, width=5)
-
-            range_start.insert(0, str(comp.data.get("range_start", "")))
-            range_end.insert(0, str(comp.data.get("range_end", "")))
-
-            range_start.pack(side="left")
+        else:  # "random in range"
+            # two entries: start and end
+            start_e = tk.Entry(amount_frame, width=5)
+            end_e   = tk.Entry(amount_frame, width=5)
+            start_e.insert(0, str(comp.data.get("range_start", 2)))
+            end_e.insert(0,   str(comp.data.get("range_end",   total)))
+            start_e.pack(side="left")
             tk.Label(amount_frame, text=" to ").pack(side="left")
-            range_end.pack(side="left")
+            end_e.pack(side="left")
 
-            def save_range(*_):
+            def save_range(event=None):
+                # parse or fallback
                 try:
-                    comp.data["range_start"] = int(range_start.get())
+                    raw_s = int(start_e.get())
                 except ValueError:
-                    comp.data["range_start"] = None
+                    raw_s = comp.data.get("range_start", 2)
                 try:
-                    comp.data["range_end"] = int(range_end.get())
+                    raw_e = int(end_e.get())
                 except ValueError:
-                    comp.data["range_end"] = None
+                    raw_e = comp.data.get("range_end", total)
 
-            range_start.bind("<FocusOut>", save_range)
-            range_end.bind("<FocusOut>", save_range)
+                # clamp both into [2, total]
+                s = clamp(raw_s, 2, total)
+                e = clamp(raw_e, 2, total)
+                # ensure e >= s
+                if e < s:
+                    e = s
 
+                comp.data["range_start"] = s
+                comp.data["range_end"]   = e
+
+                # reflect clamp back into the UI
+                start_e.delete(0, "end"); start_e.insert(0, str(s))
+                end_e.delete(0,   "end"); end_e.insert(0,   str(e))
+
+                # redraw grid
+                setup_field_grid(main_panel, comp)
+
+            start_e.bind("<FocusOut>", save_range)
+            end_e.bind(  "<FocusOut>", save_range)
+
+    # re‑build the amount inputs whenever the mode changes
     size_var.trace_add("write", update_amount_input)
+    # initial layout + grid draw
     update_amount_input()
+
 
     # ---------- Stimulus Set ----------
     add_label("Stimulus Set")

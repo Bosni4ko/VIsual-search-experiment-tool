@@ -107,7 +107,7 @@ def show_editor_screen(app):
             setup_text_editor(app, main_panel, comp)
             setup_text_options(app, left_panel, comp)
         elif comp.component_type == "Stimulus":
-            setup_stimulus_options(app, left_panel, comp)
+            setup_stimulus_options(app, left_panel,main_panel, comp)
         else:
             tk.Label(main_panel, text="No text options available for this component").pack()
 

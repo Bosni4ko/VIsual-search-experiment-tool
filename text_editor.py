@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import ttk, font, colorchooser
 import uuid
+import tkinter.font as tkfont
 # def setup_text_editor(app, main_panel, comp):
 #     # pull saved family/size (or fall back to your defaults)
 #     default_family = getattr(comp, "font_family", "Arial")
@@ -207,7 +208,7 @@ def setup_text_editor(app, main_panel, comp):
     """
     Creates and packs a Text widget into the main_panel for code editing.
     Uses exportselection=False so selection stays visible when focus moves away.
-    Assigns the widget to comp.text_widget.
+    If the component already has saved text+formatting, loads it.
     """
     comp.text_widget = tk.Text(
         main_panel,
@@ -217,6 +218,11 @@ def setup_text_editor(app, main_panel, comp):
         exportselection=False
     )
     comp.text_widget.pack(fill=tk.BOTH, expand=True)
+    # Load any previously saved content and styling
+    try:
+        load_formatting(comp)
+    except Exception:
+        pass  # no saved state yet, or errors in loading
 
 
 def setup_text_options(app, left_panel, comp):
@@ -231,7 +237,6 @@ def setup_text_options(app, left_panel, comp):
     Uses record_selection to capture selected range before any control steals focus.
     """
     def record_selection(event=None):
-        # Capture current selection indices
         try:
             comp._sel_start = comp.text_widget.index('sel.first')
             comp._sel_end = comp.text_widget.index('sel.last')
@@ -324,10 +329,6 @@ def setup_text_options(app, left_panel, comp):
 
 
 def update_font(comp):
-    """
-    Applies the selected font attributes and current color to the recorded selection range.
-    Uses a unique tag per application so previous ranges aren’t affected.
-    """
     text = comp.text_widget
     start = getattr(comp, '_sel_start', None)
     end = getattr(comp, '_sel_end', None)
@@ -340,17 +341,12 @@ def update_font(comp):
     color = comp.color_var.get()
     fnt = font.Font(family=fam, size=size, weight=weight, slant=slant)
     tag_name = f"font_{uuid.uuid4().hex}"
-    # include both font and color in this tag
     text.tag_configure(tag_name, font=fnt, foreground=color)
     text.tag_add(tag_name, start, end)
     text.focus_set()
 
 
 def choose_color(comp):
-    """
-    Opens a color chooser and applies the selected color only to the recorded selection.
-    Updates the preview box and uses a unique tag so previous ranges aren’t affected.
-    """
     text = comp.text_widget
     color = colorchooser.askcolor(title='Choose font color')[1]
     if not color:
@@ -368,10 +364,6 @@ def choose_color(comp):
 
 
 def set_alignment(comp):
-    """
-    Sets justification (left, center, right) on the recorded selection or entire text if none.
-    Uses a unique tag so previous alignments aren’t overwritten.
-    """
     text = comp.text_widget
     align = comp.align_var.get()
     start = getattr(comp, '_sel_start', None)
@@ -382,6 +374,86 @@ def set_alignment(comp):
     text.tag_configure(tag_name, justify=align)
     text.tag_add(tag_name, start, end)
     text.focus_set()
+
+
+def save_formatting(comp):
+    """
+    Stores the current text and all styling tags into the component,
+    but breaks the font out into explicit family/size/weight/slant.
+    """
+    text = comp.text_widget
+    comp.saved_text = text.get('1.0', 'end-1c')
+    comp.saved_tags = []
+
+    for tag in text.tag_names():
+        ranges = text.tag_ranges(tag)
+        if not ranges:
+            continue
+
+        # pull the real Font object (or build one)…
+        font_spec = text.tag_cget(tag, 'font')
+        try:
+            fobj = tkfont.nametofont(font_spec)
+        except tk.TclError:
+            fobj = tkfont.Font(font=font_spec)
+
+        # now get the actual attributes
+        font_info = {
+            'family': fobj.actual('family'),
+            'size':   fobj.actual('size'),
+            'weight': fobj.actual('weight'),
+            'slant':  fobj.actual('slant'),
+        }
+
+        tag_info = {
+            'name':       tag,
+            'ranges':     [(str(ranges[i]), str(ranges[i+1]))
+                           for i in range(0, len(ranges), 2)],
+            'font_info':  font_info,
+            'foreground': text.tag_cget(tag, 'foreground'),
+            'justify':    text.tag_cget(tag, 'justify'),
+        }
+        comp.saved_tags.append(tag_info)
+
+
+def load_formatting(comp):
+    """
+    Loads previously saved text and styling tags from the component into the editor,
+    reconstructing each Font from the saved family/size/weight/slant.
+    """
+    text = comp.text_widget
+    text.delete('1.0', 'end')
+    if not hasattr(comp, 'saved_text'):
+        return
+
+    text.insert('1.0', comp.saved_text)
+
+    for tag_info in getattr(comp, 'saved_tags', []):
+        name = tag_info['name']
+        opts = {}
+
+        # rebuild the Font if we have font_info
+        fi = tag_info.get('font_info')
+        if fi:
+            f = tkfont.Font(**fi)
+            opts['font'] = f
+
+        fg = tag_info.get('foreground')
+        if fg:
+            opts['foreground'] = fg
+
+        just = tag_info.get('justify')
+        if just:
+            opts['justify'] = just
+
+        if opts:
+            text.tag_configure(name, **opts)
+
+        for start, end in tag_info['ranges']:
+            text.tag_add(name, start, end)
+
+    text.focus_set()
+
 
 
 

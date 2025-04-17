@@ -19,6 +19,9 @@ class ComponentBlock(tk.Frame):
         self.data = {}
         self.label_offset_y = 65  # vertical offset for text below the block
 
+        self.saved_text = ""
+        self.saved_tags = []
+        
         # Hidden internal label inside block
         self.label_widget = tk.Label(self, text="", bg=color)
         self.label_widget.place(relx=0.5, rely=0.5, anchor="center")

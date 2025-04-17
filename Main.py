@@ -1,6 +1,56 @@
 import tkinter as tk
 from tkinter import ttk
+import os
+from tkinter import filedialog
+import sys
 from editor_screen import show_editor_screen
+
+class ScrollableFrame(tk.Frame):
+    def __init__(self, container, *args, **kwargs):
+        super().__init__(container, *args, **kwargs)
+        self.canvas = tk.Canvas(self, bg="#ffffff", highlightthickness=0)
+        vsb = ttk.Scrollbar(self, orient="vertical", command=self.canvas.yview)
+        self.canvas.configure(yscrollcommand=vsb.set)
+
+        # Inner frame
+        self.scrollable_frame = tk.Frame(self.canvas, bg="#ffffff")
+        self.scrollable_frame.bind(
+            "<Configure>",
+            lambda e: self.canvas.configure(scrollregion=self.canvas.bbox("all"))
+        )
+        self.canvas.create_window((0, 0), window=self.scrollable_frame, anchor="nw")
+
+        # Layout
+        self.canvas.pack(side="left", fill="both", expand=True)
+        vsb.pack(side="right", fill="y")
+
+        # Bind enter/leave on both frame and canvas
+        for w in (self, self.canvas):
+            w.bind("<Enter>", self._bind_mousewheel)
+            w.bind("<Leave>", self._unbind_mousewheel)
+
+    def _on_mousewheel(self, event):
+        # only scroll if content taller than viewport
+        bbox = self.canvas.bbox("all")
+        if bbox:
+            content_height = bbox[3] - bbox[1]
+            view_height = self.canvas.winfo_height()
+            if content_height <= view_height:
+                return  # nothing to scroll
+        
+        # now actually scroll
+        delta = event.delta
+        if sys.platform == "darwin":
+            self.canvas.yview_scroll(-1 * delta, "units")
+        else:
+            # Windows: delta is multiple of 120
+            self.canvas.yview_scroll(-1 * (delta // 120), "units")
+
+    def _bind_mousewheel(self, _):
+        self.canvas.bind_all("<MouseWheel>", self._on_mousewheel)
+
+    def _unbind_mousewheel(self, _):
+        self.canvas.unbind_all("<MouseWheel>")
 
 class ExperimentApp:
     def __init__(self, root):
@@ -28,8 +78,9 @@ class ExperimentApp:
         self.style.configure("AddItem.TButton", font=("Segoe UI", 8), padding=(1, 1))
 
         # Stored values for persistence
-        self.saved_exp_name = ""
-        self.saved_participant_name = ""
+        self.saved_exp_name = "Default_Experiment_name"
+        self.saved_participant_name = "Participant"
+        self.saved_save_location = os.path.join(os.getcwd(), "experiments")
         self.saved_metadata = [] 
 
         # List to store metadata rows (each row is represented as a dictionary of widget references)
@@ -62,6 +113,12 @@ class ExperimentApp:
         launch_button = ttk.Button(button_frame, text="Launch Experiment")
         launch_button.grid(row=0, column=1, padx=20, pady=20)
 
+    def choose_save_location(self):
+        directory = filedialog.askdirectory(initialdir=self.save_location_entry.get() or os.getcwd())
+        if directory:
+            self.save_location_entry.delete(0, tk.END)
+            self.save_location_entry.insert(0, directory)
+
     def show_create_screen(self):
         self.clear_screen()
         self.metadata_entries = []  # Reset metadata entries
@@ -81,48 +138,53 @@ class ExperimentApp:
         form_frame.pack(pady=10)
         form_frame.columnconfigure(0, weight=1)
         form_frame.columnconfigure(1, weight=1)
+
+        # Save Location row
+        save_label = ttk.Label(form_frame, text="Save Location:", font=("Segoe UI", 18, "bold"), background="#f0f0f0")
+        save_label.grid(row=0, column=0, sticky="e", padx=5, pady=5)
+        self.save_location_entry = ttk.Entry(form_frame, width=50)
+        self.save_location_entry.grid(row=0, column=1, sticky="w", padx=5, pady=5)
+        self.save_location_entry.insert(0, self.saved_save_location)
+        choose_button = ttk.Button(form_frame, text="Choose",command=self.choose_save_location,style="Small.TButton")
+        choose_button.grid(row=0, column=2, sticky="w", padx=5, pady=5)
         
         exp_label = ttk.Label(form_frame, text="Experiment Name:", font=("Segoe UI", 18, "bold"), background="#f0f0f0")
-        exp_label.grid(row=0, column=0, sticky="e", padx=5, pady=5)
+        exp_label.grid(row=1, column=0, sticky="e", padx=5, pady=5)
         self.exp_name_entry = ttk.Entry(form_frame, width=50)
-        self.exp_name_entry.grid(row=0, column=1, sticky="w", padx=5, pady=5)
+        self.exp_name_entry.grid(row=1, column=1, sticky="w", padx=5, pady=5)
         self.exp_name_entry.insert(0, self.saved_exp_name)
         
         part_label = ttk.Label(form_frame, text="Participant Default Name:", font=("Segoe UI", 18, "bold"), background="#f0f0f0")
-        part_label.grid(row=1, column=0, sticky="e", padx=5, pady=5)
+        part_label.grid(row=2, column=0, sticky="e", padx=5, pady=5)
         self.participant_entry = ttk.Entry(form_frame, width=50)
-        self.participant_entry.grid(row=1, column=1, sticky="w", padx=5, pady=5)
+        self.participant_entry.grid(row=2, column=1, sticky="w", padx=5, pady=5)
         self.participant_entry.insert(0, self.saved_participant_name)
         
         # Metadata section container to hold metadata rows
         metadata_container = tk.Frame(main_frame, bg="#f0f0f0")
-        metadata_container.pack(pady=10, padx=20, fill="x")
-        
-        metadata_label = ttk.Label(metadata_container, text="Metadata:", font=("Segoe UI", 24, "bold"),
-                                   background="#f0f0f0", anchor="center")
-        metadata_label.pack(pady=(0,5), anchor="center")
-        
-        # Container frame for metadata entries (with a set width, made narrower)
-        self.metadata_frame = tk.Frame(metadata_container, bg="#ffffff", bd=2, relief="groove",
-                                       padx=10, pady=10, width=500)
-        self.metadata_frame.pack(anchor="center", fill="x")
-        
-        # Load saved metadata rows if available; otherwise add an empty row.
+        metadata_container.pack(pady=10, padx=20, fill="both")
+        metadata_container.configure(height=200)
+        metadata_container.pack_propagate(False)
+
+        scrollable = ScrollableFrame(metadata_container, bd=2, relief="groove", padx=10, pady=10)
+        scrollable.pack(fill="both", expand=True)
+
+        self.metadata_frame = scrollable.scrollable_frame
+        # --- end scrollable setup ---
+
+        # Load saved metadata rows or one empty row
         if self.saved_metadata:
             for md in self.saved_metadata:
                 self.add_metadata_row(initial_data=md)
         else:
             self.add_metadata_row()
 
-        # Button to add more metadata rows
+        # + Add Metadata button, action buttons, etc.
         add_button = ttk.Button(main_frame, text="+ Add Metadata", command=self.add_metadata_row)
         add_button.pack(pady=10)
-        
-        # Action buttons at the bottom (Back and Create)
+
         action_frame = tk.Frame(main_frame, bg="#f0f0f0")
         action_frame.pack(pady=20)
-        
-        # Instead of calling show_main_screen directly, call a helper that saves current state before going back.
         back_button = ttk.Button(action_frame, text="Back", command=self.back_to_main)
         back_button.grid(row=0, column=0, padx=20)
         create_button = ttk.Button(action_frame, text="Create", command=self.validate_and_proceed)
@@ -143,15 +205,18 @@ class ExperimentApp:
         if initial_data and "name" in initial_data:
             name_entry.insert(0, initial_data["name"])
 
-        # Combobox for selecting type: "Value" or "List"
-        type_var = tk.StringVar(value="Value")
+       # Determine initial mode (default to "Value")
+        initial_mode = initial_data.get("type", "Value") if initial_data else "Value"
+        print(initial_mode)
+        # Combobox for selecting type, pre‑seeded to the saved choice
+        type_var = tk.StringVar(value=initial_mode)
         type_combobox = ttk.Combobox(
             row_frame,
             textvariable=type_var,
             values=["Value", "List"],
             state="readonly",
             width=6
-        )
+        )        
         type_combobox.pack(side="left", padx=5)
         # Content frame that will hold either the white placeholder or list input controls.
         content_frame = tk.Frame(row_frame, bg="#ffffff")
@@ -174,7 +239,6 @@ class ExperimentApp:
         # Determine the initial mode (default to "Value")
         initial_mode = initial_data.get("type", "Value") if initial_data else "Value"
         if initial_mode == "List":
-            type_var.set("List")
             # Populate list container with provided data if available.
             if initial_data and "value" in initial_data:
                 for item in initial_data["value"]:
@@ -191,7 +255,6 @@ class ExperimentApp:
             placeholder.pack_forget()
         else:
             # Mode is "Value": show the placeholder and hide list elements.
-            type_var.set("Value")
             placeholder.pack(side="left", padx=5, pady=5)
             list_container.pack_forget()
             add_item_button.pack_forget()
@@ -279,6 +342,7 @@ class ExperimentApp:
         # Save experiment and participant info and collect metadata details.
         self.saved_exp_name = exp_name
         self.saved_participant_name = participant_name
+        self.saved_save_location = self.save_location_entry.get().strip()
         self.saved_metadata = []
 
         for row in self.metadata_entries:
@@ -312,6 +376,7 @@ class ExperimentApp:
         then stores them in the appropriate instance variables.
         """
         self.saved_exp_name = self.exp_name_entry.get().strip()
+        self.saved_participant_name = self.participant_entry.get().strip()
         self.saved_participant_name = self.participant_entry.get().strip()
         new_metadata = []
         for row in self.metadata_entries:

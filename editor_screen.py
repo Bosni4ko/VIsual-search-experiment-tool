@@ -1,5 +1,6 @@
 import tkinter as tk
 from component_block import ComponentBlock
+from tkinter import filedialog
 from palette import setup_components_palette
 from text_editor import setup_text_editor, setup_text_options,update_component_text
 from stimulus_editor import setup_stimulus_options

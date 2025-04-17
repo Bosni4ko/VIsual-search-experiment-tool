@@ -470,6 +470,7 @@ def setup_stimulus_options(app, left_panel,main_panel,comp):
             comp.data["field_x"] = x
             comp.data["field_y"] = y
             setup_field_grid(main_panel, comp)
+            update_amount_input() 
 
     # bind on focus‑out
     field_x.bind("<FocusOut>", save_field_size)

@@ -273,22 +273,28 @@ def refresh_formatting_options(comp,
                                 default_color='#000000',
                                 default_align='left'):
     """
-    Resets the formatting controls to match the style at the cursor position.
-    If the cursor is at whitespace or before the first character, reverts to defaults.
+    Syncs the controls to the style at sel.first if text is selected,
+    else at the character before the cursor. Whitespace or invalid spots
+    revert to defaults.
     """
     text = comp.text_widget
-    idx = text.index('insert')
-    try:
-        prev = text.index(f"{idx} -1c")
-    except tk.TclError:
-        prev = None
-    at_space = True
-    if prev:
-        ch = text.get(prev)
-        at_space = ch.isspace()
 
-    if at_space:
-        # revert to defaults
+    # 1) Decide probe index: selection start if selecting, else insert-1c
+    try:
+        sel_start = text.index('sel.first')
+    except tk.TclError:
+        sel_start = None
+
+    if sel_start:
+        probe = sel_start
+    else:
+        try:
+            probe = text.index('insert -1c')
+        except tk.TclError:
+            probe = None
+
+    # 2) If probe is missing or is whitespace, reset to defaults
+    if not probe or text.get(probe).isspace():
         comp.font_family_var.set(default_family)
         comp.font_size_var.set(default_size)
         comp.bold_var.set(False)
@@ -296,39 +302,39 @@ def refresh_formatting_options(comp,
         comp.color_var.set(default_color)
         comp.color_preview.config(bg=default_color)
         comp.align_var.set(default_align)
-    else:
-        # probe tags at prev pos
-        fam = default_family
-        size = default_size
-        weight = 'normal'
-        slant = 'roman'
-        fg = None
-        just = default_align
-        for tag in text.tag_names(prev):
-            fnt_name = text.tag_cget(tag, 'font')
-            if fnt_name:
-                try:
-                    fobj = tkfont.nametofont(fnt_name)
-                except tk.TclError:
-                    fobj = tkfont.Font(font=fnt_name)
-                fam = fobj.actual('family')
-                size = fobj.actual('size')
-                weight = fobj.actual('weight')
-                slant = fobj.actual('slant')
-            c = text.tag_cget(tag, 'foreground')
-            if c:
-                fg = c
-            j = text.tag_cget(tag, 'justify')
-            if j:
-                just = j
-        comp.font_family_var.set(fam)
-        comp.font_size_var.set(size)
-        comp.bold_var.set(weight == 'bold')
-        comp.italic_var.set(slant == 'italic')
-        if fg:
-            comp.color_var.set(fg)
-        comp.color_preview.config(bg=comp.color_var.get())
-        comp.align_var.set(just)
+        return
+
+    # 3) Otherwise, look at all tags at that position
+    fam, size, weight, slant = default_family, default_size, 'normal', 'roman'
+    fg, just = None, default_align
+    for tag in text.tag_names(probe):
+        fnt_name = text.tag_cget(tag, 'font')
+        if fnt_name:
+            try:
+                fobj = tkfont.nametofont(fnt_name)
+            except tk.TclError:
+                fobj = tkfont.Font(font=fnt_name)
+            fam = fobj.actual('family')
+            size = fobj.actual('size')
+            weight = fobj.actual('weight')
+            slant = fobj.actual('slant')
+        c = text.tag_cget(tag, 'foreground')
+        if c:
+            fg = c
+        j = text.tag_cget(tag, 'justify')
+        if j:
+            just = j
+
+    # 4) Apply back to controls
+    comp.font_family_var.set(fam)
+    comp.font_size_var.set(size)
+    comp.bold_var.set(weight == 'bold')
+    comp.italic_var.set(slant == 'italic')
+    if fg:
+        comp.color_var.set(fg)
+    comp.color_preview.config(bg=comp.color_var.get())
+    comp.align_var.set(just)
+
 
 
 

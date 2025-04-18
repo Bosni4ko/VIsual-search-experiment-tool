@@ -19,7 +19,7 @@ def save_timeline_state(app):
     state = []
     for idx, block in enumerate(app.timeline_components):
         entry = {
-            "type":  block.component_type,
+            "type": block.component_type,
             "label": block.label_text,
             "color": block.color,
             "index": idx,
@@ -51,6 +51,14 @@ def save_timeline_state(app):
             for key, value in last_dist.items()
         ]
 
+        # Include attachment information for Stimulus notification
+        if block.component_type == "Stimulus notification" and block.attachment:
+            entry["attachment"] = {
+                "label": block.attachment.label_text,
+                "color": block.attachment.color,
+                "index": app.timeline_components.index(block.attachment)
+            }
+
         state.append(entry)
 
     with open(STATE_FILE, "w") as f:
@@ -65,7 +73,19 @@ def load_timeline_state(app):
         state = json.load(f)
 
     app.timeline_components.clear()
+    block_map = {}  # Track all blocks by original index
+    attachment_pairs = []  # Store (notification_index, stimulus_index) pairs
+
+    # First pass: create all components and record attachments
     for item in sorted(state, key=lambda x: x["index"]):
+        # Skip creating notification components for now, just record them
+        if item["type"] == "Stimulus notification":
+            attachment_info = item.get("attachment")
+            if attachment_info:
+                attachment_pairs.append((item["index"], attachment_info["index"]))
+            continue
+            
+        # Create non-notification components
         app.insert_component(
             label=item["label"],
             color=item["color"],
@@ -77,20 +97,53 @@ def load_timeline_state(app):
             block.saved_text = item.get("saved_text", "")
             block.saved_tags = item.get("saved_tags", [])
 
-        # restore main data
+        # Restore main data
         block.data = item.get("data", {})
 
-        # rebuild last_selections map with tuple keys
+        # Rebuild last_selections map with tuple keys
         block.data["last_selections"] = {}
         for rec in item.get("last_selections", []):
             key = (rec.get("stimulus_set"), rec.get("stimulus_type"))
             block.data["last_selections"][key] = rec.get("path")
 
-        # rebuild last_distractors map
+        # Rebuild last_distractors map
         block.data["last_distractors"] = {}
         for rec in item.get("last_distractors", []):
             key = (rec.get("stimulus_set"), rec.get("distractor_type"))
             block.data["last_distractors"][key] = rec.get("paths")
+
+        block_map[item["index"]] = block
+
+    # Second pass: create notification components and establish attachments
+    for item in sorted(state, key=lambda x: x["index"]):
+        if item["type"] != "Stimulus notification":
+            continue
+            
+        # Find the original position where this notification should be inserted
+        original_index = item["index"]
+        
+        # Create the notification component
+        notification = ComponentBlock(
+            app,
+            app.timeline_container,
+            item["label"],
+            item["color"],
+            x=0,  # Position will be fixed during render
+            y=10,
+            from_timeline=True,
+            component_type="Stimulus notification"
+        )
+        
+        # Insert at the original position
+        app.timeline_components.insert(original_index, notification)
+        block_map[original_index] = notification
+
+        # Find and attach to the stimulus component
+        attachment_info = item.get("attachment")
+        if attachment_info and attachment_info["index"] in block_map:
+            stimulus = block_map[attachment_info["index"]]
+            notification.attachment = stimulus
+            stimulus.attachment = notification
 
 
 

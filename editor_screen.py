@@ -3,7 +3,7 @@ from component_block import ComponentBlock
 from palette import setup_components_palette
 from text_editor import setup_text_editor, setup_text_options,save_formatting
 from stimulus_editor import setup_stimulus_options
-from TEXT_AND_TAGS import NOTIFICATION_DEFAULT_TEXT,NOTIFICATION_DEFAULT_TAGS
+from TEXT_AND_TAGS import NOTIFICATION_DEFAULT_TEXT,NOTIFICATION_DEFAULT_TAGS,END_DEFAULT_TEXT,END_DEFAULT_TAGS
 import json
 import os
 STATE_FILE = "timeline_state.json"
@@ -236,7 +236,7 @@ def show_editor_screen(app):
     def select_component(comp):
         prev = getattr(app, 'selected_component', None)
         # only save if previous Text block is still in the timeline
-        if prev and (prev.component_type == "Text" or prev.component_type == "Stimulus notification") and prev in app.timeline_components:
+        if prev and prev.component_type in ["Text", "Stimulus notification", "End"] and prev in app.timeline_components:
             try:
                 save_formatting(prev)
             except tk.TclError:
@@ -257,13 +257,16 @@ def show_editor_screen(app):
             widget.destroy()
         for widget in main_panel.winfo_children():
             widget.destroy()
-        if comp.component_type == "Text" or comp.component_type == "Stimulus notification":
+        if comp.component_type in ["Text", "Stimulus notification", "End"]:
             # If it's a Stimulus notification, set up default text if empty
             if comp.component_type == "Stimulus notification":
                 if not hasattr(comp, 'saved_text') or not comp.saved_text:
                     comp.saved_text = NOTIFICATION_DEFAULT_TEXT
                     comp.saved_tags = NOTIFICATION_DEFAULT_TAGS  
-
+            elif comp.component_type == "End":
+                if not hasattr(comp, 'saved_text') or not comp.saved_text:
+                    comp.saved_text = END_DEFAULT_TEXT
+                    comp.saved_tags = END_DEFAULT_TAGS  
             setup_text_editor(app, main_panel, comp)
             setup_text_options(app, left_panel, comp)
 

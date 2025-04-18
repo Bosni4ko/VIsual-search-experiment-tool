@@ -3,7 +3,11 @@ from tkinter import ttk
 import os
 from tkinter import filedialog
 import sys
+import json
 from editor_screen import show_editor_screen
+STATE_FILE = "create_screen_state.json"
+
+
 
 class ScrollableFrame(tk.Frame):
     def __init__(self, container, *args, **kwargs):
@@ -87,7 +91,7 @@ class ExperimentApp:
         self.metadata_entries = []
 
         self.imported_stimulus_sets = {}
-
+        self.load_create_screen_state()
         self.show_main_screen()
 
     def clear_screen(self):
@@ -371,24 +375,27 @@ class ExperimentApp:
         show_editor_screen(self)
 
     def save_current_create_screen_state(self):
-        """
-        Captures the current data from the experiment name, participant name, and all metadata rows,
-        then stores them in the appropriate instance variables.
-        """
-        self.saved_exp_name = self.exp_name_entry.get().strip()
-        self.saved_participant_name = self.participant_entry.get().strip()
-        self.saved_participant_name = self.participant_entry.get().strip()
-        new_metadata = []
-        for row in self.metadata_entries:
-            name = row["name_entry"].get().strip()
-            type_val = row["type_combobox"].get()
-            if type_val == "Value":
-                value = "N/A"  # Change this if you add a dedicated widget for value entry
-                new_metadata.append({"name": name, "type": type_val, "value": value})
-            elif type_val == "List":
-                list_values = [entry.get().strip() for entry in row["list_entries"] if entry.get().strip()]
-                new_metadata.append({"name": name, "type": type_val, "value": list_values})
-        self.saved_metadata = new_metadata
+        data = {
+            "exp_name": self.saved_exp_name,
+            "participant_name": self.saved_participant_name,
+            "save_location": self.saved_save_location,
+            "metadata": self.saved_metadata
+        }
+        with open(STATE_FILE, "w") as f:
+            json.dump(data, f, indent=2)
+    
+    def load_create_screen_state(self):
+        if os.path.exists(STATE_FILE):
+            try:
+                with open(STATE_FILE, "r") as f:
+                    data = json.load(f)
+                    self.saved_exp_name = data.get("exp_name", "Default_Experiment_name")
+                    self.saved_participant_name = data.get("participant_name", "Participant")
+                    self.saved_save_location = data.get("save_location", os.getcwd())
+                    self.saved_metadata = data.get("metadata", [])
+            except Exception as e:
+                print(f"Error loading saved create screen state: {e}")
+
 
     def back_to_main(self):
         """

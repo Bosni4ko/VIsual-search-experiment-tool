@@ -205,7 +205,7 @@ def show_editor_screen(app):
         update_timeline_container_size()
     
     render_timeline()
-    app.render_timeline= render_timeline()
+    app.render_timeline= render_timeline
     
     # Automatically add Start block at index 0
     start_block = ComponentBlock(app,app.timeline_container, "Start", "green", x=0, y=10, from_timeline=True,component_type="Start")
@@ -242,9 +242,16 @@ def show_editor_screen(app):
             except tk.TclError:
                 # underlying Text widget was already destroyed
                 pass 
+        
+        save_timeline_state(app)
+            # --- Remove highlight from previous ---
+        if prev:
+            prev.configure(highlightbackground="white", highlightthickness=0)
 
         app.selected_component = comp
 
+        # --- Highlight the new one ---
+        comp.configure(highlightbackground="blue", highlightthickness=3)
         # Clear the left and main panels
         for widget in left_panel.winfo_children():
             widget.destroy()

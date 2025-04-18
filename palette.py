@@ -80,7 +80,7 @@ def setup_components_palette(app):
             if timeline_x <= x_root <= timeline_x + timeline_w:
                 drop_x = x_root - timeline_x
                 index = drop_x // app.timeline_spacing
-                index = min(index, len(app.timeline_components))
+                index = max(0, min(index, len(app.timeline_components) - 1))
 
                 label = drag_data["label"]
                 color = drag_data["color"]
@@ -100,6 +100,7 @@ def setup_components_palette(app):
                     drag_data["temp"] = None
                     drag_data["dragging"] = False
                     return
+                
                 if component_type == "Stimulus notification":
                 # Check the block that will come AFTER the drop
                     if index < len(app.timeline_components):

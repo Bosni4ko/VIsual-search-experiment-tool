@@ -334,11 +334,3 @@ def refresh_formatting_options(comp,
         comp.color_var.set(fg)
     comp.color_preview.config(bg=comp.color_var.get())
     comp.align_var.set(just)
-
-
-
-
-
-
-
-

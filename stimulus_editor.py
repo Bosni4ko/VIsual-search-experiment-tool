@@ -131,6 +131,7 @@ def open_image_selector(comp, target_type):
               font=("Segoe UI", 10, "bold")).pack(anchor="w", padx=10, pady=(10, 0))
         img_grid = tk.Frame(content_frame)
         img_grid.pack(anchor="w", padx=10, pady=5)
+        
 
         try:
             images = [f for f in os.listdir(folder)
@@ -139,6 +140,10 @@ def open_image_selector(comp, target_type):
             images = []
 
         for i, img_name in enumerate(images):
+            # if i % 200 == 0:
+            #     img_grid = tk.Frame(content_frame)
+            #     img_grid.pack(anchor="w", padx=10, pady=5)
+
             path = os.path.join(folder, img_name)
             # Each image occupies two grid rows (one for the container and one for the caption)
             row_base = (i // images_per_row) * 2  
@@ -368,6 +373,10 @@ def open_distractor_selector(comp, distractor_type):
         except FileNotFoundError:
             images = []
         for i, img_name in enumerate(images):
+            # if i % 200 == 0:
+            #     img_grid = tk.Frame(content_frame)
+            #     img_grid.pack(anchor="w", padx=10, pady=5)
+
             path = os.path.join(folder, img_name)
             row_base = (i // images_per_row) * 2  # using two grid rows per image cell.
             col = i % images_per_row
@@ -407,9 +416,6 @@ def open_distractor_selector(comp, distractor_type):
 
     Button(selector_win, text="Confirm", command=on_confirm).pack(pady=10)
     lazy_load_images()
-
-
-
 
 def setup_stimulus_options(app, left_panel,main_panel,comp):
     def add_label(text, pady=8):

@@ -7,6 +7,7 @@ import os
 
 def show_launch_screen(app):
     app.clear_screen()
+    app.root.configure(bg="#f0f0f0")
 
     # === Top Back Arrow ===
     top_frame = tk.Frame(app.root, bg="#f0f0f0")

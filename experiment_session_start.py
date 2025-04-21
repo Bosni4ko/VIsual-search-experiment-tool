@@ -2,8 +2,14 @@ import tkinter as tk
 from tkinter import ttk, filedialog
 import json
 import os
+from running_session_screen import show_running_session_screen
+
 
 def show_experiment_session_start(app, experiment_name, experiment_path):
+    app.root.configure(bg="#f0f0f0")
+
+    def start_session():
+        show_running_session_screen(app, experiment_path)
     def load_create_screen_state(file_path):
         if not os.path.exists(file_path):
             print(f"File not found: {file_path}")
@@ -181,6 +187,6 @@ def show_experiment_session_start(app, experiment_name, experiment_path):
     participant_name_entry.bind('<KeyRelease>', lambda event: update_save_name_and_location())
 
     # === Start Session Button ===
-    start_button = ttk.Button(app.root, text="Start Session", width=30)
+    start_button = ttk.Button(app.root, text="Start Session", width=30, command=start_session)
     start_button.pack(pady=20)
 

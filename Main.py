@@ -99,7 +99,8 @@ class ExperimentApp:
 
     def show_main_screen(self):
         self.clear_screen()
-        
+        self.root.configure(bg="#f0f0f0")
+
         # Header Frame for title and buttons
         header_frame = tk.Frame(self.root, bg="#f0f0f0")
         header_frame.pack(expand=True, pady=50)

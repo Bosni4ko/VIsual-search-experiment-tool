@@ -50,7 +50,6 @@ def save_visual_search_experiment(app, base_save_dir, compress_images=True, imag
         raw_data = getattr(block, "data", {}) or {}
         main_data = {k: v for k, v in raw_data.items() if k not in ("last_selections", "last_distractors")}
         entry["data"] = main_data
-
         # Handle last_selections
         last_sel = raw_data.get("last_selections", {})
         new_last_sel = []
@@ -96,6 +95,7 @@ def save_visual_search_experiment(app, base_save_dir, compress_images=True, imag
     state_file = os.path.join(save_dir, "experiment_state.json")
     with open(state_file, "w") as f:
         json.dump(state, f, indent=2)
+
     # --- New: Copy create_screen_state.json ---
     try:
         if os.path.exists("create_screen_state.json"):

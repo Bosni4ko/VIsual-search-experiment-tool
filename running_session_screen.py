@@ -72,57 +72,127 @@ def render_current_component(app):
 
     component = app.experiment_components[app.current_component_index]
 
-    top_frame = tk.Frame(app.root, bg="#d0d0d0", highlightthickness=0, bd=0)
-    top_frame.pack(fill="x", pady=0, padx=0)
-
     def back_to_start_screen():
         from experiment_session_start import show_experiment_session_start
         show_experiment_session_start(app, experiment_name=os.path.basename(app.experiment_path), experiment_path=app.experiment_path)
 
-    back_button = ttk.Button(top_frame, text="←", command=back_to_start_screen, width=3)
-    back_button.pack(side="left", padx=10, pady=5)
+    back_button = ttk.Button(app.root, text="←", command=back_to_start_screen, width=3)
+    back_button.place(x=10, y=10)  # ← Place it absolutely at the top-left
 
+    # === Main Area ===
     main_frame = tk.Frame(app.root, bg="#d0d0d0", highlightthickness=0, bd=0)
     main_frame.pack(expand=True, fill="both", pady=0, padx=0)
 
-    text_widget = tk.Text(
-        main_frame,
-        font=("Segoe UI", 16),
-        wrap="word",
-        width=80,
-        height=20,
-        bg="#d0d0d0",
-        bd=0,
-        highlightthickness=0,
-        relief="flat"
-    )
-    text_widget.pack(expand=True, padx=20, pady=20, fill="both")
+    # === Handling Different Component Types ===
+    if component['type'] in ["Start", "Text", "Stimulus notification", "End"]:
+        # --- Text-based components ---
+        text_widget = tk.Text(
+            main_frame,
+            font=("Segoe UI", 16),
+            wrap="word",
+            width=80,
+            height=20,
+            bg="#d0d0d0",
+            bd=0,
+            highlightthickness=0,
+            relief="flat"
+        )
+        text_widget.pack(expand=True, padx=20, pady=20, fill="both")
 
-    # Prepare content
-    text_content = component.get('saved_text', '')
+        # --- Load the text ---
+        text_content = component.get('saved_text', '')
 
-    if component['type'] == 'Stimulus notification':
-        # Look for image in next Stimulus
-        if app.current_component_index + 1 < len(app.experiment_components):
-            next_comp = app.experiment_components[app.current_component_index + 1]
-            if next_comp['type'] == 'Stimulus':
-                selections = next_comp.get('last_selections', [])
-                if selections:
-                    first_image_path = selections[0].get('path')
-                    if first_image_path:
-                        full_image_path = os.path.join(app.experiment_path, first_image_path.replace("/", os.sep))
-                        text_content = text_content.replace("[/image/]", f"<<image:{full_image_path}>>")
+        if component['type'] == 'Stimulus notification':
+            # Special replacement of [/image/] with real image
+            if app.current_component_index + 1 < len(app.experiment_components):
+                next_comp = app.experiment_components[app.current_component_index + 1]
+                if next_comp['type'] == 'Stimulus':
+                    selections = next_comp.get('last_selections', [])
+                    if selections:
+                        first_image_path = selections[0].get('path')
+                        if first_image_path:
+                            full_image_path = os.path.join(app.experiment_path, first_image_path.replace("/", os.sep))
+                            text_content = text_content.replace("[/image/]", f"<<image:{full_image_path}>>")
 
-    # Insert text and images
-    insert_text_with_images(text_widget, text_content)
+        # --- Insert content with images ---
+        insert_text_with_images(text_widget, text_content)
 
-    # Apply formatting (but do NOT delete text anymore)
-    apply_formatting_tags(text_widget, component)
+        # --- Apply saved formatting ---
+        apply_formatting_tags(text_widget, component)
 
-    text_widget.configure(state="disabled")
+        text_widget.configure(state="disabled")
 
-    # Bind space key for next
+    elif component['type'] == "Stimulus":
+        field_x = component.get("data", {}).get("field_x", 5)
+        field_y = component.get("data", {}).get("field_y", 5)
+
+        selections = component.get("last_selections", [])
+        distractors = component.get("last_distractors", [])
+
+        image_paths = []
+
+        if selections:
+            target_path = selections[0].get('path')
+            if target_path:
+                full_target_path = os.path.join(app.experiment_path, target_path.replace("/", os.sep))
+                image_paths.append((full_target_path, True))
+
+        if distractors:
+            distractor_paths = distractors[0].get('paths', [])
+            for d_path in distractor_paths:
+                full_distractor_path = os.path.join(app.experiment_path, d_path.replace("/", os.sep))
+                image_paths.append((full_distractor_path, False))
+
+        import random
+        random.shuffle(image_paths)
+
+        app.image_refs = []
+
+        # 🧹 Main Grid Wrapping Frame
+        grid_wrapper_outer = tk.Frame(main_frame, bg="#d0d0d0")
+        grid_wrapper_outer.pack(expand=True, fill="both")
+
+        grid_wrapper_outer.pack_propagate(False)  # Important: prevent shrinking!
+
+        # 🖼 Inner centered frame
+        grid_wrapper = tk.Frame(grid_wrapper_outer, bg="#d0d0d0")
+        grid_wrapper.place(relx=0.5, rely=0.5, anchor="center")  # absolute centering
+
+        # 📦 Slot settings
+        slot_size = 90  # bigger slots now!
+
+        idx = 0
+        for row in range(field_y):
+            for col in range(field_x):
+                slot = tk.Frame(grid_wrapper, width=slot_size, height=slot_size, bg="#d0d0d0", highlightthickness=0)
+                slot.grid(row=row, column=col, padx=4, pady=4)
+                slot.grid_propagate(False)
+
+                if idx < len(image_paths):
+                    img_path, is_target = image_paths[idx]
+                    try:
+                        img = Image.open(img_path)
+                        img.thumbnail((slot_size - 10, slot_size - 10))  # small margin
+                        img_tk = ImageTk.PhotoImage(img)
+
+                        canvas = tk.Canvas(slot, width=slot_size, height=slot_size, bg="#d0d0d0", highlightthickness=0)
+                        canvas.pack()
+
+                        canvas.create_image(slot_size // 2, slot_size // 2, image=img_tk, anchor="center")
+
+
+                        app.image_refs.append(img_tk)
+
+                    except Exception as e:
+                        print(f"Failed to load image {img_path}: {e}")
+
+                idx += 1
+
+
+
+    # === Bind space key for next ===
     app.root.bind('<space>', lambda event: next_component(app))
+
 
 
 def apply_formatting_tags(text_widget, component):

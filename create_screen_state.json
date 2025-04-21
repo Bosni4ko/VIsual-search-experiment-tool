@@ -2,5 +2,11 @@
   "exp_name": "Metadata_test",
   "participant_name": "Participanti",
   "save_location": "C:/Users/User/Desktop",
-  "metadata": []
+  "metadata": [
+    {
+      "name": "A",
+      "type": "Value",
+      "value": "N/A"
+    }
+  ]
 }

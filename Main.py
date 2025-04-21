@@ -5,6 +5,7 @@ from tkinter import filedialog
 import sys
 import json
 from editor_screen import show_editor_screen
+from launch_screen import show_launch_screen
 STATE_FILE = "create_screen_state.json"
 
 class ScrollableFrame(tk.Frame):
@@ -112,8 +113,9 @@ class ExperimentApp:
         create_button = ttk.Button(button_frame, text="Create Experiment", command=self.show_create_screen)
         create_button.grid(row=0, column=0, padx=20, pady=20)
         
-        launch_button = ttk.Button(button_frame, text="Launch Experiment")
+        launch_button = ttk.Button(button_frame, text="Launch Experiment", command=self.show_launch_screen)
         launch_button.grid(row=0, column=1, padx=20, pady=20)
+
 
     def choose_save_location(self):
         directory = filedialog.askdirectory(initialdir=self.save_location_entry.get() or os.getcwd())
@@ -192,6 +194,9 @@ class ExperimentApp:
         back_button.grid(row=0, column=0, padx=20)
         create_button = ttk.Button(action_frame, text="Create", command=self.validate_and_proceed)
         create_button.grid(row=0, column=1, padx=20)
+    def show_launch_screen(self):
+        show_launch_screen(self)
+
 
     def add_metadata_row(self, initial_data=None):
         """

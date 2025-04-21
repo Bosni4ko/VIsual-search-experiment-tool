@@ -1,10 +1,10 @@
 {
-  "exp_name": "Default_Experiment_name23",
-  "participant_name": "Participant1",
+  "exp_name": "Default_Experiment_name_2",
+  "participant_name": "Participant",
   "save_location": "C:/Users/User/Desktop",
   "metadata": [
     {
-      "name": "1",
+      "name": "AA",
       "type": "Value",
       "value": "N/A"
     }

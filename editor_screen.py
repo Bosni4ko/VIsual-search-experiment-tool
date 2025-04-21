@@ -1,12 +1,142 @@
 import tkinter as tk
+import shutil
+import json
+import os
+from PIL import Image
+from tkinter import messagebox
+
 from component_block import ComponentBlock
 from palette import setup_components_palette
 from text_editor import setup_text_editor, setup_text_options,save_formatting
 from stimulus_editor import setup_stimulus_options
 from TEXT_AND_TAGS import NOTIFICATION_DEFAULT_TEXT,NOTIFICATION_DEFAULT_TAGS,END_DEFAULT_TEXT,END_DEFAULT_TAGS
-import json
-import os
 STATE_FILE = "timeline_state.json"
+
+def save_visual_search_experiment(app, base_save_dir, compress_images=True, image_quality=85):
+    """
+    Save the visual search experiment, including copying used images.
+    
+    Args:
+        app: Application instance with timeline_components.
+        base_save_dir: Base directory where the experiment folder will be created.
+        compress_images: Whether to compress images when saving.
+        image_quality: Quality setting for JPEG compression (1-95).
+    """
+
+    # Create a subfolder named after the experiment
+    exp_folder_name = app.saved_exp_name.strip().replace(" ", "_")  # Clean name: replace spaces with underscores
+    save_dir = os.path.join(base_save_dir, exp_folder_name)
+    os.makedirs(save_dir, exist_ok=True)
+
+    # Create two separate folders for selections and distractors
+    selections_dir = os.path.join(save_dir, "selections")
+    distractors_dir = os.path.join(save_dir, "distractors")
+    os.makedirs(selections_dir, exist_ok=True)
+    os.makedirs(distractors_dir, exist_ok=True)
+
+    image_map = {}  # (original_path, destination_folder) -> relative_path
+    state = []
+
+    for idx, block in enumerate(app.timeline_components):
+        entry = {
+            "type": block.component_type,
+            "label": block.label_text,
+            "color": block.color,
+            "index": idx,
+        }
+        entry["saved_text"] = block.saved_text
+        entry["saved_tags"] = block.saved_tags
+
+        raw_data = getattr(block, "data", {}) or {}
+        main_data = {k: v for k, v in raw_data.items() if k not in ("last_selections", "last_distractors")}
+        entry["data"] = main_data
+
+        # Handle last_selections
+        last_sel = raw_data.get("last_selections", {})
+        new_last_sel = []
+        for key, path in last_sel.items():
+            new_path = copy_and_compress_image(
+                path, selections_dir, ("selections",), image_map, compress_images, image_quality
+            )
+            new_last_sel.append({
+                "stimulus_set": key[0],
+                "stimulus_type": key[1],
+                "path": new_path
+            })
+        entry["last_selections"] = new_last_sel
+
+        # Handle last_distractors
+        last_dist = raw_data.get("last_distractors", {})
+        new_last_dist = []
+        for key, paths in last_dist.items():
+            new_paths = [
+                copy_and_compress_image(
+                    p, distractors_dir, ("distractors",), image_map, compress_images, image_quality
+                )
+                for p in paths
+            ]
+            new_last_dist.append({
+                "stimulus_set": key[0],
+                "distractor_type": key[1],
+                "paths": new_paths
+            })
+        entry["last_distractors"] = new_last_dist
+
+        # Handle attachment if any
+        if block.component_type == "Stimulus notification" and block.attachment:
+            entry["attachment"] = {
+                "label": block.attachment.label_text,
+                "color": block.attachment.color,
+                "index": app.timeline_components.index(block.attachment)
+            }
+
+        state.append(entry)
+
+    # Save the final JSON
+    state_file = os.path.join(save_dir, "experiment_state.json")
+    with open(state_file, "w") as f:
+        json.dump(state, f, indent=2)
+    # --- New: Copy create_screen_state.json ---
+    try:
+        if os.path.exists("create_screen_state.json"):
+            shutil.copy2("create_screen_state.json", save_dir)
+        else:
+            print("Warning: create_screen_state.json not found, skipping copy.")
+    except Exception as e:
+        print(f"Error copying create_screen_state.json: {e}")
+
+def copy_and_compress_image(original_path, dest_dir, folder_tag, image_map, compress_images, image_quality):
+    """
+    Copy and optionally compress an image.
+    Keeps track of already-copied images to avoid duplicates.
+    
+    folder_tag: ("selections",) or ("distractors",) - used to separate images.
+    """
+    map_key = (original_path, folder_tag)
+
+    if map_key in image_map:
+        return image_map[map_key]
+
+    filename = os.path.basename(original_path)
+    save_path = os.path.join(dest_dir, filename)
+
+    if not os.path.exists(original_path):
+        raise FileNotFoundError(f"Image not found: {original_path}")
+
+    if compress_images:
+        try:
+            with Image.open(original_path) as img:
+                img.save(save_path, format="JPEG", quality=image_quality, optimize=True)
+        except Exception as e:
+            print(f"Compression failed for {original_path}, falling back to copy. Error: {e}")
+            shutil.copy2(original_path, save_path)
+    else:
+        shutil.copy2(original_path, save_path)
+
+    # Relative path saved in JSON
+    relative_path = os.path.join(folder_tag[0], filename)
+    image_map[map_key] = relative_path
+    return relative_path
 
 def save_timeline_state(app):
     # Commit any in‑progress Text edits
@@ -483,9 +613,16 @@ def show_editor_screen(app):
     app.insert_component = insert_component
     load_timeline_state(app)
     render_timeline()
-    # Create the Create button as before.
-    create_button = tk.Button(app.root, text="Create", font=("Segoe UI", 12), bg="#fef6f6", width=12)
+
+    def on_create():
+        answer = messagebox.askyesno("Confirm", "Are you sure you want to create the experiment?")
+        if answer:
+            save_visual_search_experiment(app, app.saved_save_location)
+            messagebox.showinfo("Success", "Experiment created successfully!")
+
+    create_button = tk.Button(app.root, text="Create", font=("Segoe UI", 12), bg="#fef6f6", width=12, command=on_create)
     create_button.place(relx=0.82, rely=0.8)
+
 
 # --- Added: removal logic and button ---
     def remove_selected_component():

@@ -456,10 +456,63 @@
     "saved_tags": [],
     "data": {
       "stimulus_size_mode": "random",
-      "no_target": false
+      "no_target": false,
+      "distractor_type": "negative",
+      "stimulus_set": "Faces",
+      "distractor_set": "Select set from list",
+      "selected_target": "Select from list",
+      "target_image": "images\\faces\\positive\\happy\\0_30.jpg"
     },
-    "last_selections": [],
-    "last_distractors": []
+    "last_selections": [
+      {
+        "stimulus_set": "Faces",
+        "stimulus_type": "positive",
+        "path": "images\\faces\\positive\\happy\\0_30.jpg"
+      }
+    ],
+    "last_distractors": [
+      {
+        "stimulus_set": "Faces",
+        "distractor_type": "negative",
+        "paths": [
+          "images\\faces\\negative\\angry\\100_22.jpg",
+          "images\\faces\\negative\\angry\\101_19.jpg",
+          "images\\faces\\negative\\angry\\106_28.jpg",
+          "images\\faces\\negative\\angry\\105_26.jpg",
+          "images\\faces\\negative\\angry\\112_14.jpg",
+          "images\\faces\\negative\\angry\\105_8.jpg",
+          "images\\faces\\negative\\angry\\112_2.jpg",
+          "images\\faces\\negative\\angry\\111_29.jpg",
+          "images\\faces\\negative\\angry\\103_16.jpg",
+          "images\\faces\\negative\\angry\\0_25.jpg",
+          "images\\faces\\negative\\angry\\0_0.jpg",
+          "images\\faces\\negative\\angry\\100_29.jpg",
+          "images\\faces\\negative\\angry\\111_11.jpg",
+          "images\\faces\\negative\\angry\\111_28.jpg",
+          "images\\faces\\negative\\angry\\106_25.jpg",
+          "images\\faces\\negative\\angry\\112_24.jpg",
+          "images\\faces\\negative\\angry\\10_23.jpg",
+          "images\\faces\\negative\\angry\\107_20.jpg",
+          "images\\faces\\negative\\angry\\102_34.jpg",
+          "images\\faces\\negative\\angry\\103_23.jpg",
+          "images\\faces\\negative\\angry\\105_18.jpg",
+          "images\\faces\\negative\\angry\\106_22.jpg",
+          "images\\faces\\negative\\angry\\101_3.jpg",
+          "images\\faces\\negative\\angry\\102_20.jpg",
+          "images\\faces\\negative\\angry\\110_11.jpg",
+          "images\\faces\\negative\\angry\\103_32.jpg",
+          "images\\faces\\negative\\angry\\100_24.jpg",
+          "images\\faces\\negative\\angry\\102_17.jpg",
+          "images\\faces\\negative\\angry\\110_16.jpg",
+          "images\\faces\\negative\\angry\\104_7.jpg",
+          "images\\faces\\negative\\angry\\101_32.jpg",
+          "images\\faces\\negative\\angry\\104_11.jpg",
+          "images\\faces\\negative\\angry\\110_22.jpg",
+          "images\\faces\\negative\\angry\\0_29.jpg",
+          "images\\faces\\negative\\angry\\104_17.jpg"
+        ]
+      }
+    ]
   },
   {
     "type": "End",

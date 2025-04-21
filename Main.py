@@ -7,8 +7,6 @@ import json
 from editor_screen import show_editor_screen
 STATE_FILE = "create_screen_state.json"
 
-
-
 class ScrollableFrame(tk.Frame):
     def __init__(self, container, *args, **kwargs):
         super().__init__(container, *args, **kwargs)
@@ -122,6 +120,7 @@ class ExperimentApp:
         if directory:
             self.save_location_entry.delete(0, tk.END)
             self.save_location_entry.insert(0, directory)
+            self.saved_save_location = directory 
 
     def show_create_screen(self):
         self.clear_screen()

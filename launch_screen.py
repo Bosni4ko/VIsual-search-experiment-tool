@@ -1,6 +1,9 @@
 import tkinter as tk
 from tkinter import ttk, filedialog
+from experiment_session_start import show_experiment_session_start
+
 import os
+
 
 def show_launch_screen(app):
     app.clear_screen()
@@ -157,7 +160,21 @@ def show_launch_screen(app):
     continue_button = ttk.Button(button_frame, text="Continue Experiment", width=25)
     continue_button.grid(row=0, column=0, padx=20, pady=10)
 
-    launch_button = ttk.Button(button_frame, text="Launch New Experiment", width=25)
+    def launch_experiment():
+        exp_name = selected_experiment.get()
+        if not exp_name:
+            print("No experiment selected.")
+            return
+
+        exp_path = loaded_experiments.get(exp_name)
+        if not exp_path:
+            print("Experiment path not found.")
+            return
+
+        # Now pass the selected experiment name and path to the session screen!
+        show_experiment_session_start(app, exp_name, exp_path)
+
+    launch_button = ttk.Button(button_frame, text="Launch New Experiment", width=25, command=launch_experiment)
     launch_button.grid(row=0, column=1, padx=20, pady=10)
 
 

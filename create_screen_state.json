@@ -1,12 +1,20 @@
 {
-  "exp_name": "Default_Experiment_name_2",
-  "participant_name": "Participant",
+  "exp_name": "Metadata_test",
+  "participant_name": "Participanti",
   "save_location": "C:/Users/User/Desktop",
   "metadata": [
     {
-      "name": "AA",
+      "name": "AA1",
       "type": "Value",
       "value": "N/A"
+    },
+    {
+      "name": "AA2",
+      "type": "List",
+      "value": [
+        "1-10",
+        "11-20"
+      ]
     }
   ]
 }

@@ -7,6 +7,9 @@ import time
 from PIL import Image, ImageTk
 
 def show_running_session_screen(app, experiment_path):
+    app.stimulus_log = []  #  New empty list to collect stimulus results
+    app.stimulus_counter = 0  # counts how many stimulus were shown
+
     app.clear_screen()
 
     app.experiment_path = experiment_path
@@ -182,6 +185,13 @@ def render_current_component(app):
                 images_to_display.append((d_path, False))
 
         random.shuffle(images_to_display)
+        app.current_stimulus_info = {
+            "stimulus_number": app.stimulus_counter + 1,
+            "number_of_distractors": 0,  # will count below
+            "target_present": False,
+            "placements": []
+        }
+
 
         app.image_refs = []
         loaded_images = []
@@ -190,9 +200,10 @@ def render_current_component(app):
         for img_path, is_target in images_to_display:
             try:
                 img = Image.open(img_path)
-                img.thumbnail((80, 80))  # preload smaller
+                img.thumbnail((80, 80))
                 img_tk = ImageTk.PhotoImage(img)
-                loaded_images.append((img_tk, is_target))
+
+                loaded_images.append((img_tk, is_target, img_path))  # 🔥 Save path together!
                 app.image_refs.append(img_tk)
             except Exception as e:
                 print(f"Failed to preload image {img_path}: {e}")
@@ -255,10 +266,24 @@ def render_current_component(app):
                     for widget in slot.winfo_children():
                         widget.destroy()
 
-                for (img_tk, is_target), (r, c) in zip(loaded_images, total_slots):
+                for (img_tk, is_target, img_path), (r, c) in zip(loaded_images, total_slots):
+
                     canvas = tk.Canvas(slot_frames[r][c], width=slot_size, height=slot_size, bg="#d0d0d0", highlightthickness=0)
                     canvas.pack()
                     canvas.create_image(slot_size // 2, slot_size // 2, image=img_tk, anchor="center")
+
+                    # 📋 Save placement info
+                    app.current_stimulus_info["placements"].append({
+                        "row": r,
+                        "col": c,
+                        "is_target": is_target,
+                        "image_path": img_path    # we cannot get file path from img_tk easily, you may want to map manually
+                    })
+
+                    if is_target:
+                        app.current_stimulus_info["target_present"] = True
+                    else:
+                        app.current_stimulus_info["number_of_distractors"] += 1
 
                 #RECORD THE TIME when images appear
                 app.stimulus_start_time_ns = time.perf_counter_ns()
@@ -306,8 +331,18 @@ def next_component(app):
     if hasattr(app, 'stimulus_start_time_ns'):
         reaction_time_ns = time.perf_counter_ns() - app.stimulus_start_time_ns
         reaction_time_seconds = reaction_time_ns / 1_000_000_000
-        print(f"Reaction time: {reaction_time_seconds:.9f} seconds")
-        del app.stimulus_start_time_ns  # Clean up for next components
+
+        if hasattr(app, 'current_stimulus_info'):
+            stimulus_info = app.current_stimulus_info
+            stimulus_info["reaction_time_seconds"] = reaction_time_seconds
+            app.stimulus_log.append(stimulus_info)
+
+            app.stimulus_counter += 1  # Increment stimulus number
+
+            del app.current_stimulus_info
+
+        del app.stimulus_start_time_ns
+
 
     app.current_component_index += 1
     render_current_component(app)
@@ -335,3 +370,11 @@ def show_session_complete_screen(app):
 
     back_button = ttk.Button(complete_frame, text="Back to Launch Screen", command=back_to_launch_screen)
     back_button.pack(pady=20)
+
+    save_path = os.path.join(app.experiment_path, "stimulus_log.json")
+    try:
+        with open(save_path, "w") as f:
+            json.dump(app.stimulus_log, f, indent=2)
+        print(f"Saved stimulus log to {save_path}")
+    except Exception as e:
+        print(f"Failed to save stimulus log: {e}")

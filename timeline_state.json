@@ -11,243 +11,10 @@
     "last_distractors": []
   },
   {
-    "type": "Text",
-    "label": "Text",
-    "color": "gray",
-    "index": 1,
-    "saved_text": "\nasdasdasd",
-    "saved_tags": [
-      {
-        "name": "font_8eed75e7f2994111960bfc225b2e617b",
-        "ranges": [
-          [
-            "2.0",
-            "2.9"
-          ]
-        ],
-        "font_info": {
-          "family": "Courier New",
-          "size": 13,
-          "weight": "normal",
-          "slant": "roman"
-        },
-        "foreground": "SystemHighlightText",
-        "justify": ""
-      },
-      {
-        "name": "font_3c37b62695ea4cfea4bd7cf40b4b59e8",
-        "ranges": [
-          [
-            "2.0",
-            "2.9"
-          ]
-        ],
-        "font_info": {
-          "family": "Courier New",
-          "size": 14,
-          "weight": "normal",
-          "slant": "roman"
-        },
-        "foreground": "SystemHighlightText",
-        "justify": ""
-      },
-      {
-        "name": "font_ff92f4de59054885883f3e2783a71535",
-        "ranges": [
-          [
-            "2.0",
-            "2.9"
-          ]
-        ],
-        "font_info": {
-          "family": "Courier New",
-          "size": 15,
-          "weight": "normal",
-          "slant": "roman"
-        },
-        "foreground": "SystemHighlightText",
-        "justify": ""
-      },
-      {
-        "name": "font_1beb9978c1534cc1819ff5f6d992955f",
-        "ranges": [
-          [
-            "2.0",
-            "2.9"
-          ]
-        ],
-        "font_info": {
-          "family": "Courier New",
-          "size": 16,
-          "weight": "normal",
-          "slant": "roman"
-        },
-        "foreground": "SystemHighlightText",
-        "justify": ""
-      },
-      {
-        "name": "font_ff4c6d9013d04ef6ad7fc5946026836a",
-        "ranges": [
-          [
-            "2.0",
-            "2.9"
-          ]
-        ],
-        "font_info": {
-          "family": "Courier New",
-          "size": 17,
-          "weight": "normal",
-          "slant": "roman"
-        },
-        "foreground": "SystemHighlightText",
-        "justify": ""
-      },
-      {
-        "name": "color_c1af5cb559a54b499dcbbfdf52e8a105",
-        "ranges": [
-          [
-            "2.0",
-            "2.9"
-          ]
-        ],
-        "font_info": {
-          "family": "Arial",
-          "size": 12,
-          "weight": "normal",
-          "slant": "roman"
-        },
-        "foreground": "#000000",
-        "justify": ""
-      },
-      {
-        "name": "font_e13c08229eb94072ae777da8ad984a04",
-        "ranges": [
-          [
-            "2.0",
-            "2.9"
-          ]
-        ],
-        "font_info": {
-          "family": "Arial",
-          "size": 13,
-          "weight": "normal",
-          "slant": "roman"
-        },
-        "foreground": "#000000",
-        "justify": ""
-      },
-      {
-        "name": "font_0218e2d8de254c0c995c570c55922dc4",
-        "ranges": [
-          [
-            "2.0",
-            "2.9"
-          ]
-        ],
-        "font_info": {
-          "family": "Arial",
-          "size": 14,
-          "weight": "normal",
-          "slant": "roman"
-        },
-        "foreground": "#000000",
-        "justify": ""
-      },
-      {
-        "name": "font_b4a8c7060d7c4ed78a1cbba8c1a0b72e",
-        "ranges": [
-          [
-            "2.0",
-            "2.9"
-          ]
-        ],
-        "font_info": {
-          "family": "Arial",
-          "size": 15,
-          "weight": "normal",
-          "slant": "roman"
-        },
-        "foreground": "#000000",
-        "justify": ""
-      },
-      {
-        "name": "font_9bdba54a9dab4d129a926af22664ee97",
-        "ranges": [
-          [
-            "2.0",
-            "2.9"
-          ]
-        ],
-        "font_info": {
-          "family": "Arial",
-          "size": 16,
-          "weight": "normal",
-          "slant": "roman"
-        },
-        "foreground": "#000000",
-        "justify": ""
-      },
-      {
-        "name": "font_468002a3f5ed416a98b3a00b411dfd3c",
-        "ranges": [
-          [
-            "2.0",
-            "2.9"
-          ]
-        ],
-        "font_info": {
-          "family": "Arial",
-          "size": 17,
-          "weight": "normal",
-          "slant": "roman"
-        },
-        "foreground": "#000000",
-        "justify": ""
-      },
-      {
-        "name": "font_23da7de5850745b7a22c09ce04eb13a7",
-        "ranges": [
-          [
-            "2.0",
-            "2.9"
-          ]
-        ],
-        "font_info": {
-          "family": "Arial",
-          "size": 18,
-          "weight": "normal",
-          "slant": "roman"
-        },
-        "foreground": "#000000",
-        "justify": ""
-      },
-      {
-        "name": "font_024fbb3aa4ee486787e2ccc2f24622d5",
-        "ranges": [
-          [
-            "2.0",
-            "2.9"
-          ]
-        ],
-        "font_info": {
-          "family": "Arial",
-          "size": 19,
-          "weight": "normal",
-          "slant": "roman"
-        },
-        "foreground": "#000000",
-        "justify": ""
-      }
-    ],
-    "data": {},
-    "last_selections": [],
-    "last_distractors": []
-  },
-  {
     "type": "Stimulus notification",
     "label": "Stimulus notification",
     "color": "purple",
-    "index": 2,
+    "index": 1,
     "saved_text": "\n\n\n\n\n\n\n\nPlease click the button\nwhen you see the following image:\n\n[/image/]",
     "saved_tags": [
       {
@@ -444,18 +211,18 @@
     "attachment": {
       "label": "Stimulus",
       "color": "yellow",
-      "index": 3
+      "index": 2
     }
   },
   {
     "type": "Stimulus",
     "label": "Stimulus",
     "color": "yellow",
-    "index": 3,
+    "index": 2,
     "saved_text": "",
     "saved_tags": [],
     "data": {
-      "stimulus_size_mode": "random",
+      "stimulus_size_mode": "fixed",
       "no_target": false,
       "distractor_type": "negative",
       "stimulus_set": "Faces",
@@ -463,7 +230,8 @@
       "selected_target": "Select from list",
       "target_image": "images\\faces\\positive\\happy\\0_30.jpg",
       "field_x": 10,
-      "field_y": 10
+      "field_y": 10,
+      "fixed_amount": 10
     },
     "last_selections": [
       {
@@ -595,7 +363,7 @@
     "type": "End",
     "label": "End",
     "color": "red",
-    "index": 4,
+    "index": 3,
     "saved_text": "\n\n\n\n\n\n\n\n\nThank you for participaing in the experiment!",
     "saved_tags": [
       {

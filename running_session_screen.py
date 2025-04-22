@@ -126,67 +126,103 @@ def render_current_component(app):
         field_x = component.get("data", {}).get("field_x", 5)
         field_y = component.get("data", {}).get("field_y", 5)
 
+        data = component.get("data", {})
+
+        stimulus_size_mode = data.get("stimulus_size_mode", "random")
+        no_target = data.get("no_target", False)
+        fixed_amount = data.get("fixed_amount", 5)
+        range_start = data.get("range_start", 2)
+        range_end = data.get("range_end", field_x * field_y)
+
         selections = component.get("last_selections", [])
         distractors = component.get("last_distractors", [])
 
-        image_paths = []
+        target_image = None
+        distractor_images = []
 
-        if selections:
+        # Load target image if needed
+        if not no_target and selections:
             target_path = selections[0].get('path')
             if target_path:
-                full_target_path = os.path.join(app.experiment_path, target_path.replace("/", os.sep))
-                image_paths.append((full_target_path, True))
+                target_image = os.path.join(app.experiment_path, target_path.replace("/", os.sep))
 
+        # Load distractors
         if distractors:
             distractor_paths = distractors[0].get('paths', [])
             for d_path in distractor_paths:
                 full_distractor_path = os.path.join(app.experiment_path, d_path.replace("/", os.sep))
-                image_paths.append((full_distractor_path, False))
+                distractor_images.append(full_distractor_path)
 
         import random
-        random.shuffle(image_paths)
+
+        # How many images to display?
+        if stimulus_size_mode == "random":
+            num_images = random.randint(2, field_x * field_y)
+        elif stimulus_size_mode == "fixed":
+            num_images = fixed_amount
+        elif stimulus_size_mode == "random in range":
+            num_images = random.randint(range_start, range_end)
+        else:
+            num_images = 2  # fallback
+
+        # 🧠 Build the images list
+        images_to_display = []
+
+        if target_image:
+            images_to_display.append((target_image, True))  # (path, is_target)
+
+        distractors_needed = num_images - len(images_to_display)
+
+        # Make sure distractors are picked without repetition first
+        if distractor_images:
+            expanded_distractors = []
+            while len(expanded_distractors) < distractors_needed:
+                remaining = distractor_images.copy()
+                random.shuffle(remaining)
+                expanded_distractors.extend(remaining)
+
+            expanded_distractors = expanded_distractors[:distractors_needed]
+            for d_path in expanded_distractors:
+                images_to_display.append((d_path, False))
+
+        random.shuffle(images_to_display)  # randomize order (so target isn't always first!)
 
         app.image_refs = []
 
         # 🧹 Main Grid Wrapping Frame
         grid_wrapper_outer = tk.Frame(main_frame, bg="#d0d0d0")
         grid_wrapper_outer.pack(expand=True, fill="both")
+        grid_wrapper_outer.pack_propagate(False)
 
-        grid_wrapper_outer.pack_propagate(False)  # Important: prevent shrinking!
-
-        # 🖼 Inner centered frame
         grid_wrapper = tk.Frame(grid_wrapper_outer, bg="#d0d0d0")
-        grid_wrapper.place(relx=0.5, rely=0.5, anchor="center")  # absolute centering
+        grid_wrapper.place(relx=0.5, rely=0.5, anchor="center")
 
-        # 📦 Slot settings
-        slot_size = 90  # bigger slots now!
+        slot_size = 90
 
-        idx = 0
-        for row in range(field_y):
-            for col in range(field_x):
-                slot = tk.Frame(grid_wrapper, width=slot_size, height=slot_size, bg="#d0d0d0", highlightthickness=0)
-                slot.grid(row=row, column=col, padx=4, pady=4)
-                slot.grid_propagate(False)
+        # 💥 Random slot selection
+        total_slots = [(row, col) for row in range(field_y) for col in range(field_x)]
+        random.shuffle(total_slots)
 
-                if idx < len(image_paths):
-                    img_path, is_target = image_paths[idx]
-                    try:
-                        img = Image.open(img_path)
-                        img.thumbnail((slot_size - 10, slot_size - 10))  # small margin
-                        img_tk = ImageTk.PhotoImage(img)
+        for (img_path, is_target), (row, col) in zip(images_to_display, total_slots):
+            slot = tk.Frame(grid_wrapper, width=slot_size, height=slot_size, bg="#d0d0d0", highlightthickness=0)
+            slot.grid(row=row, column=col, padx=4, pady=4)
+            slot.grid_propagate(False)
 
-                        canvas = tk.Canvas(slot, width=slot_size, height=slot_size, bg="#d0d0d0", highlightthickness=0)
-                        canvas.pack()
+            try:
+                img = Image.open(img_path)
+                img.thumbnail((slot_size - 10, slot_size - 10))
+                img_tk = ImageTk.PhotoImage(img)
 
-                        canvas.create_image(slot_size // 2, slot_size // 2, image=img_tk, anchor="center")
+                canvas = tk.Canvas(slot, width=slot_size, height=slot_size, bg="#d0d0d0", highlightthickness=0)
+                canvas.pack()
+                canvas.create_image(slot_size // 2, slot_size // 2, image=img_tk, anchor="center")
+
+                app.image_refs.append(img_tk)
+
+            except Exception as e:
+                print(f"Failed to load image {img_path}: {e}")
 
 
-                        app.image_refs.append(img_tk)
-
-                    except Exception as e:
-                        print(f"Failed to load image {img_path}: {e}")
-
-                idx += 1
 
 
 

@@ -3,6 +3,7 @@ from tkinter import ttk
 import json
 import os
 import tkinter.font as tkfont
+import time
 from PIL import Image, ImageTk
 
 def show_running_session_screen(app, experiment_path):
@@ -245,12 +246,12 @@ def render_current_component(app):
             cross_canvas.create_line(0, 25, 50, 25, fill="white", width=8)
             cross_canvas.create_line(25, 0, 25, 50, fill="white", width=8)
 
-
+            app.stimulus_start_time = None
             # Next phase after delay
             def phase4_show_images():
                 cross_canvas.destroy()
 
-                for slot in sum(slot_frames, []):  # flatten list
+                for slot in sum(slot_frames, []):
                     for widget in slot.winfo_children():
                         widget.destroy()
 
@@ -259,21 +260,17 @@ def render_current_component(app):
                     canvas.pack()
                     canvas.create_image(slot_size // 2, slot_size // 2, image=img_tk, anchor="center")
 
+                #RECORD THE TIME when images appear
+                app.stimulus_start_time_ns = time.perf_counter_ns()
+
             app.root.after(1500, phase4_show_images)
 
         # Timed transitions
         app.root.after(500, phase2_invert_chessboard)
         app.root.after(1000, phase3_fixation_cross)
 
-
-
-
-
-
     # === Bind space key for next ===
     app.root.bind('<space>', lambda event: next_component(app))
-
-
 
 def apply_formatting_tags(text_widget, component):
     """
@@ -304,11 +301,17 @@ def apply_formatting_tags(text_widget, component):
 
 
 def next_component(app):
-    # Unbind previous space so it doesn't double-bind
     app.root.unbind('<space>')
+
+    if hasattr(app, 'stimulus_start_time_ns'):
+        reaction_time_ns = time.perf_counter_ns() - app.stimulus_start_time_ns
+        reaction_time_seconds = reaction_time_ns / 1_000_000_000
+        print(f"Reaction time: {reaction_time_seconds:.9f} seconds")
+        del app.stimulus_start_time_ns  # Clean up for next components
 
     app.current_component_index += 1
     render_current_component(app)
+
 
 def show_session_complete_screen(app):
     for widget in app.root.winfo_children():
@@ -332,6 +335,3 @@ def show_session_complete_screen(app):
 
     back_button = ttk.Button(complete_frame, text="Back to Launch Screen", command=back_to_launch_screen)
     back_button.pack(pady=20)
-
-
-

@@ -140,13 +140,11 @@ def render_current_component(app):
         target_image = None
         distractor_images = []
 
-        # Load target image if needed
         if not no_target and selections:
             target_path = selections[0].get('path')
             if target_path:
                 target_image = os.path.join(app.experiment_path, target_path.replace("/", os.sep))
 
-        # Load distractors
         if distractors:
             distractor_paths = distractors[0].get('paths', [])
             for d_path in distractor_paths:
@@ -155,7 +153,6 @@ def render_current_component(app):
 
         import random
 
-        # How many images to display?
         if stimulus_size_mode == "random":
             num_images = random.randint(2, field_x * field_y)
         elif stimulus_size_mode == "fixed":
@@ -163,17 +160,15 @@ def render_current_component(app):
         elif stimulus_size_mode == "random in range":
             num_images = random.randint(range_start, range_end)
         else:
-            num_images = 2  # fallback
+            num_images = 2
 
-        # 🧠 Build the images list
         images_to_display = []
 
         if target_image:
-            images_to_display.append((target_image, True))  # (path, is_target)
+            images_to_display.append((target_image, True))
 
         distractors_needed = num_images - len(images_to_display)
 
-        # Make sure distractors are picked without repetition first
         if distractor_images:
             expanded_distractors = []
             while len(expanded_distractors) < distractors_needed:
@@ -185,11 +180,23 @@ def render_current_component(app):
             for d_path in expanded_distractors:
                 images_to_display.append((d_path, False))
 
-        random.shuffle(images_to_display)  # randomize order (so target isn't always first!)
+        random.shuffle(images_to_display)
 
         app.image_refs = []
+        loaded_images = []
 
-        # 🧹 Main Grid Wrapping Frame
+        # 🖼 Preload all images
+        for img_path, is_target in images_to_display:
+            try:
+                img = Image.open(img_path)
+                img.thumbnail((80, 80))  # preload smaller
+                img_tk = ImageTk.PhotoImage(img)
+                loaded_images.append((img_tk, is_target))
+                app.image_refs.append(img_tk)
+            except Exception as e:
+                print(f"Failed to preload image {img_path}: {e}")
+
+        # 🧹 Main Grid Frame
         grid_wrapper_outer = tk.Frame(main_frame, bg="#d0d0d0")
         grid_wrapper_outer.pack(expand=True, fill="both")
         grid_wrapper_outer.pack_propagate(False)
@@ -199,28 +206,65 @@ def render_current_component(app):
 
         slot_size = 90
 
-        # 💥 Random slot selection
-        total_slots = [(row, col) for row in range(field_y) for col in range(field_x)]
+        # Prepare slots
+        slot_frames = []
+        for row in range(field_y):
+            row_slots = []
+            for col in range(field_x):
+                slot = tk.Frame(grid_wrapper, width=slot_size, height=slot_size, bg="#d0d0d0", highlightthickness=0)
+                slot.grid(row=row, column=col, padx=2, pady=2)
+                slot.grid_propagate(False)
+                row_slots.append(slot)
+            slot_frames.append(row_slots)
+
+        total_slots = [(r, c) for r in range(field_y) for c in range(field_x)]
         random.shuffle(total_slots)
 
-        for (img_path, is_target), (row, col) in zip(images_to_display, total_slots):
-            slot = tk.Frame(grid_wrapper, width=slot_size, height=slot_size, bg="#d0d0d0", highlightthickness=0)
-            slot.grid(row=row, column=col, padx=4, pady=4)
-            slot.grid_propagate(False)
+        # === Phase 1: Chessboard 1 ===
+        def show_chessboard(color1, color2):
+            for r in range(field_y):
+                for c in range(field_x):
+                    color = color1 if (r + c) % 2 == 0 else color2
+                    slot_frames[r][c].configure(bg=color)
 
-            try:
-                img = Image.open(img_path)
-                img.thumbnail((slot_size - 10, slot_size - 10))
-                img_tk = ImageTk.PhotoImage(img)
+        show_chessboard("#d8d8d8", "#b8b8b8")  # light/dark grey
 
-                canvas = tk.Canvas(slot, width=slot_size, height=slot_size, bg="#d0d0d0", highlightthickness=0)
-                canvas.pack()
-                canvas.create_image(slot_size // 2, slot_size // 2, image=img_tk, anchor="center")
+        def phase2_invert_chessboard():
+            show_chessboard("#b8b8b8", "#d8d8d8")
 
-                app.image_refs.append(img_tk)
+        def phase3_fixation_cross():
+            # Set all to neutral grey
+            for r in range(field_y):
+                for c in range(field_x):
+                    slot_frames[r][c].configure(bg="#d0d0d0")
 
-            except Exception as e:
-                print(f"Failed to load image {img_path}: {e}")
+            # Draw cross
+            cross_canvas = tk.Canvas(grid_wrapper_outer, bg="#d0d0d0", highlightthickness=0)
+            cross_canvas.place(relx=0.5, rely=0.5, anchor="center", width=50, height=50)
+
+            cross_canvas.create_line(0, 25, 50, 25, fill="white", width=8)
+            cross_canvas.create_line(25, 0, 25, 50, fill="white", width=8)
+
+
+            # Next phase after delay
+            def phase4_show_images():
+                cross_canvas.destroy()
+
+                for slot in sum(slot_frames, []):  # flatten list
+                    for widget in slot.winfo_children():
+                        widget.destroy()
+
+                for (img_tk, is_target), (r, c) in zip(loaded_images, total_slots):
+                    canvas = tk.Canvas(slot_frames[r][c], width=slot_size, height=slot_size, bg="#d0d0d0", highlightthickness=0)
+                    canvas.pack()
+                    canvas.create_image(slot_size // 2, slot_size // 2, image=img_tk, anchor="center")
+
+            app.root.after(1500, phase4_show_images)
+
+        # Timed transitions
+        app.root.after(500, phase2_invert_chessboard)
+        app.root.after(1000, phase3_fixation_cross)
+
 
 
 

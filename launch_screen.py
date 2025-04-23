@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import ttk, filedialog
 from experiment_session_start import show_experiment_session_start
 import os
+from tkinter import messagebox
 
 
 def show_launch_screen(app):
@@ -54,7 +55,17 @@ def show_launch_screen(app):
 
         path = folder_entry.get().strip()
         if not path or not os.path.isdir(path):
-            print("Invalid folder selected.")
+            messagebox.showerror("Invalid Folder", "Please select a valid directory.")
+            return
+
+        # --- REQUIRE both state JSONs to exist ---
+        required = ['create_screen_state.json', 'experiment_state.json']
+        missing  = [f for f in required if not os.path.isfile(os.path.join(path, f))]
+        if missing:
+            messagebox.showerror(
+                "Invalid Experiment Folder",
+                "Incorrect experiment folder format."
+            )
             return
 
         exp_name = os.path.basename(path.rstrip("/\\"))

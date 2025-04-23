@@ -92,25 +92,49 @@ def show_launch_screen(app):
     canvas.pack(side="left", fill="both", expand=True)
     scrollbar.pack(side="right", fill="y")
 
-    # Mousewheel scroll
+    # --- Mousewheel handler (clamped) ---
     def _on_mousewheel(event):
-        bbox = canvas.bbox("all")
-        if bbox:
-            content_height = bbox[3] - bbox[1]
-            view_height = canvas.winfo_height()
-            if content_height > view_height:
-                if event.delta:
-                    canvas.yview_scroll(int(-1*(event.delta/120)), "units")
-                else:
-                    if event.num == 5:
-                        canvas.yview_scroll(1, "units")
-                    elif event.num == 4:
-                        canvas.yview_scroll(-1, "units")
+        # Determine scroll direction
+        if hasattr(event, "delta") and event.delta:
+            direction = int(-1 * (event.delta / 120))
+        else:
+            direction = -1 if event.num == 4 else 1
 
-    canvas.bind_all("<MouseWheel>", _on_mousewheel)
-    canvas.bind_all("<Button-4>", _on_mousewheel)
-    canvas.bind_all("<Button-5>", _on_mousewheel)
+        # Scroll only if there's overflow
+        top, bottom = canvas.yview()
+        if direction < 0 and top <= 0.0:
+            return "break"
+        if direction > 0 and bottom >= 1.0:
+            return "break"
 
+        canvas.yview_scroll(direction, "units")
+        return "break"
+
+    # bind wheel _only_ on the canvas
+    canvas.bind("<MouseWheel>", _on_mousewheel)
+    canvas.bind("<Button-4>",    _on_mousewheel)
+    canvas.bind("<Button-5>",    _on_mousewheel)
+
+    # --- Clamp scrollregion when content ≤ view ---
+    def _refresh_scrollregion(event=None):
+        canvas.update_idletasks()
+        bbox = canvas.bbox("all") or (0, 0, 0, 0)
+        content_h = bbox[3] - bbox[1]
+        view_h    = canvas.winfo_height()
+
+        if content_h <= view_h:
+            # lock scrollregion to exactly the viewport
+            canvas.configure(scrollregion=(0, 0, 0, view_h))
+            canvas.yview_moveto(0)                 # snap back to top
+            scrollbar.state(["disabled"])
+        else:
+            canvas.configure(scrollregion=bbox)
+            scrollbar.state(["!disabled"])
+
+    # refresh whenever content or size changes
+    scrollable_frame.bind("<Configure>", _refresh_scrollregion)
+    canvas.bind("<Configure>",           _refresh_scrollregion)
+    app.root.after(50, _refresh_scrollregion)  # initial check
     # --- Function to create experiment label ---
     def create_experiment_label(exp_name):
         lbl = ttk.Label(scrollable_frame, text=exp_name, font=("Segoe UI", 14), cursor="hand2")

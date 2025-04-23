@@ -9,7 +9,14 @@ def show_experiment_session_start(app, experiment_name, experiment_path):
     app.root.configure(bg="#f0f0f0")
 
     def start_session():
-        show_running_session_screen(app, experiment_path)
+        # Extract values from the UI
+        app.participant_number = participant_number_var.get()
+        app.save_name = save_name_entry.get()
+        app.save_location = save_location_entry.get()
+
+        # Start the session
+        show_running_session_screen(app,experiment_path)
+
     def load_create_screen_state(file_path):
         if not os.path.exists(file_path):
             print(f"File not found: {file_path}")
@@ -38,13 +45,14 @@ def show_experiment_session_start(app, experiment_name, experiment_path):
     default_participant_name = create_state.get("participant_name", "Participant") if create_state else "Participant"
     metadata_items = create_state.get("metadata", []) if create_state else []
 
-    # === Top Frame ===
-    top_frame = tk.Frame(app.root, bg="#f0f0f0")
-    top_frame.pack(fill="x", pady=(10, 0))
-
     def back_to_launch_screen():
+        # Remove participant_number if it exists
+        if hasattr(app, "participant_number"):
+            del app.participant_number
+
         from launch_screen import show_launch_screen
         show_launch_screen(app)
+
 
     back_button = ttk.Button(top_frame, text="←", command=back_to_launch_screen, width=3)
     back_button.pack(side="left", padx=10)
@@ -86,7 +94,7 @@ def show_experiment_session_start(app, experiment_name, experiment_path):
     )
     participant_number_spinbox.pack(side="left", fill="x", expand=False)
 
-    participant_number_var.set(1)
+    participant_number_var.set(getattr(app, "participant_number", 1))
     participant_number_spinbox.update()
 
     metadata_fields = {}

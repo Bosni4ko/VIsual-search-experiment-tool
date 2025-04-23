@@ -11,9 +11,7 @@ def show_running_session_screen(app, experiment_path):
     app.stimulus_counter = 0  # counts how many stimulus were shown
 
     app.clear_screen()
-
     app.experiment_path = experiment_path
-
     # Load the experiment_state.json
     experiment_state_path = os.path.join(experiment_path, "experiment_state.json")
 
@@ -365,12 +363,20 @@ def show_session_complete_screen(app):
     complete_label.pack(expand=True, pady=20)
 
     def back_to_launch_screen():
-        from launch_screen import show_launch_screen
-        show_launch_screen(app)
+        app.participant_number = app.participant_number + 1
+
+        from experiment_session_start import show_experiment_session_start
+        show_experiment_session_start(
+            app,
+            experiment_name=os.path.basename(app.experiment_path),
+            experiment_path=app.experiment_path
+        )
+
 
     back_button = ttk.Button(complete_frame, text="Back to Launch Screen", command=back_to_launch_screen)
     back_button.pack(pady=20)
 
+    # Save stimulus log
     save_path = os.path.join(app.experiment_path, "stimulus_log.json")
     try:
         with open(save_path, "w") as f:

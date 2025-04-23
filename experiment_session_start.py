@@ -45,6 +45,10 @@ def show_experiment_session_start(app, experiment_name, experiment_path):
     default_participant_name = create_state.get("participant_name", "Participant") if create_state else "Participant"
     metadata_items = create_state.get("metadata", []) if create_state else []
 
+    # === Top Frame ===
+    top_frame = tk.Frame(app.root, bg="#f0f0f0")
+    top_frame.pack(fill="x", pady=(10, 0))
+
     def back_to_launch_screen():
         # Remove participant_number if it exists
         if hasattr(app, "participant_number"):

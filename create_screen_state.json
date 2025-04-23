@@ -1,12 +1,6 @@
 {
-  "exp_name": "Metadata_test_2",
-  "participant_name": "Participanti",
-  "save_location": "C:/Users/User/Desktop",
-  "metadata": [
-    {
-      "name": "A",
-      "type": "Value",
-      "value": "N/A"
-    }
-  ]
+  "exp_name": "Default_Experiment_name",
+  "participant_name": "Participant",
+  "save_location": "C:\\Users\\User\\Desktop\\mag\\Program\\experiments",
+  "metadata": []
 }

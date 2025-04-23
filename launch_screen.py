@@ -9,6 +9,12 @@ def show_launch_screen(app):
     app.clear_screen()
     app.root.configure(bg="#f0f0f0")
 
+    # === Persisted user-added experiments ===
+    # Initialize on first call
+    if not hasattr(app, 'added_experiments'):
+        # dict mapping exp_name -> full_path
+        app.added_experiments = {}
+
     # === Top Back Arrow ===
     top_frame = tk.Frame(app.root, bg="#f0f0f0")
     top_frame.pack(fill="x", pady=(10, 0))
@@ -54,6 +60,7 @@ def show_launch_screen(app):
             return
 
         loaded_experiments[exp_name] = path  # Save full path
+        app.added_experiments[exp_name] = path
         create_experiment_label(exp_name)
 
     browse_button = ttk.Button(folder_frame, text="Browse", command=browse_folder)
@@ -141,8 +148,20 @@ def show_launch_screen(app):
             exp_path = os.path.join(experiments_dir, exp)
             loaded_experiments[exp] = exp_path
             create_experiment_label(exp)
-    else:
-        label = ttk.Label(scrollable_frame, text="No experiments found.", font=("Segoe UI", 14, "italic"), foreground="gray")
+
+    if app.added_experiments:
+        for exp_name, exp_path in app.added_experiments.items():
+            if exp_name not in loaded_experiments:
+                loaded_experiments[exp_name] = exp_path
+                create_experiment_label(exp_name)
+
+    if not experiments and not app.added_experiments:
+        label = ttk.Label(
+            scrollable_frame,
+            text="No experiments found.",
+            font=("Segoe UI", 14, "italic"),
+            foreground="gray"
+        )
         label.pack(pady=10)
 
     # === Selected Experiment Info Field ===
@@ -177,9 +196,3 @@ def show_launch_screen(app):
 
     launch_button = ttk.Button(button_frame, text="Launch New Experiment", width=25, command=launch_experiment)
     launch_button.grid(row=0, column=1, padx=20, pady=10)
-
-
-
-
-
-

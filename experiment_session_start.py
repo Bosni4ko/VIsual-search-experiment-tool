@@ -9,13 +9,46 @@ def show_experiment_session_start(app, experiment_name, experiment_path):
     app.root.configure(bg="#f0f0f0")
 
     def start_session():
-        # Extract values from the UI
-        app.participant_number = participant_number_var.get()
-        app.save_name = save_name_entry.get()
-        app.save_location = save_location_entry.get()
+        # 1) Clear previous errors
+        for entry, lbl in [
+            (participant_name_entry, participant_name_error),
+            (save_name_entry,      save_name_error),
+            (save_location_entry,  save_location_error),
+        ]:
+            entry.configure(style="TEntry")
+            lbl.config(text="")
 
-        # Start the session
-        show_running_session_screen(app,experiment_path)
+        valid = True
+
+        # 2) Validate participant name
+        if not participant_name_entry.get().strip():
+            participant_name_entry.configure(style="Error.TEntry")
+            participant_name_error.config(text="Required")
+            valid = False
+
+        # 3) Validate save name
+        if not save_name_entry.get().strip():
+            save_name_entry.configure(style="Error.TEntry")
+            save_name_error.config(text="Required")
+            valid = False
+
+        # 4) Validate save location (only emptiness)
+        if not save_location_entry.get().strip():
+            save_location_entry.configure(style="Error.TEntry")
+            save_location_error.config(text="Required")
+            valid = False
+
+        if not valid:
+            return
+
+        # 5) All good—stash and proceed
+        app.participant_number = participant_number_var.get()
+        app.save_name          = save_name_entry.get().strip()
+        app.save_location      = save_location_entry.get().strip()
+        show_running_session_screen(app, experiment_path)
+
+    start_button = ttk.Button(app.root, text="Start Session", width=30, command=start_session)
+    start_button.pack(pady=20)
 
     def load_create_screen_state(file_path):
         if not os.path.exists(file_path):
@@ -68,6 +101,10 @@ def show_experiment_session_start(app, experiment_name, experiment_path):
     session_frame = tk.Frame(app.root, bg="#f0f0f0")
     session_frame.pack(expand=True, pady=30)
 
+    # Prepare an “error” style for entries:
+    style = ttk.Style(app.root)
+    style.configure("Error.TEntry", fieldbackground="#ffe6e6")
+
     # === Participant Name Row ===
     participant_name_frame = tk.Frame(session_frame, bg="#f0f0f0")
     participant_name_frame.pack(pady=(10, 5), fill="x", padx=20)
@@ -78,6 +115,10 @@ def show_experiment_session_start(app, experiment_name, experiment_path):
     participant_name_entry = ttk.Entry(participant_name_frame, font=("Segoe UI", 14), width=30)
     participant_name_entry.insert(0, default_participant_name)
     participant_name_entry.pack(side="left", fill="x", expand=True)
+
+    # <— error label starts hidden
+    participant_name_error = ttk.Label(participant_name_frame, text="", foreground="red", font=("Segoe UI",10))
+    participant_name_error.pack(anchor="w", padx=(150,0), pady=(2,0))
 
     # === Participant Number Row ===
     participant_number_frame = tk.Frame(session_frame, bg="#f0f0f0")
@@ -222,24 +263,54 @@ def show_experiment_session_start(app, experiment_name, experiment_path):
     save_name_entry = ttk.Entry(save_name_frame, font=("Segoe UI", 14), width=40)
     save_name_entry.pack(side="left", fill="x", expand=True)
 
+    save_name_error = ttk.Label(save_name_frame, text="", foreground="red", font=("Segoe UI",10))
+    save_name_error.pack(anchor="w", padx=(150,0), pady=(2,0))
+
     # === Save Location Row ===
     save_location_frame = tk.Frame(session_frame, bg="#f0f0f0")
     save_location_frame.pack(pady=(10, 20), fill="x", padx=20)
 
-    save_location_label = ttk.Label(save_location_frame, text="Save Location:", font=("Segoe UI", 16))
+    save_location_label = ttk.Label(
+        save_location_frame,
+        text="Save Location:",
+        font=("Segoe UI", 16)
+    )
     save_location_label.pack(side="left", padx=(0,10))
 
-    save_location_entry = ttk.Entry(save_location_frame, font=("Segoe UI", 12), width=70)
-    save_location_entry.pack(side="left", fill="x", expand=True, padx=(0, 5))
+    save_location_entry = ttk.Entry(
+        save_location_frame,
+        font=("Segoe UI", 12),
+        width=70
+    )
+    save_location_entry.pack(side="left", fill="x", expand=True, padx=(0,5))
 
+    # define the browse function *before* the button
     def browse_save_location():
-        folder = filedialog.askdirectory(initialdir=os.getcwd(), title="Select Save Folder")
+        folder = filedialog.askdirectory(
+            initialdir=os.getcwd(),
+            title="Select Save Folder"
+        )
         if folder:
             save_location_entry.delete(0, tk.END)
             save_location_entry.insert(0, folder)
 
-    browse_button = ttk.Button(save_location_frame, text="Browse", command=browse_save_location)
-    browse_button.pack(side="left")
+    # create exactly one Browse button
+    browse_button = ttk.Button(
+        save_location_frame,
+        text="Browse",
+        command=browse_save_location
+    )
+    browse_button.pack(side="left", padx=(5,0))
+
+    # inline error label
+    save_location_error = ttk.Label(
+        save_location_frame,
+        text="",
+        foreground="red",
+        font=("Segoe UI", 10)
+    )
+    save_location_error.pack(side="left", padx=(10,0))
+
 
     # === Dynamic updating save_name and save_location ===
     def update_save_name_and_location(*args):

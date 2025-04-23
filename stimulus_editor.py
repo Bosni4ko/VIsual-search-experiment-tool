@@ -3,6 +3,8 @@ import os
 from tkinter import Toplevel, Scrollbar, Label, Button, filedialog
 from PIL import Image, ImageTk
 from grid import setup_field_grid
+MAX_GRID_SIZE = 10
+MIN_GRID_SIZE = 2
 
 
 def open_image_selector(comp, target_type):
@@ -459,8 +461,8 @@ def setup_stimulus_options(app, left_panel,main_panel,comp):
             return
 
         # clamp to [2,20]
-        x = max(2, min(20, raw_x))
-        y = max(2, min(20, raw_y))
+        x = max(MIN_GRID_SIZE, min(MAX_GRID_SIZE, raw_x))
+        y = max(MIN_GRID_SIZE, min(MAX_GRID_SIZE, raw_y))
 
         # if they typed out-of-bounds, reset the entries to the clamped values
         if raw_x != x:

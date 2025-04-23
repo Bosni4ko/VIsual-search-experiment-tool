@@ -1,7 +1,6 @@
 import tkinter as tk
 from tkinter import ttk, filedialog
 from experiment_session_start import show_experiment_session_start
-
 import os
 
 
@@ -48,18 +47,23 @@ def show_launch_screen(app):
             folder_entry.insert(0, path)
 
     def add_experiment():
+        # --- If the "No experiments found" label is there, remove it ---
+        if hasattr(app, 'no_experiments_label'):
+            app.no_experiments_label.destroy()
+            delattr(app, 'no_experiments_label')
+
         path = folder_entry.get().strip()
         if not path or not os.path.isdir(path):
             print("Invalid folder selected.")
             return
 
-        exp_name = os.path.basename(path.rstrip("/\\"))  # Clean folder name
+        exp_name = os.path.basename(path.rstrip("/\\"))
 
         if exp_name in loaded_experiments:
             print(f"Experiment '{exp_name}' already listed.")
             return
 
-        loaded_experiments[exp_name] = path  # Save full path
+        loaded_experiments[exp_name] = path
         app.added_experiments[exp_name] = path
         create_experiment_label(exp_name)
 
@@ -156,13 +160,13 @@ def show_launch_screen(app):
                 create_experiment_label(exp_name)
 
     if not experiments and not app.added_experiments:
-        label = ttk.Label(
-            scrollable_frame,
-            text="No experiments found.",
-            font=("Segoe UI", 14, "italic"),
-            foreground="gray"
-        )
-        label.pack(pady=10)
+            app.no_experiments_label = ttk.Label(
+                scrollable_frame,
+                text="No experiments found.",
+                font=("Segoe UI", 14, "italic"),
+                foreground="gray"
+            )
+            app.no_experiments_label.pack(pady=10)
 
     # === Selected Experiment Info Field ===
     info_frame = tk.Frame(app.root, bg="#f0f0f0")

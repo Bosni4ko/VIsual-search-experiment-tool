@@ -386,9 +386,14 @@ def show_session_complete_screen(app):
         # Build the full path: <save_location>/<save_name>.json
         filename = f"{app.save_name}.json"
         save_path = os.path.join(app.save_location, filename)
-
+        output = {
+            "participant_name":    app.participant_name,
+            "participant_number":  app.participant_number,
+            "stimulus_log":        app.stimulus_log
+        }
+        
         with open(save_path, "w") as f:
-            json.dump(app.stimulus_log, f, indent=2)
+            json.dump(output, f, indent=2)
 
         print(f"Saved stimulus log to {save_path}")
 

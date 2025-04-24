@@ -42,6 +42,7 @@ def show_experiment_session_start(app, experiment_name, experiment_path):
             return
 
         # 5) All good—stash and proceed
+        app.participant_name   = participant_name_entry.get().strip()
         app.participant_number = participant_number_var.get()
         app.save_name          = save_name_entry.get().strip()
         app.save_location      = save_location_entry.get().strip()

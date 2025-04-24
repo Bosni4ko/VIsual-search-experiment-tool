@@ -4,7 +4,10 @@ import json
 import os
 import tkinter.font as tkfont
 import time
+import csv
+import datetime
 from PIL import Image, ImageTk
+
 
 def show_running_session_screen(app, experiment_path):
     app.stimulus_log = []  #  New empty list to collect stimulus results
@@ -400,3 +403,48 @@ def show_session_complete_screen(app):
 
     except Exception as e:
         print(f"Failed to save stimulus log: {e}")
+
+ # === Write all reaction times in one single CSV row, prefixed by name & number ===
+    try:
+        os.makedirs(app.save_location, exist_ok=True)
+        csv_path = os.path.join(app.save_location, "stimulus_times.csv")
+
+        # 1) collect reaction times in order
+        reaction_times = [trial["reaction_time_seconds"] for trial in app.stimulus_log]
+
+        # 2) build header:
+        #    - fixed columns: name & number
+        #    - one column per metadata key (in insertion order)
+        #    - one column per stimulus
+        metadata_keys   = list(app.metadata.keys())
+        stimulus_cols   = [f"stimulus_{i+1}" for i in range(len(reaction_times))]
+        headers = (
+            ["participant_name", "participant_number"]
+            + metadata_keys
+            + stimulus_cols
+        )
+
+        # 3) build the row:
+        #    - participant info
+        #    - metadata values (in the same order as metadata_keys)
+        #    - reaction times
+        row = (
+            [app.participant_name, app.participant_number]
+            +[app.metadata[k] for k in metadata_keys]
+            +reaction_times
+        )
+
+        # 4) decide whether to write header
+        write_header = not os.path.isfile(csv_path)
+
+        # 5) append to CSV
+        with open(csv_path, "a", newline="") as csvfile:
+            writer = csv.writer(csvfile)
+            if write_header:
+                writer.writerow(headers)
+            writer.writerow(row)
+
+        print(f"Wrote single‐row stimulus times (with participant info) to {csv_path}")
+
+    except Exception as e:
+        print(f"Failed to write stimulus_times.csv: {e}")

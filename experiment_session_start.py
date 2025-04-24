@@ -41,6 +41,11 @@ def show_experiment_session_start(app, experiment_name, experiment_path):
         if not valid:
             return
 
+        app.metadata = {}
+        for name, widget in metadata_fields.items():
+            # for Entry or Combobox, .get() returns the current text
+            app.metadata[name] = widget.get().strip()
+
         # 5) All good—stash and proceed
         app.participant_name   = participant_name_entry.get().strip()
         app.participant_number = participant_number_var.get()

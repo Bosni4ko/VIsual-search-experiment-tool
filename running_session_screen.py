@@ -389,6 +389,7 @@ def show_session_complete_screen(app):
         output = {
             "participant_name":    app.participant_name,
             "participant_number":  app.participant_number,
+            "metadata":            app.metadata,
             "stimulus_log":        app.stimulus_log
         }
         

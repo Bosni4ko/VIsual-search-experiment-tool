@@ -216,7 +216,29 @@ def show_launch_screen(app):
     button_frame = tk.Frame(app.root, bg="#f0f0f0")
     button_frame.pack(pady=20)
 
-    continue_button = ttk.Button(button_frame, text="Continue Experiment", width=25)
+    def continue_experiment():
+        exp_name = selected_experiment.get()
+        if not exp_name:
+            messagebox.showwarning("No Experiment Selected",
+                                "Please select an experiment first.")
+            return
+
+        exp_path = loaded_experiments.get(exp_name)
+        if not exp_path:
+            messagebox.showerror("Path Not Found",
+                                f"Could not find path for experiment '{exp_name}'.")
+            return
+
+        continue_file = os.path.join(exp_path, "continue_experiment.json")
+        if not os.path.isfile(continue_file):
+            messagebox.showinfo("Cannot Continue",
+                                f"There's no continue_experiment.json in\n{exp_path}")
+            return
+
+        # if we get here, the JSON exists and we can hand off to the session screen
+        show_experiment_session_start(app, exp_name, exp_path,True)
+
+    continue_button = ttk.Button(button_frame, text="Continue Experiment", width=25,command=continue_experiment)
     continue_button.grid(row=0, column=0, padx=20, pady=10)
 
     def launch_experiment():
@@ -232,6 +254,7 @@ def show_launch_screen(app):
 
         # Now pass the selected experiment name and path to the session screen!
         show_experiment_session_start(app, exp_name, exp_path)
+
 
     launch_button = ttk.Button(button_frame, text="Launch New Experiment", width=25, command=launch_experiment)
     launch_button.grid(row=0, column=1, padx=20, pady=10)

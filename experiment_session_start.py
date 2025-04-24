@@ -5,8 +5,19 @@ import os
 from running_session_screen import show_running_session_screen
 
 
-def show_experiment_session_start(app, experiment_name, experiment_path):
+def show_experiment_session_start(app, experiment_name, experiment_path, continue_mode=False):
     app.root.configure(bg="#f0f0f0")
+
+    if continue_mode:
+        continue_data = {}
+        continue_path = os.path.join(experiment_path, "continue_experiment.json")
+        if os.path.isfile(continue_path):
+            try:
+                with open(continue_path, "r") as cf:
+                    continue_data = json.load(cf)
+            except Exception as e:
+                print(f"Error loading continue_experiment.json: {e}")
+        
 
     def start_session():
         # 1) Clear previous errors
@@ -51,6 +62,21 @@ def show_experiment_session_start(app, experiment_name, experiment_path):
         app.participant_number = participant_number_var.get()
         app.save_name          = save_name_entry.get().strip()
         app.save_location      = save_location_entry.get().strip()
+
+        # 5a) Write out a continue_experiment.json in the experiment folder
+        try:
+            cont_data = {
+                "participant_number": app.participant_number,
+                "participant_name":   app.participant_name,
+                "save_name":          app.save_name,
+                "save_location":      app.save_location
+            }
+            cont_path = os.path.join(experiment_path, "continue_experiment.json")
+            with open(cont_path, "w") as cf:
+                json.dump(cont_data, cf, indent=2)
+            print(f"Wrote continue file to {cont_path}")
+        except Exception as e:
+            print(f"Error writing continue_experiment: {e}")
         show_running_session_screen(app, experiment_path)
 
     start_button = ttk.Button(app.root, text="Start Session", width=30, command=start_session)
@@ -82,8 +108,13 @@ def show_experiment_session_start(app, experiment_name, experiment_path):
     create_state = load_create_screen_state(create_state_path)
 
     default_participant_name = create_state.get("participant_name", "Participant") if create_state else "Participant"
-    metadata_items = create_state.get("metadata", []) if create_state else []
+    if continue_mode and continue_data:
+        default_participant_name   = continue_data.get("participant_name", default_participant_name)
+        app.participant_number = continue_data.get("participant_number", 1)
+        app.participant_number = app.participant_number+1
+        app.save_location = continue_data.get("save_location", "")
 
+    metadata_items = create_state.get("metadata", []) if create_state else []
     # === Top Frame ===
     top_frame = tk.Frame(app.root, bg="#f0f0f0")
     top_frame.pack(fill="x", pady=(10, 0))

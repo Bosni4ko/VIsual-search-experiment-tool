@@ -364,7 +364,6 @@ def show_session_complete_screen(app):
 
     def back_to_launch_screen():
         app.participant_number = app.participant_number + 1
-
         from experiment_session_start import show_experiment_session_start
         show_experiment_session_start(
             app,
@@ -372,15 +371,26 @@ def show_session_complete_screen(app):
             experiment_path=app.experiment_path
         )
 
-
-    back_button = ttk.Button(complete_frame, text="Back to Launch Screen", command=back_to_launch_screen)
+    back_button = ttk.Button(
+        complete_frame,
+        text="Back to Launch Screen",
+        command=back_to_launch_screen
+    )
     back_button.pack(pady=20)
 
-    # Save stimulus log
-    save_path = os.path.join(app.experiment_path, "stimulus_log.json")
+    # === Save stimulus log using app.save_location and app.save_name ===
     try:
+        # Ensure the save directory exists
+        os.makedirs(app.save_location, exist_ok=True)
+
+        # Build the full path: <save_location>/<save_name>.json
+        filename = f"{app.save_name}.json"
+        save_path = os.path.join(app.save_location, filename)
+
         with open(save_path, "w") as f:
             json.dump(app.stimulus_log, f, indent=2)
+
         print(f"Saved stimulus log to {save_path}")
+
     except Exception as e:
         print(f"Failed to save stimulus log: {e}")

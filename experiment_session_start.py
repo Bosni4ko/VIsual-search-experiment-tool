@@ -321,7 +321,13 @@ def show_experiment_session_start(app, experiment_name, experiment_path):
         save_name_entry.delete(0, tk.END)
         save_name_entry.insert(0, current_save_name)
 
-        default_save_location = os.path.join("session_saves", experiment_name, current_save_name)
+        # 2) If the app already has a save_location, reuse it…
+        if hasattr(app, "save_location") and app.save_location:
+            default_save_location = app.save_location
+        else:
+            # …otherwise fall back to the session_saves/<experiment> folder
+            default_save_location = os.path.join("session_saves", experiment_name)
+
         save_location_entry.delete(0, tk.END)
         save_location_entry.insert(0, default_save_location)
 

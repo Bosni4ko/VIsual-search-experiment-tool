@@ -376,6 +376,7 @@ class ExperimentApp:
                 metadata_item = {"name": name, "type": "List", "value": list_values}
             self.saved_metadata.append(metadata_item)
 
+        self.save_current_create_screen_state()
         # Proceed with the editor screen using the collected information.
         show_editor_screen(self)
 

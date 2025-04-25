@@ -5,7 +5,6 @@ import os
 import tkinter.font as tkfont
 import time
 import csv
-import datetime
 from PIL import Image, ImageTk
 
 

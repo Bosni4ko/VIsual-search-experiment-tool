@@ -27,6 +27,9 @@ def save_visual_search_experiment(app, base_save_dir, compress_images=True, imag
     # Create a subfolder named after the experiment
     exp_folder_name = app.saved_exp_name.strip().replace(" ", "_")  # Clean name: replace spaces with underscores
     save_dir = os.path.join(base_save_dir, exp_folder_name)
+    # Delete existing folder if it already exists
+    if os.path.exists(save_dir):
+        shutil.rmtree(save_dir)
     os.makedirs(save_dir, exist_ok=True)
 
     # Create two separate folders for selections and distractors

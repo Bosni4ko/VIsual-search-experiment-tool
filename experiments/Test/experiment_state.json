@@ -15,7 +15,7 @@
     "label": "Text",
     "color": "gray",
     "index": 1,
-    "saved_text": "",
+    "saved_text": "Aa",
     "saved_tags": [],
     "data": {},
     "last_selections": [],
@@ -237,11 +237,11 @@
       "no_target": false,
       "distractor_type": "negative",
       "stimulus_set": "Faces",
-      "distractor_set": "Select set from list",
-      "selected_target": "Select from list",
+      "distractor_set": "Random",
+      "selected_target": "Random",
       "target_image": "images\\faces\\positive\\happy\\0_30.jpg",
-      "field_x": 10,
-      "field_y": 10,
+      "field_x": 5,
+      "field_y": 5,
       "fixed_amount": 10
     },
     "last_selections": [
@@ -587,14 +587,14 @@
       "stimulus_set": "Faces",
       "target_type": "negative",
       "selected_target": "Select from list",
-      "target_image": "images\\faces\\negative\\angry\\0_29.jpg",
+      "target_image": "images\\faces\\negative\\angry\\101_3.jpg",
       "distractor_set": "Select set from list"
     },
     "last_selections": [
       {
         "stimulus_set": "Faces",
         "stimulus_type": "negative",
-        "path": "selections\\0_29.jpg"
+        "path": "selections\\101_3.jpg"
       }
     ],
     "last_distractors": [
@@ -602,26 +602,26 @@
         "stimulus_set": "Faces",
         "distractor_type": "positive",
         "paths": [
-          "distractors\\104_26.jpg",
-          "distractors\\105_32.jpg",
-          "distractors\\0_24.jpg",
-          "distractors\\105_10.jpg",
-          "distractors\\103_3.jpg",
-          "distractors\\100_21.jpg",
-          "distractors\\100_33.jpg",
-          "distractors\\100_10.jpg",
           "distractors\\101_10.jpg",
-          "distractors\\102_26.jpg",
+          "distractors\\102_2.jpg",
+          "distractors\\100_21.jpg",
+          "distractors\\100_10.jpg",
           "distractors\\0_19.jpg",
-          "distractors\\104_1.jpg",
-          "distractors\\0_30.jpg",
           "distractors\\102_19.jpg",
-          "distractors\\101_34.jpg",
-          "distractors\\101_24.jpg",
-          "distractors\\103_29.jpg",
-          "distractors\\104_16.jpg",
           "distractors\\103_2.jpg",
-          "distractors\\102_2.jpg"
+          "distractors\\101_24.jpg",
+          "distractors\\103_3.jpg",
+          "distractors\\104_1.jpg",
+          "distractors\\102_26.jpg",
+          "distractors\\100_33.jpg",
+          "distractors\\103_29.jpg",
+          "distractors\\105_32.jpg",
+          "distractors\\105_10.jpg",
+          "distractors\\104_26.jpg",
+          "distractors\\101_34.jpg",
+          "distractors\\104_16.jpg",
+          "distractors\\0_24.jpg",
+          "distractors\\0_30.jpg"
         ]
       }
     ]

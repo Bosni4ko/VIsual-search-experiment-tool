@@ -51,7 +51,22 @@ def save_visual_search_experiment(app, base_save_dir, compress_images=True, imag
         main_data = {k: v for k, v in raw_data.items() if k not in ("last_selections", "last_distractors")}
         entry["data"] = main_data
         # Handle last_selections
-        last_sel = raw_data.get("last_selections", {})
+        last_sel = raw_data.get("last_selections", {}).copy()
+        selected_target_mode = raw_data.get("selected_target", "Random")
+        stimulus_set = raw_data.get("stimulus_set", "Faces")
+        target_type = raw_data.get("target_type", "positive")
+
+        if selected_target_mode == "Random":
+            from random import choice
+            base_path = os.path.join("images", "faces", target_type)
+            if os.path.isdir(base_path):
+                all_imgs = [os.path.join(base_path, f) for f in os.listdir(base_path)
+                            if f.lower().endswith((".jpg", ".jpeg", ".png"))]
+                if all_imgs:
+                    random_img = choice(all_imgs)
+                    last_sel[(stimulus_set, target_type)] = random_img
+
+
         new_last_sel = []
         for key, path in last_sel.items():
             new_path = copy_and_compress_image(
@@ -64,8 +79,24 @@ def save_visual_search_experiment(app, base_save_dir, compress_images=True, imag
             })
         entry["last_selections"] = new_last_sel
 
-        # Handle last_distractors
-        last_dist = raw_data.get("last_distractors", {})
+        last_dist = raw_data.get("last_distractors", {}).copy()
+        distractor_set_mode = raw_data.get("distractor_set", "All")
+        distractor_type = raw_data.get("distractor_type", "positive")
+        grid_x = raw_data.get("field_x", 10)
+        grid_y = raw_data.get("field_y", 10)
+
+        if distractor_set_mode == "Random":
+            from random import sample
+            base_path = os.path.join("images", "faces", distractor_type)
+            if os.path.isdir(base_path):
+                all_imgs = [os.path.join(base_path, f) for f in os.listdir(base_path)
+                            if f.lower().endswith((".jpg", ".jpeg", ".png"))]
+                total_needed = max(0, grid_x * grid_y - 1)
+                if len(all_imgs) >= total_needed:
+                    random_set = sample(all_imgs, total_needed)
+                    last_dist[(stimulus_set, distractor_type)] = random_set
+
+
         new_last_dist = []
         for key, paths in last_dist.items():
             new_paths = [

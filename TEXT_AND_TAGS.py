@@ -380,3 +380,346 @@ END_DEFAULT_TAGS=[
         "justify": ""
       }
     ]
+START_DEFAULT_TEXT = "\n\n\n\n\n\n\n\n\nWelcome to the experiment. \nPlease follow the instructions carefully.\nUse \"space\" button to continue."
+START_DEFAULT_TAGS =[
+      {
+        "name": "align_6a719f49bf9f4651a0776e04b4e0925c",
+        "ranges": [
+          [
+            "10.0",
+            "12.31"
+          ]
+        ],
+        "font_info": {
+          "family": "Arial",
+          "size": 12,
+          "weight": "normal",
+          "slant": "roman"
+        },
+        "foreground": "",
+        "justify": "center"
+      },
+      {
+        "name": "font_28de7a4564af48f38cbb5d693e6036b9",
+        "ranges": [
+          [
+            "10.0",
+            "12.31"
+          ]
+        ],
+        "font_info": {
+          "family": "Courier New",
+          "size": 12,
+          "weight": "bold",
+          "slant": "roman"
+        },
+        "foreground": "SystemHighlightText",
+        "justify": ""
+      },
+      {
+        "name": "font_bd92b5a108b44b4a90f392b8f5e6266c",
+        "ranges": [
+          [
+            "10.0",
+            "12.31"
+          ]
+        ],
+        "font_info": {
+          "family": "Courier New",
+          "size": 13,
+          "weight": "bold",
+          "slant": "roman"
+        },
+        "foreground": "SystemHighlightText",
+        "justify": ""
+      },
+      {
+        "name": "font_940954951cd14f4d8d12640c19b542e8",
+        "ranges": [
+          [
+            "10.0",
+            "12.31"
+          ]
+        ],
+        "font_info": {
+          "family": "Courier New",
+          "size": 14,
+          "weight": "bold",
+          "slant": "roman"
+        },
+        "foreground": "SystemHighlightText",
+        "justify": ""
+      },
+      {
+        "name": "font_5e569014dac949c8bd2695dd35eef0d0",
+        "ranges": [
+          [
+            "10.0",
+            "12.31"
+          ]
+        ],
+        "font_info": {
+          "family": "Courier New",
+          "size": 15,
+          "weight": "bold",
+          "slant": "roman"
+        },
+        "foreground": "SystemHighlightText",
+        "justify": ""
+      },
+      {
+        "name": "font_1997d3b3db574d74bda84300712513dd",
+        "ranges": [
+          [
+            "10.0",
+            "12.31"
+          ]
+        ],
+        "font_info": {
+          "family": "Courier New",
+          "size": 16,
+          "weight": "bold",
+          "slant": "roman"
+        },
+        "foreground": "SystemHighlightText",
+        "justify": ""
+      },
+      {
+        "name": "font_a54e6681d3364c47adcf1843b42a97fb",
+        "ranges": [
+          [
+            "10.0",
+            "12.31"
+          ]
+        ],
+        "font_info": {
+          "family": "Courier New",
+          "size": 17,
+          "weight": "bold",
+          "slant": "roman"
+        },
+        "foreground": "SystemHighlightText",
+        "justify": ""
+      },
+      {
+        "name": "font_f45684325d474a7c937bedd65088272c",
+        "ranges": [
+          [
+            "10.0",
+            "12.31"
+          ]
+        ],
+        "font_info": {
+          "family": "Courier New",
+          "size": 18,
+          "weight": "bold",
+          "slant": "roman"
+        },
+        "foreground": "SystemHighlightText",
+        "justify": ""
+      },
+      {
+        "name": "font_18b5096f4d42442ea098691b386b5b03",
+        "ranges": [
+          [
+            "10.0",
+            "12.31"
+          ]
+        ],
+        "font_info": {
+          "family": "Courier New",
+          "size": 17,
+          "weight": "bold",
+          "slant": "roman"
+        },
+        "foreground": "SystemHighlightText",
+        "justify": ""
+      },
+      {
+        "name": "font_5c7f1fa6a7cc45e28178f3f297e98e93",
+        "ranges": [
+          [
+            "10.0",
+            "12.31"
+          ]
+        ],
+        "font_info": {
+          "family": "Courier New",
+          "size": 16,
+          "weight": "bold",
+          "slant": "roman"
+        },
+        "foreground": "SystemHighlightText",
+        "justify": ""
+      },
+      {
+        "name": "font_59c2a0bde04d4bb99de99223ee885520",
+        "ranges": [
+          [
+            "10.0",
+            "12.31"
+          ]
+        ],
+        "font_info": {
+          "family": "Courier New",
+          "size": 15,
+          "weight": "bold",
+          "slant": "roman"
+        },
+        "foreground": "SystemHighlightText",
+        "justify": ""
+      },
+      {
+        "name": "font_232bfcc062354233acad799f4c625a19",
+        "ranges": [
+          [
+            "10.0",
+            "12.31"
+          ]
+        ],
+        "font_info": {
+          "family": "Courier New",
+          "size": 14,
+          "weight": "bold",
+          "slant": "roman"
+        },
+        "foreground": "SystemHighlightText",
+        "justify": ""
+      },
+      {
+        "name": "font_f2ddf7258be94d8785f2e4a9bf69f0ab",
+        "ranges": [
+          [
+            "10.0",
+            "12.31"
+          ]
+        ],
+        "font_info": {
+          "family": "Courier New",
+          "size": 15,
+          "weight": "bold",
+          "slant": "roman"
+        },
+        "foreground": "SystemHighlightText",
+        "justify": ""
+      },
+      {
+        "name": "color_0c7458256006402883bde5603e6e796a",
+        "ranges": [
+          [
+            "10.0",
+            "12.31"
+          ]
+        ],
+        "font_info": {
+          "family": "Arial",
+          "size": 12,
+          "weight": "normal",
+          "slant": "roman"
+        },
+        "foreground": "#000000",
+        "justify": ""
+      },
+      {
+        "name": "font_a4872eedecd740b1a118382bc81df36b",
+        "ranges": [
+          [
+            "10.0",
+            "12.31"
+          ]
+        ],
+        "font_info": {
+          "family": "Courier New",
+          "size": 16,
+          "weight": "bold",
+          "slant": "roman"
+        },
+        "foreground": "#000000",
+        "justify": ""
+      },
+      {
+        "name": "font_495c6f1633274e54aef3fadf1d291116",
+        "ranges": [
+          [
+            "10.0",
+            "12.31"
+          ]
+        ],
+        "font_info": {
+          "family": "Courier New",
+          "size": 15,
+          "weight": "bold",
+          "slant": "roman"
+        },
+        "foreground": "#000000",
+        "justify": ""
+      },
+      {
+        "name": "font_e3222b3bd5714a9c9bca332a06f15e2f",
+        "ranges": [
+          [
+            "10.0",
+            "12.31"
+          ]
+        ],
+        "font_info": {
+          "family": "Ebrima",
+          "size": 15,
+          "weight": "bold",
+          "slant": "roman"
+        },
+        "foreground": "#000000",
+        "justify": ""
+      },
+      {
+        "name": "font_ab2927c534a744f2a3e192b157e06297",
+        "ranges": [
+          [
+            "10.0",
+            "12.31"
+          ]
+        ],
+        "font_info": {
+          "family": "Ebrima",
+          "size": 16,
+          "weight": "bold",
+          "slant": "roman"
+        },
+        "foreground": "#000000",
+        "justify": ""
+      },
+      {
+        "name": "font_b1d694978d5a4ae88705ec0ae8bc9736",
+        "ranges": [
+          [
+            "10.0",
+            "12.31"
+          ]
+        ],
+        "font_info": {
+          "family": "Ebrima",
+          "size": 17,
+          "weight": "bold",
+          "slant": "roman"
+        },
+        "foreground": "#000000",
+        "justify": ""
+      },
+      {
+        "name": "font_86eeaafecc5a42878b03885018230a50",
+        "ranges": [
+          [
+            "10.0",
+            "12.31"
+          ]
+        ],
+        "font_info": {
+          "family": "Ebrima",
+          "size": 18,
+          "weight": "bold",
+          "slant": "roman"
+        },
+        "foreground": "#000000",
+        "justify": ""
+      }
+    ]

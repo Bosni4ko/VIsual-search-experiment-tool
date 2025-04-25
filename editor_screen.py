@@ -4,6 +4,7 @@ import json
 import os
 from PIL import Image
 from tkinter import messagebox
+from random import sample
 
 from component_block import ComponentBlock
 from palette import setup_components_palette
@@ -85,16 +86,19 @@ def save_visual_search_experiment(app, base_save_dir, compress_images=True, imag
         grid_x = raw_data.get("field_x", 10)
         grid_y = raw_data.get("field_y", 10)
 
-        if distractor_set_mode == "Random":
-            from random import sample
-            base_path = os.path.join("images", "faces", distractor_type)
-            if os.path.isdir(base_path):
-                all_imgs = [os.path.join(base_path, f) for f in os.listdir(base_path)
-                            if f.lower().endswith((".jpg", ".jpeg", ".png"))]
+        base_path = os.path.join("images", "faces", distractor_type)
+        if os.path.isdir(base_path):
+            all_imgs = [os.path.join(base_path, f) for f in os.listdir(base_path)
+                        if f.lower().endswith((".jpg", ".jpeg", ".png"))]
+
+            if distractor_set_mode == "Random":
                 total_needed = max(0, grid_x * grid_y - 1)
                 if len(all_imgs) >= total_needed:
                     random_set = sample(all_imgs, total_needed)
                     last_dist[(stimulus_set, distractor_type)] = random_set
+
+            elif distractor_set_mode == "All":
+                last_dist[(stimulus_set, distractor_type)] = all_imgs
 
 
         new_last_dist = []

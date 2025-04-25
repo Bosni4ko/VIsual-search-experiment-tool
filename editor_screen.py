@@ -619,6 +619,13 @@ def show_editor_screen(app):
     render_timeline()
 
     def on_create():
+        # Save any pending text formatting
+        sel = getattr(app, "selected_component", None)
+        if sel and sel.component_type in ["Text", "Stimulus notification", "Start", "End"]:
+            try:
+                save_formatting(sel)
+            except Exception:
+                pass
         answer = messagebox.askyesno("Confirm", "Are you sure you want to create the experiment?")
         if answer:
             save_visual_search_experiment(app, app.saved_save_location)

@@ -16,7 +16,25 @@
     "color": "gray",
     "index": 1,
     "saved_text": "Aa",
-    "saved_tags": [],
+    "saved_tags": [
+      {
+        "name": "sel",
+        "ranges": [
+          [
+            "1.0",
+            "1.2"
+          ]
+        ],
+        "font_info": {
+          "family": "Arial",
+          "size": 12,
+          "weight": "normal",
+          "slant": "roman"
+        },
+        "foreground": "SystemHighlightText",
+        "justify": ""
+      }
+    ],
     "data": {},
     "last_selections": [],
     "last_distractors": []
@@ -627,10 +645,28 @@
     ]
   },
   {
+    "type": "Stimulus",
+    "label": "Stimulus",
+    "color": "yellow",
+    "index": 6,
+    "saved_text": "",
+    "saved_tags": [],
+    "data": {
+      "stimulus_size_mode": "random",
+      "stimulus_set": "Faces",
+      "no_target": false,
+      "selected_target": "Select from list",
+      "distractor_type": "negative",
+      "distractor_set": "Select set from list"
+    },
+    "last_selections": [],
+    "last_distractors": []
+  },
+  {
     "type": "End",
     "label": "End",
     "color": "red",
-    "index": 6,
+    "index": 7,
     "saved_text": "\n\n\n\n\n\n\n\n\nThank you for participaing in the experiment!",
     "saved_tags": [
       {

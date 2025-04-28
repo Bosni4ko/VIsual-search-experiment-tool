@@ -11,14 +11,18 @@ def open_image_selector(comp, target_type):
     # Get the currently selected stimulus set.
     stimulus_set = comp.data.get("stimulus_set", "Faces")
     # Allow the selector if the current stimulus set is either "Faces" or an imported set.
-    if stimulus_set != "Faces" and stimulus_set not in comp.data.get("imported_stimulus_sets", {}):
+    # Allow the selector if the current stimulus set is "Faces", "Images" or an imported set.
+    if stimulus_set not in ("Faces", "Images") and stimulus_set not in comp.data.get("imported_stimulus_sets", {}):
         return
 
     # Set the base path according to the stimulus set.
     if stimulus_set == "Faces":
         base_path = os.path.join("images", "faces")
+    elif stimulus_set == "Images":
+        base_path = os.path.join("images","images")
     else:
         base_path = comp.data["imported_stimulus_sets"][stimulus_set]
+
 
     # Create a unique key for this stimulus set and target type
     prev_key = (stimulus_set, target_type)
@@ -204,17 +208,20 @@ def open_image_selector(comp, target_type):
 def open_distractor_selector(comp, distractor_type):
     # Get the current stimulus set.
     stimulus_set = comp.data.get("stimulus_set", "Faces")
-    # Proceed only if it's "Faces" or an imported set.
-    if stimulus_set != "Faces" and stimulus_set not in comp.data.get("imported_stimulus_sets", {}):
+    # Proceed only if it's "Faces", "Images" or an imported set.
+    if stimulus_set not in ("Faces", "Images") and stimulus_set not in comp.data.get("imported_stimulus_sets", {}):
         print("returned")
         return
+
 
     # Determine the base folder.
     if stimulus_set == "Faces":
         base_path = os.path.join("images", "faces")
+    elif stimulus_set == "Images":
+        base_path = os.path.join("images","images")
     else:
         base_path = comp.data["imported_stimulus_sets"][stimulus_set]
-    print(base_path)
+
 
     # Create a unique key for this stimulus set and distractor type.
     prev_key = (stimulus_set, distractor_type)
@@ -604,6 +611,13 @@ def setup_stimulus_options(app, left_panel,main_panel,comp):
     stim_set_var = tk.StringVar(value=comp.data.get("stimulus_set", "Images"))
     # Default options.
     stimulus_options = ["Images", "Faces", "Import"]
+    # stimulus set: default to Images if not set
+    stimulus_set = comp.data.get("stimulus_set")
+    if stimulus_set is None:
+        stimulus_set = "Images"
+        comp.data["stimulus_set"] = "Images"  # <- fix: save it to comp.data immediately
+
+    stim_set_var = tk.StringVar(value=stimulus_set)
 
     # Initialize app.imported_stimulus_sets if not already present.
     if not hasattr(app, "imported_stimulus_sets"):

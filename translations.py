@@ -1,5 +1,5 @@
 translations = {
-    "English": {
+    "EN": {
         "create_experiment": "Create Experiment",
         "launch_experiment": "Launch Experiment",
         "visual_search_launcher": "Visual Search Experiment Launcher",
@@ -20,7 +20,7 @@ translations = {
         "value": "Value",
         "list": "List"
     },
-    "Latvian" : {
+    "LV" : {
         "create_experiment": "Izveidot eksperimentu",
         "launch_experiment": "Palaist eksperimentu",
         "visual_search_launcher": "Vizuālās meklēšanas eksperimenta rīks",

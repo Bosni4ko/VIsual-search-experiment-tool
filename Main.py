@@ -15,6 +15,7 @@ class ScrollableFrame(tk.Frame):
         self.canvas = tk.Canvas(self, bg="#ffffff", highlightthickness=0)
         vsb = ttk.Scrollbar(self, orient="vertical", command=self.canvas.yview)
         self.canvas.configure(yscrollcommand=vsb.set)
+        self.current_screen = "main"  # default screen
 
         # Inner frame
         self.scrollable_frame = tk.Frame(self.canvas, bg="#ffffff")
@@ -92,7 +93,7 @@ class ExperimentApp:
 
         self.translations = translations
         self.languages = list(self.translations.keys())  # Get languages dynamically
-        self.current_language = "English"  # Default language
+        self.current_language = "EN"  # Default language
 
         self.imported_stimulus_sets = {}
         self.load_create_screen_state()
@@ -120,10 +121,17 @@ class ExperimentApp:
     def on_language_change(self, event=None):
         selected_language = self.language_var.get()
         self.current_language = selected_language
-        self.show_main_screen()  # Refresh to apply language immediately
+        # Now reopen the correct screen
+        if self.current_screen == "main":
+            self.show_main_screen()
+        elif self.current_screen == "create":
+            self.show_create_screen()
+        elif self.current_screen == "launch":
+            self.show_launch_screen()
 
 
     def show_main_screen(self):
+        self.current_screen = "main"
         self.clear_screen()
         self.root.configure(bg="#f0f0f0")
 
@@ -178,8 +186,24 @@ class ExperimentApp:
             return displayed_type  # fallback (shouldn't happen)
 
     def show_create_screen(self):
+        self.current_screen = "create"
         self.clear_screen()
         self.metadata_entries = []  # Reset metadata entries
+        # TOP BAR (Language selection for Create Screen)
+        top_bar = tk.Frame(self.root, bg="#f0f0f0")
+        top_bar.pack(fill="x", side="top", anchor="nw", padx=20, pady=10)
+
+        self.language_var = tk.StringVar(value=self.current_language)
+        lang_dropdown = ttk.Combobox(
+            top_bar,
+            textvariable=self.language_var,
+            values=self.languages,
+            state="readonly",
+            width=12
+        )
+        lang_dropdown.pack(side="left")
+        lang_dropdown.bind("<<ComboboxSelected>>", self.on_language_change)
+
 
         # Main container for the create screen
         main_frame = tk.Frame(self.root, bg="#f0f0f0", padx=40, pady=40)

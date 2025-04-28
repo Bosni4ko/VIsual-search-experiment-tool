@@ -153,14 +153,11 @@ class ExperimentApp:
         button_frame = tk.Frame(header_frame, bg="#f0f0f0")
         button_frame.pack()
         
-        create_button = ttk.Button(button_frame, text="Create Experiment", command=self.show_create_screen)
+        create_button = ttk.Button(button_frame, text=self.tr("create_experiment"), command=self.show_create_screen)
         create_button.grid(row=0, column=0, padx=20, pady=20)
         
-        launch_button = ttk.Button(button_frame, text="Launch Experiment", command=self.show_launch_screen)
+        launch_button = ttk.Button(button_frame, text=self.tr("launch_experiment"), command=self.show_launch_screen)
         launch_button.grid(row=0, column=1, padx=20, pady=20)
-
-
-
 
     def choose_save_location(self):
         directory = filedialog.askdirectory(initialdir=self.save_location_entry.get() or os.getcwd())
@@ -168,6 +165,17 @@ class ExperimentApp:
             self.save_location_entry.delete(0, tk.END)
             self.save_location_entry.insert(0, directory)
             self.saved_save_location = directory 
+
+    def get_real_type(self, displayed_type):
+        """
+        Maps translated type (displayed text) back to internal real type: 'Value' or 'List'
+        """
+        if displayed_type == self.tr("value"):
+            return "Value"
+        elif displayed_type == self.tr("list"):
+            return "List"
+        else:
+            return displayed_type  # fallback (shouldn't happen)
 
     def show_create_screen(self):
         self.clear_screen()
@@ -177,7 +185,7 @@ class ExperimentApp:
         main_frame = tk.Frame(self.root, bg="#f0f0f0", padx=40, pady=40)
         main_frame.pack(expand=True, fill="both")
         
-        header_label = ttk.Label(main_frame, text="Create New Experiment", font=("Segoe UI", 24, "bold"))
+        header_label = ttk.Label(main_frame, text=self.tr("create_new_experiment"), font=("Segoe UI", 24, "bold"))
         header_label.pack(pady=(0, 30))
         
         self.error_label = ttk.Label(main_frame, text="", foreground="red", font=("Segoe UI", 12))
@@ -190,21 +198,21 @@ class ExperimentApp:
         form_frame.columnconfigure(1, weight=1)
 
         # Save Location row
-        save_label = ttk.Label(form_frame, text="Save Location:", font=("Segoe UI", 18, "bold"), background="#f0f0f0")
+        save_label = ttk.Label(form_frame, text=self.tr("save_location"), font=("Segoe UI", 18, "bold"), background="#f0f0f0")
         save_label.grid(row=0, column=0, sticky="e", padx=5, pady=5)
         self.save_location_entry = ttk.Entry(form_frame, width=50)
         self.save_location_entry.grid(row=0, column=1, sticky="w", padx=5, pady=5)
         self.save_location_entry.insert(0, self.saved_save_location)
-        choose_button = ttk.Button(form_frame, text="Choose",command=self.choose_save_location,style="Small.TButton")
+        choose_button = ttk.Button(form_frame, text=self.tr("choose"),command=self.choose_save_location,style="Small.TButton")
         choose_button.grid(row=0, column=2, sticky="w", padx=5, pady=5)
         
-        exp_label = ttk.Label(form_frame, text="Experiment Name:", font=("Segoe UI", 18, "bold"), background="#f0f0f0")
+        exp_label = ttk.Label(form_frame, text=self.tr("experiment_name"), font=("Segoe UI", 18, "bold"), background="#f0f0f0")
         exp_label.grid(row=1, column=0, sticky="e", padx=5, pady=5)
         self.exp_name_entry = ttk.Entry(form_frame, width=50)
         self.exp_name_entry.grid(row=1, column=1, sticky="w", padx=5, pady=5)
         self.exp_name_entry.insert(0, self.saved_exp_name)
         
-        part_label = ttk.Label(form_frame, text="Participant Default Name:", font=("Segoe UI", 18, "bold"), background="#f0f0f0")
+        part_label = ttk.Label(form_frame, text=self.tr("participant_default_name"), font=("Segoe UI", 18, "bold"), background="#f0f0f0")
         part_label.grid(row=2, column=0, sticky="e", padx=5, pady=5)
         self.participant_entry = ttk.Entry(form_frame, width=50)
         self.participant_entry.grid(row=2, column=1, sticky="w", padx=5, pady=5)
@@ -230,14 +238,14 @@ class ExperimentApp:
             self.add_metadata_row()
 
         # + Add Metadata button, action buttons, etc.
-        add_button = ttk.Button(main_frame, text="+ Add Metadata", command=self.add_metadata_row)
+        add_button = ttk.Button(main_frame, text=self.tr("add_metadata"), command=self.add_metadata_row)
         add_button.pack(pady=10)
 
         action_frame = tk.Frame(main_frame, bg="#f0f0f0")
         action_frame.pack(pady=20)
-        back_button = ttk.Button(action_frame, text="Back", command=self.back_to_main)
+        back_button = ttk.Button(action_frame, text=self.tr("back"), command=self.back_to_main)
         back_button.grid(row=0, column=0, padx=20)
-        create_button = ttk.Button(action_frame, text="Create", command=self.validate_and_proceed)
+        create_button = ttk.Button(action_frame, text=self.tr("create"), command=self.validate_and_proceed)
         create_button.grid(row=0, column=1, padx=20)
     def show_launch_screen(self):
         show_launch_screen(self)
@@ -266,7 +274,7 @@ class ExperimentApp:
         type_combobox = ttk.Combobox(
             row_frame,
             textvariable=type_var,
-            values=["Value", "List"],
+            values=[self.tr("value"), self.tr("list")],
             state="readonly",
             width=6
         )        
@@ -284,7 +292,7 @@ class ExperimentApp:
         list_entries = []
         add_item_button = ttk.Button(
             content_frame,
-            text="+ Add Item",
+            text=self.tr("add_item"),
             style="AddItem.TButton",
             command=lambda: self._add_list_item(list_container, list_entries)
         )
@@ -327,7 +335,7 @@ class ExperimentApp:
         # Remove metadata button for this row.
         remove_btn = ttk.Button(
             row_frame,
-            text="Remove",
+            text=self.tr("remove"),
             command=lambda: self.remove_metadata_row(row_frame),
             style="Small.TButton"
         )
@@ -347,7 +355,7 @@ class ExperimentApp:
         entry = ttk.Entry(row, width=35)
         entry.pack(side="left", padx=5)
         entry.insert(0, initial_text)
-        remove_btn = ttk.Button(row, text="Remove", style="Small.TButton", command=row.destroy)
+        remove_btn = ttk.Button(row, text=self.tr("remove"), style="Small.TButton", command=row.destroy)
         remove_btn.pack(side="left", padx=5)
         return entry
 
@@ -386,7 +394,7 @@ class ExperimentApp:
         participant_name = self.participant_entry.get().strip()
 
         if not exp_name or not participant_name:
-            self.error_label.config(text="Please fill in both the experiment name and participant name.")
+            self.error_label.config(text=self.tr("please_fill_fields"))
             return
 
         # Clear any previous error message
@@ -402,10 +410,10 @@ class ExperimentApp:
             name = row["name_entry"].get().strip()
             # Validate the main metadata field is not empty.
             if not name:
-                self.error_label.config(text="Metadata field names cannot be empty.")
+                self.error_label.config(text=self.tr("metadata_field_empty"))
                 return
 
-            type_val = row["type_combobox"].get()
+            type_val = self.get_real_type(row["type_combobox"].get())
             if type_val == "Value":
                 # In your code the "Value" mode uses a placeholder.
                 # If you later add an input widget for this mode, replace "N/A" with its content.
@@ -415,7 +423,7 @@ class ExperimentApp:
                 # Get all non-empty list item entries.
                 list_values = [entry.get().strip() for entry in row["list_entries"] if entry.get().strip()]
                 if not list_values:
-                    self.error_label.config(text=f"Please fill in at least one list item for the metadata field '{name}'.")
+                    self.error_label.config(text=f"{self.tr('at_least_one_list_item')} '{name}'.")
                     return
                 metadata_item = {"name": name, "type": "List", "value": list_values}
             self.saved_metadata.append(metadata_item)

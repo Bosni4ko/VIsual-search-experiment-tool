@@ -11,11 +11,14 @@ translations = {
         "create": "Create",
         "remove": "Remove",
         "choose": "Choose",
+        "add_item":"+ Add Item",
         "change_language": "Change Language",
         "create_new_experiment": "Create New Experiment",
         "please_fill_fields": "Please fill in both the experiment name and participant name.",
         "metadata_field_empty": "Metadata field names cannot be empty.",
         "at_least_one_list_item": "Please fill in at least one list item for the metadata field",
+        "value": "Value",
+        "list": "List"
     },
     "Latvian" : {
         "create_experiment": "Izveidot eksperimentu",
@@ -29,10 +32,13 @@ translations = {
         "create": "Izveidot",
         "remove": "Noņemt",
         "choose": "Izvēlēt",
+        "add_item":"+ Pievienot saraksta elementu",
         "change_language": "Change Language",
         "create_new_experiment": "Izveidot jaunu eksperimentu",
-        "please_fill_fields": "Please fill in both the experiment name and participant name.",
-        "metadata_field_empty": "Metadata field names cannot be empty.",
-        "at_least_one_list_item": "Please fill in at least one list item for the metadata field",
+        "please_fill_fields": "Lūdzu, ierakstiet gan eksperimenta , gan dalībnieka nosaukumu.",
+        "metadata_field_empty": "Datu lauku nosaukumi nedrīkst būt tukši.",
+        "at_least_one_list_item": "Lūdzu, datu laukā aizpildiet vismaz vienu saraksta elementu.",
+        "value": "Vērtība",
+        "list": "Saraksts"
     },
 }

@@ -36,7 +36,19 @@ translations = {
         "cannot_continue": "Cannot Continue",
         "please_select_experiment":"Please select an experiment first.",
         "path_not_found_for_experiment": "Could not find path for experiment '{experiment_name}'.",
-        "no_continue_file": "There's no continue_experiment.json in\n{path}"
+        "no_continue_file": "There's no continue_experiment.json in\n{path}",
+
+        "start_session": "Start Session",
+        "participant_name": "Participant Name:",
+        "participant_number": "Participant Number:",
+        "metadata": "Metadata:",
+        "save_name": "Save Name:",
+        "save_location": "Save Location:",
+        "browse": "Browse",
+        "required": "Required",
+        "select_save_folder": "Select Save Folder",
+        "participant": "Participant",
+        "experiment_colon": "Experiment: {experiment_name}"
 
     },
     "LV" : {
@@ -45,7 +57,7 @@ translations = {
         "visual_search_launcher": "Vizuālās meklēšanas eksperimenta rīks",
         "save_location": "Saglabāšanas mape",
         "experiment_name": "Eksperimenta nosaukums:",
-        "participant_default_name": "Dalībnieka noklusējuma nosaukums:",
+        "participant_default_name": "Dalībnieka noklusējuma vārds:",
         "add_metadata": "+ Pievienot datus",
         "back": "Atpakaļ",
         "create": "Izveidot",
@@ -76,6 +88,17 @@ translations = {
         "cannot_continue": "Nevar turpināt",
         "please_select_experiment":"Lūdzu, vispirms atlasiet eksperimentu.",
         "path_not_found_for_experiment": "Nevar atrast eksperimenta ceļu '{experiment_name}'.",
-        "no_continue_file": "Netiek atrasts continue_experiment.json mapē\n{path}"
+        "no_continue_file": "Netiek atrasts continue_experiment.json mapē\n{path}",
+
+        "start_session": "Sākst sessiju",
+        "participant_name": "Dalībnieka vārds:",
+        "participant_number": "Dalībnieka numurs:",
+        "metadata": "Dati:",
+        "save_name": "Saglabātā faila nosaukums",
+        "save_location": "Saglabātā faila mape",
+        "required": "Obligāts",
+        "select_save_folder": "Izvēlieties saglabāšanas mapi",
+        "participant": "Dalībnieks",
+        "experiment_colon": "Experiments: {experiment_name}"
     },
 }

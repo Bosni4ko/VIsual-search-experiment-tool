@@ -244,7 +244,9 @@ def show_launch_screen(app):
             messagebox.showinfo(app.tr("cannot_continue"),
                                 app.tr("no_continue_file").format(path=exp_path))
             return
-
+        app.experiment_name = exp_name
+        app.experiment_path = exp_path
+        app.continue_mode = True
         # if we get here, the JSON exists and we can hand off to the session screen
         show_experiment_session_start(app, exp_name, exp_path,True)
 
@@ -261,7 +263,9 @@ def show_launch_screen(app):
         if not exp_path:
             print("Experiment path not found.")
             return
-
+        app.experiment_name = exp_name
+        app.experiment_path = exp_path
+        app.continue_mode = False
         # Now pass the selected experiment name and path to the session screen!
         show_experiment_session_start(app, exp_name, exp_path)
 

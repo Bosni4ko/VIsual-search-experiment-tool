@@ -6,6 +6,7 @@ from running_session_screen import show_running_session_screen
 
 
 def show_experiment_session_start(app, experiment_name, experiment_path, continue_mode=False):
+    app.current_screen = "session_start"
     app.root.configure(bg="#f0f0f0")
 
     if continue_mode:
@@ -79,7 +80,7 @@ def show_experiment_session_start(app, experiment_name, experiment_path, continu
             print(f"Error writing continue_experiment: {e}")
         show_running_session_screen(app, experiment_path)
 
-    start_button = ttk.Button(app.root, text="Start Session", width=30, command=start_session)
+    start_button = ttk.Button(app.root, text=app.tr("start_session"), width=30, command=start_session)
     start_button.pack(pady=20)
 
     def load_create_screen_state(file_path):
@@ -130,8 +131,17 @@ def show_experiment_session_start(app, experiment_name, experiment_path, continu
 
     back_button = ttk.Button(top_frame, text="←", command=back_to_launch_screen, width=3)
     back_button.pack(side="left", padx=10)
-
-    title_label = ttk.Label(top_frame, text=f"Experiment: {experiment_name}", font=("Segoe UI", 20, "bold"))
+    app.language_var = tk.StringVar(value=app.current_language)
+    lang_dropdown = ttk.Combobox(
+        top_frame,
+        textvariable=app.language_var,
+        values=app.languages,
+        state="readonly",
+        width=12
+    )
+    lang_dropdown.pack(side="left")
+    lang_dropdown.bind("<<ComboboxSelected>>", app.on_language_change)
+    title_label = ttk.Label(top_frame, text=app.tr("experiment_colon").format(experiment_name=experiment_name), font=("Segoe UI", 20, "bold"))
     title_label.pack(side="left", padx=20)
 
     # === Main Session Frame ===
@@ -146,7 +156,7 @@ def show_experiment_session_start(app, experiment_name, experiment_path, continu
     participant_name_frame = tk.Frame(session_frame, bg="#f0f0f0")
     participant_name_frame.pack(pady=(10, 5), fill="x", padx=20)
 
-    participant_name_label = ttk.Label(participant_name_frame, text="Participant Name:", font=("Segoe UI", 16))
+    participant_name_label = ttk.Label(participant_name_frame, text=app.tr("participant_name"), font=("Segoe UI", 16))
     participant_name_label.pack(side="left", padx=(0,10))
 
     participant_name_entry = ttk.Entry(participant_name_frame, font=("Segoe UI", 14), width=30)
@@ -161,7 +171,7 @@ def show_experiment_session_start(app, experiment_name, experiment_path, continu
     participant_number_frame = tk.Frame(session_frame, bg="#f0f0f0")
     participant_number_frame.pack(pady=(10, 20), fill="x", padx=20)
 
-    participant_number_label = ttk.Label(participant_number_frame, text="Participant Number:", font=("Segoe UI", 16))
+    participant_number_label = ttk.Label(participant_number_frame, text=app.tr("participant_number"), font=("Segoe UI", 16))
     participant_number_label.pack(side="left", padx=(0,10))
 
     participant_number_var = tk.IntVar()
@@ -185,7 +195,7 @@ def show_experiment_session_start(app, experiment_name, experiment_path, continu
         # === Metadata Section (with Scroll) ===
         metadata_label = ttk.Label(
             session_frame,
-            text="Metadata:",
+            text=app.tr("metadata"),
             font=("Segoe UI", 18, "bold")
         )
         metadata_label.pack(pady=(20, 10))
@@ -294,7 +304,7 @@ def show_experiment_session_start(app, experiment_name, experiment_path, continu
     save_name_frame = tk.Frame(session_frame, bg="#f0f0f0")
     save_name_frame.pack(pady=(30, 5), fill="x", padx=20)
 
-    save_name_label = ttk.Label(save_name_frame, text="Save Name:", font=("Segoe UI", 16))
+    save_name_label = ttk.Label(save_name_frame, text=app.tr("save_name"), font=("Segoe UI", 16))
     save_name_label.pack(side="left", padx=(0,10))
 
     save_name_entry = ttk.Entry(save_name_frame, font=("Segoe UI", 14), width=40)
@@ -309,7 +319,7 @@ def show_experiment_session_start(app, experiment_name, experiment_path, continu
 
     save_location_label = ttk.Label(
         save_location_frame,
-        text="Save Location:",
+        text=app.tr("save_location"),
         font=("Segoe UI", 16)
     )
     save_location_label.pack(side="left", padx=(0,10))
@@ -334,7 +344,7 @@ def show_experiment_session_start(app, experiment_name, experiment_path, continu
     # create exactly one Browse button
     browse_button = ttk.Button(
         save_location_frame,
-        text="Browse",
+        text=app.tr("browse"),
         command=browse_save_location
     )
     browse_button.pack(side="left", padx=(5,0))
@@ -373,6 +383,6 @@ def show_experiment_session_start(app, experiment_name, experiment_path, continu
     participant_name_entry.bind('<KeyRelease>', lambda event: update_save_name_and_location())
 
     # === Start Session Button ===
-    start_button = ttk.Button(app.root, text="Start Session", width=30, command=start_session)
+    start_button = ttk.Button(app.root, text=app.tr("start_session"), width=30, command=start_session)
     start_button.pack(pady=20)
 

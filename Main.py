@@ -128,13 +128,16 @@ class ExperimentApp:
             self.show_create_screen()
         elif self.current_screen == "launch":
             self.show_launch_screen()
+        elif self.current_screen == "session_start":
+            from experiment_session_start import show_experiment_session_start
+            show_experiment_session_start(self, self.experiment_name, self.experiment_path, self.continue_mode)
+        
 
 
     def show_main_screen(self):
         self.current_screen = "main"
         self.clear_screen()
         self.root.configure(bg="#f0f0f0")
-
 
         # TOP BAR (Language selection)
         top_bar = tk.Frame(self.root, bg="#f0f0f0")

@@ -18,7 +18,26 @@ translations = {
         "metadata_field_empty": "Metadata field names cannot be empty.",
         "at_least_one_list_item": "Please fill in at least one list item for the metadata field",
         "value": "Value",
-        "list": "List"
+        "list": "List",
+
+        "launch_visual_search_experiment": "Launch Visual Search Experiment",
+        "browse": "Browse",
+        "add": "Add",
+        "no_experiments_found": "No experiments found.",
+        "select_experiment_to_view_details": "Select an experiment to view its details here.",
+        "continue_experiment": "Continue Experiment",
+        "launch_new_experiment": "Launch New Experiment",
+        "invalid_folder": "Invalid Folder",
+        "please_select_valid_directory": "Please select a valid directory.",
+        "invalid_experiment_folder": "Invalid Experiment Folder",
+        "incorrect_experiment_folder_format": "Incorrect experiment folder format.",
+        "no_experiment_selected": "No Experiment Selected",
+        "path_not_found": "Path Not Found",
+        "cannot_continue": "Cannot Continue",
+        "please_select_experiment":"Please select an experiment first.",
+        "path_not_found_for_experiment": "Could not find path for experiment '{experiment_name}'.",
+        "no_continue_file": "There's no continue_experiment.json in\n{path}"
+
     },
     "LV" : {
         "create_experiment": "Izveidot eksperimentu",
@@ -39,6 +58,24 @@ translations = {
         "metadata_field_empty": "Datu lauku nosaukumi nedrīkst būt tukši.",
         "at_least_one_list_item": "Lūdzu, datu laukā aizpildiet vismaz vienu saraksta elementu.",
         "value": "Vērtība",
-        "list": "Saraksts"
+        "list": "Saraksts",
+
+        "launch_visual_search_experiment": "Palaist vizuālās meklēšanas eksperimentu",
+        "browse": "Pārlūkot",
+        "add": "Pievienot",
+        "no_experiments_found": "Eksperimenti nav atrasti.",
+        "select_experiment_to_view_details": "Select an experiment to view its details here.",
+        "continue_experiment": "Turpināt eksperimentu",
+        "launch_new_experiment": "Palaist jaunu eksperimentu",
+        "invalid_folder": "Nederīga mape",
+        "please_select_valid_directory": "Lūdzu, atlasiet derīgu mapi.",
+        "invalid_experiment_folder": "Nederīga eksperimenta mape",
+        "incorrect_experiment_folder_format": "Nepareizs eksperimenta mapes formāts.",
+        "no_experiment_selected": "Nav atlasīts neviens eksperiments",
+        "path_not_found": "Ceļš nav atrasts",
+        "cannot_continue": "Nevar turpināt",
+        "please_select_experiment":"Lūdzu, vispirms atlasiet eksperimentu.",
+        "path_not_found_for_experiment": "Nevar atrast eksperimenta ceļu '{experiment_name}'.",
+        "no_continue_file": "Netiek atrasts continue_experiment.json mapē\n{path}"
     },
 }

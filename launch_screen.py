@@ -6,6 +6,7 @@ from tkinter import messagebox
 
 
 def show_launch_screen(app):
+    app.current_screen = "launch"  # Track which screen is active
     app.clear_screen()
     app.root.configure(bg="#f0f0f0")
 
@@ -21,12 +22,21 @@ def show_launch_screen(app):
 
     back_button = ttk.Button(top_frame, text="←", command=app.show_main_screen, width=3)
     back_button.pack(side="left", padx=10)
-
+    app.language_var = tk.StringVar(value=app.current_language)
+    lang_dropdown = ttk.Combobox(
+        top_frame,
+        textvariable=app.language_var,
+        values=app.languages,
+        state="readonly",
+        width=12
+    )
+    lang_dropdown.pack(side="left")
+    lang_dropdown.bind("<<ComboboxSelected>>", app.on_language_change)
     # === Header ===
     header_frame = tk.Frame(app.root, bg="#f0f0f0")
     header_frame.pack(pady=20)
 
-    title_label = ttk.Label(header_frame, text="Launch Visual Search Experiment", anchor="center", font=("Segoe UI", 24, "bold"))
+    title_label = ttk.Label(header_frame, text=app.tr("launch_visual_search_experiment"), anchor="center", font=("Segoe UI", 24, "bold"))
     title_label.pack(pady=(0, 10))
 
     # === Folder Entry + Browse + Add ===
@@ -55,7 +65,7 @@ def show_launch_screen(app):
 
         path = folder_entry.get().strip()
         if not path or not os.path.isdir(path):
-            messagebox.showerror("Invalid Folder", "Please select a valid directory.")
+            messagebox.showerror("Invalid Folder", app.tr("please_select_valid_directory"))
             return
 
         # --- REQUIRE both state JSONs to exist ---
@@ -63,8 +73,8 @@ def show_launch_screen(app):
         missing  = [f for f in required if not os.path.isfile(os.path.join(path, f))]
         if missing:
             messagebox.showerror(
-                "Invalid Experiment Folder",
-                "Incorrect experiment folder format."
+                app.tr("invalid_experiment_folder"),
+                app.tr("incorrect_experiment_folder_format")
             )
             return
 
@@ -78,10 +88,10 @@ def show_launch_screen(app):
         app.added_experiments[exp_name] = path
         create_experiment_label(exp_name)
 
-    browse_button = ttk.Button(folder_frame, text="Browse", command=browse_folder)
+    browse_button = ttk.Button(folder_frame, text=app.tr("browse"), command=browse_folder)
     browse_button.pack(side="left", padx=5)
 
-    add_button = ttk.Button(folder_frame, text="Add", command=add_experiment)
+    add_button = ttk.Button(folder_frame, text=app.tr("add"), command=add_experiment)
     add_button.pack(side="left", padx=5)
 
     # === Experiments List with Scroll ===
@@ -197,7 +207,7 @@ def show_launch_screen(app):
     if not experiments and not app.added_experiments:
             app.no_experiments_label = ttk.Label(
                 scrollable_frame,
-                text="No experiments found.",
+                text=app.tr("no_experiments_found"),
                 font=("Segoe UI", 14, "italic"),
                 foreground="gray"
             )
@@ -209,7 +219,7 @@ def show_launch_screen(app):
 
     experiment_info_text = tk.Text(info_frame, height=7, font=("Segoe UI", 12), bg="#f8f8f8", wrap="word")
     experiment_info_text.pack(fill="both", expand=True)
-    experiment_info_text.insert(tk.END, "Select an experiment to view its details here.")
+    experiment_info_text.insert(tk.END, app.tr("select_experiment_to_view_details"))
     experiment_info_text.config(state="disabled")  # Make it read-only
 
     # === Bottom Buttons (Continue and Launch) ===
@@ -219,26 +229,26 @@ def show_launch_screen(app):
     def continue_experiment():
         exp_name = selected_experiment.get()
         if not exp_name:
-            messagebox.showwarning("No Experiment Selected",
-                                "Please select an experiment first.")
+            messagebox.showwarning(app.tr("no_experiment_selected"),
+                                app.tr("please_select_experiment"))
             return
 
         exp_path = loaded_experiments.get(exp_name)
         if not exp_path:
-            messagebox.showerror("Path Not Found",
-                                f"Could not find path for experiment '{exp_name}'.")
+            messagebox.showerror(app.tr("path_not_found"),
+                                app.tr("path_not_found_for_experiment").format(experiment_name=exp_name))
             return
 
         continue_file = os.path.join(exp_path, "continue_experiment.json")
         if not os.path.isfile(continue_file):
-            messagebox.showinfo("Cannot Continue",
-                                f"There's no continue_experiment.json in\n{exp_path}")
+            messagebox.showinfo(app.tr("cannot_continue"),
+                                app.tr("no_continue_file").format(path=exp_path))
             return
 
         # if we get here, the JSON exists and we can hand off to the session screen
         show_experiment_session_start(app, exp_name, exp_path,True)
 
-    continue_button = ttk.Button(button_frame, text="Continue Experiment", width=25,command=continue_experiment)
+    continue_button = ttk.Button(button_frame, app.tr("continue_experiment"), width=25,command=continue_experiment)
     continue_button.grid(row=0, column=0, padx=20, pady=10)
 
     def launch_experiment():
@@ -256,5 +266,5 @@ def show_launch_screen(app):
         show_experiment_session_start(app, exp_name, exp_path)
 
 
-    launch_button = ttk.Button(button_frame, text="Launch New Experiment", width=25, command=launch_experiment)
+    launch_button = ttk.Button(button_frame, app.tr("launch_new_experiment"), width=25, command=launch_experiment)
     launch_button.grid(row=0, column=1, padx=20, pady=10)

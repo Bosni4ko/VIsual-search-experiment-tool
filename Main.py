@@ -4,6 +4,7 @@ import os
 from tkinter import filedialog
 import sys
 import json
+from translations import translations
 from editor_screen import show_editor_screen
 from launch_screen import show_launch_screen
 STATE_FILE = "create_screen_state.json"
@@ -89,25 +90,66 @@ class ExperimentApp:
         # List to store metadata rows (each row is represented as a dictionary of widget references)
         self.metadata_entries = []
 
+        self.translations = translations
+        self.languages = list(self.translations.keys())  # Get languages dynamically
+        self.current_language = "English"  # Default language
+
         self.imported_stimulus_sets = {}
         self.load_create_screen_state()
         self.show_main_screen()
+    def tr(self, key):
+        return self.translations[self.current_language].get(key, key)
 
     def clear_screen(self):
         for widget in self.root.winfo_children():
             widget.destroy()
+    def change_language(self):
+        def set_language(new_lang):
+            self.current_language = new_lang
+            self.show_main_screen()  # Refresh current screen
+            popup.destroy()
+
+        popup = tk.Toplevel(self.root)
+        popup.title(self.tr("change_language"))
+        popup.geometry("300x200")
+        tk.Label(popup, text=self.tr("change_language")).pack(pady=10)
+
+        for lang in self.languages:
+            btn = ttk.Button(popup, text=lang, command=lambda l=lang: set_language(l))
+            btn.pack(pady=5)
+    def on_language_change(self, event=None):
+        selected_language = self.language_var.get()
+        self.current_language = selected_language
+        self.show_main_screen()  # Refresh to apply language immediately
+
 
     def show_main_screen(self):
         self.clear_screen()
         self.root.configure(bg="#f0f0f0")
 
+
+        # TOP BAR (Language selection)
+        top_bar = tk.Frame(self.root, bg="#f0f0f0")
+        top_bar.pack(fill="x", side="top", anchor="nw", padx=20, pady=10)  
+
+        self.language_var = tk.StringVar(value=self.current_language)
+        lang_dropdown = ttk.Combobox(
+            top_bar,
+            textvariable=self.language_var,
+            values=self.languages,
+            state="readonly",
+            width=12
+        )
+        lang_dropdown.pack(side="left")
+        lang_dropdown.bind("<<ComboboxSelected>>", self.on_language_change)
+
         # Header Frame for title and buttons
         header_frame = tk.Frame(self.root, bg="#f0f0f0")
         header_frame.pack(expand=True, pady=50)
-        
-        title_label = ttk.Label(header_frame, text="Visual Search Experiment Launcher", anchor="center")
+        title_label = ttk.Label(header_frame, text=self.tr("visual_search_launcher"), anchor="center")
         title_label.pack(pady=(0, 30))
-        
+
+
         button_frame = tk.Frame(header_frame, bg="#f0f0f0")
         button_frame.pack()
         
@@ -116,6 +158,8 @@ class ExperimentApp:
         
         launch_button = ttk.Button(button_frame, text="Launch Experiment", command=self.show_launch_screen)
         launch_button.grid(row=0, column=1, padx=20, pady=20)
+
+
 
 
     def choose_save_location(self):

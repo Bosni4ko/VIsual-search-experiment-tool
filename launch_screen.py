@@ -248,7 +248,7 @@ def show_launch_screen(app):
         # if we get here, the JSON exists and we can hand off to the session screen
         show_experiment_session_start(app, exp_name, exp_path,True)
 
-    continue_button = ttk.Button(button_frame, app.tr("continue_experiment"), width=25,command=continue_experiment)
+    continue_button = ttk.Button(button_frame, text=app.tr("continue_experiment"), width=25,command=continue_experiment)
     continue_button.grid(row=0, column=0, padx=20, pady=10)
 
     def launch_experiment():
@@ -266,5 +266,5 @@ def show_launch_screen(app):
         show_experiment_session_start(app, exp_name, exp_path)
 
 
-    launch_button = ttk.Button(button_frame, app.tr("launch_new_experiment"), width=25, command=launch_experiment)
+    launch_button = ttk.Button(button_frame, text=app.tr("launch_new_experiment"), width=25, command=launch_experiment)
     launch_button.grid(row=0, column=1, padx=20, pady=10)

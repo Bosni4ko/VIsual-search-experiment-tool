@@ -357,7 +357,7 @@ def show_session_complete_screen(app):
 
     complete_label = ttk.Label(
         complete_frame,
-        text="Session Complete!",
+        text=app.tr("session_complete"),
         font=("Segoe UI", 24, "bold"),
         background="#d0d0d0",
         foreground="black"
@@ -375,7 +375,7 @@ def show_session_complete_screen(app):
 
     back_button = ttk.Button(
         complete_frame,
-        text="Back to Launch Screen",
+        text=app.tr("back_to_launch_screen"),
         command=back_to_launch_screen
     )
     back_button.pack(pady=20)

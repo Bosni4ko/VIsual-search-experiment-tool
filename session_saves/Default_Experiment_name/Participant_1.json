@@ -1,0 +1,60 @@
+{
+  "participant_name": "Participant",
+  "participant_number": 1,
+  "metadata": {
+    "Vecums": "23",
+    "Alga": "1000+"
+  },
+  "stimulus_log": [
+    {
+      "stimulus_number": 1,
+      "number_of_distractors": 6,
+      "target_present": true,
+      "placements": [
+        {
+          "row": 4,
+          "col": 6,
+          "is_target": false,
+          "image_path": "experiments\\Default_Experiment_name\\distractors\\Sn009.bmp"
+        },
+        {
+          "row": 2,
+          "col": 6,
+          "is_target": false,
+          "image_path": "experiments\\Default_Experiment_name\\distractors\\Sn006.bmp"
+        },
+        {
+          "row": 1,
+          "col": 3,
+          "is_target": false,
+          "image_path": "experiments\\Default_Experiment_name\\distractors\\Sn002.bmp"
+        },
+        {
+          "row": 2,
+          "col": 3,
+          "is_target": false,
+          "image_path": "experiments\\Default_Experiment_name\\distractors\\Sn003.bmp"
+        },
+        {
+          "row": 7,
+          "col": 0,
+          "is_target": false,
+          "image_path": "experiments\\Default_Experiment_name\\distractors\\Sn010.bmp"
+        },
+        {
+          "row": 7,
+          "col": 3,
+          "is_target": true,
+          "image_path": "experiments\\Default_Experiment_name\\selections\\P046.bmp"
+        },
+        {
+          "row": 6,
+          "col": 4,
+          "is_target": false,
+          "image_path": "experiments\\Default_Experiment_name\\distractors\\Sn001.bmp"
+        }
+      ],
+      "reaction_time_seconds": 5.2813849
+    }
+  ]
+}

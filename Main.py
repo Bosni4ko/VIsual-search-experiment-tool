@@ -133,7 +133,6 @@ class ExperimentApp:
             show_experiment_session_start(self, self.experiment_name, self.experiment_path, self.continue_mode)
         
 
-
     def show_main_screen(self):
         self.current_screen = "main"
         self.clear_screen()

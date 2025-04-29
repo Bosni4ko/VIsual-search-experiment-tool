@@ -48,7 +48,10 @@ translations = {
         "required": "Required",
         "select_save_folder": "Select Save Folder",
         "participant": "Participant",
-        "experiment_colon": "Experiment: {experiment_name}"
+        "experiment_colon": "Experiment: {experiment_name}",
+
+        "session_complete": "Session Complete!",
+        "back_to_launch_screen": "Back to Launch Screen"
 
     },
     "LV" : {
@@ -99,6 +102,9 @@ translations = {
         "required": "Obligāts",
         "select_save_folder": "Izvēlieties saglabāšanas mapi",
         "participant": "Dalībnieks",
-        "experiment_colon": "Experiments: {experiment_name}"
+        "experiment_colon": "Experiments: {experiment_name}",
+        
+        "session_complete": "Session Complete!",
+        "back_to_launch_screen": "Back to Launch Screen"
     },
 }

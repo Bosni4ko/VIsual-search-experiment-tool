@@ -4,9 +4,17 @@
   "save_location": "C:\\Users\\User\\Desktop\\mag\\Program\\experiments",
   "metadata": [
     {
-      "name": "A",
+      "name": "Vecums",
       "type": "Value",
       "value": "N/A"
+    },
+    {
+      "name": "Alga",
+      "type": "List",
+      "value": [
+        "0-1000+",
+        "1000+"
+      ]
     }
   ]
 }

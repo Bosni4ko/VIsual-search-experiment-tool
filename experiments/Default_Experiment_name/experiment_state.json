@@ -349,7 +349,13 @@
     ],
     "data": {},
     "last_selections": [],
-    "last_distractors": []
+    "last_distractors": [
+      {
+        "stimulus_set": "Faces",
+        "distractor_type": "positive",
+        "paths": []
+      }
+    ]
   },
   {
     "type": "Text",
@@ -360,7 +366,13 @@
     "saved_tags": [],
     "data": {},
     "last_selections": [],
-    "last_distractors": []
+    "last_distractors": [
+      {
+        "stimulus_set": "Faces",
+        "distractor_type": "positive",
+        "paths": []
+      }
+    ]
   },
   {
     "type": "Stimulus notification",
@@ -559,7 +571,13 @@
     ],
     "data": {},
     "last_selections": [],
-    "last_distractors": [],
+    "last_distractors": [
+      {
+        "stimulus_set": "Faces",
+        "distractor_type": "positive",
+        "paths": []
+      }
+    ],
     "attachment": {
       "label": "Stimulus",
       "color": "yellow",
@@ -591,7 +609,7 @@
       {
         "stimulus_set": "Images",
         "stimulus_type": "positive",
-        "path": "images\\images\\positive\\P\\P046.bmp"
+        "path": "selections\\P046.bmp"
       }
     ],
     "last_distractors": [
@@ -599,16 +617,16 @@
         "stimulus_set": "Images",
         "distractor_type": "negative",
         "paths": [
-          "images\\images\\negative\\Sn\\Sn008.bmp",
-          "images\\images\\negative\\Sn\\Sn001.bmp",
-          "images\\images\\negative\\Sn\\Sn002.bmp",
-          "images\\images\\negative\\Sn\\Sn006.bmp",
-          "images\\images\\negative\\Sn\\Sn009.bmp",
-          "images\\images\\negative\\Sn\\Sn005.bmp",
-          "images\\images\\negative\\Sn\\Sn004.bmp",
-          "images\\images\\negative\\Sn\\Sn003.bmp",
-          "images\\images\\negative\\Sn\\Sn007.bmp",
-          "images\\images\\negative\\Sn\\Sn010.bmp"
+          "distractors\\Sn008.bmp",
+          "distractors\\Sn001.bmp",
+          "distractors\\Sn002.bmp",
+          "distractors\\Sn006.bmp",
+          "distractors\\Sn009.bmp",
+          "distractors\\Sn005.bmp",
+          "distractors\\Sn004.bmp",
+          "distractors\\Sn003.bmp",
+          "distractors\\Sn007.bmp",
+          "distractors\\Sn010.bmp"
         ]
       }
     ]
@@ -810,6 +828,12 @@
     ],
     "data": {},
     "last_selections": [],
-    "last_distractors": []
+    "last_distractors": [
+      {
+        "stimulus_set": "Faces",
+        "distractor_type": "positive",
+        "paths": []
+      }
+    ]
   }
 ]

@@ -79,7 +79,7 @@ def save_visual_search_experiment(app, base_save_dir, compress_images=True, imag
                     all_imgs = []
                     for root, dirs, files in os.walk(base_path):
                         for fname in files:
-                            if fname.lower().endswith((".jpg", ".jpeg", ".png")):
+                            if fname.lower().endswith((".jpg", ".jpeg", ".png",".bmp")):
                                 all_imgs.append(os.path.join(root, fname))
                     if all_imgs:
                         random_img = choice(all_imgs)
@@ -115,7 +115,7 @@ def save_visual_search_experiment(app, base_save_dir, compress_images=True, imag
                 all_imgs = []
                 for root, dirs, files in os.walk(base_path):
                     for fname in files:
-                        if fname.lower().endswith((".jpg", ".jpeg", ".png")):
+                        if fname.lower().endswith((".jpg", ".jpeg", ".png",".bmp")):
                             all_imgs.append(os.path.join(root, fname))
                 if distractor_set_mode == "Random":
                     total_needed = max(0, grid_x * grid_y - 1)
@@ -205,7 +205,13 @@ def save_timeline_state(app):
             save_formatting(sel)
         except Exception:
             pass
-
+    # --- commit formatting of *all* text-like components 
+    for block in app.timeline_components:
+        if block.component_type in ["Text", "Stimulus notification", "Start", "End"]:
+            try:
+                save_formatting(block)
+            except Exception:
+                pass
     state = []
     for idx, block in enumerate(app.timeline_components):
         entry = {
@@ -333,9 +339,6 @@ def load_timeline_state(app):
             stimulus = block_map[attachment_info["index"]]
             notification.attachment = stimulus
             stimulus.attachment = notification
-
-
-
 
 def show_editor_screen(app):
     app.clear_screen()
@@ -662,6 +665,7 @@ def show_editor_screen(app):
 
             # Rerender
             render_timeline()
+            app.select_component(notification) 
             return 
         
         if index == 0 and component_type != "Start":
@@ -672,6 +676,7 @@ def show_editor_screen(app):
 
         # Rerender
         render_timeline()
+        app.select_component(new_block)
 
     app.insert_component = insert_component
     load_timeline_state(app)

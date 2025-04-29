@@ -187,6 +187,7 @@ def render_current_component(app):
         random.shuffle(images_to_display)
         app.current_stimulus_info = {
             "stimulus_number": app.stimulus_counter + 1,
+            "no_target":             no_target,
             "number_of_distractors": 0,  # will count below
             "target_present": False,
             "placements": []
@@ -272,7 +273,7 @@ def render_current_component(app):
                     canvas.pack()
                     canvas.create_image(slot_size // 2, slot_size // 2, image=img_tk, anchor="center")
 
-                    # 📋 Save placement info
+                    # Save placement info
                     app.current_stimulus_info["placements"].append({
                         "row": r,
                         "col": c,
@@ -285,8 +286,13 @@ def render_current_component(app):
                     else:
                         app.current_stimulus_info["number_of_distractors"] += 1
 
+                def on_timeout():
+                    # if the user never pressed space, we just move on
+                    next_component(app)
                 #RECORD THE TIME when images appear
                 app.stimulus_start_time_ns = time.perf_counter_ns()
+                # store the after-id so we can cancel it if they press space
+                app.stimulus_timeout_id = app.root.after(20_000, on_timeout)
 
             app.root.after(1500, phase4_show_images)
 
@@ -294,8 +300,15 @@ def render_current_component(app):
         app.root.after(500, phase2_invert_chessboard)
         app.root.after(1000, phase3_fixation_cross)
 
-    # === Bind space key for next ===
-    app.root.bind('<space>', lambda event: next_component(app))
+    # === Bind space key with timeout-cancellation ===
+    def on_space(event):
+        # cancel the pending timeout if it’s still there
+        if hasattr(app, 'stimulus_timeout_id'):
+            app.root.after_cancel(app.stimulus_timeout_id)
+            delattr(app, 'stimulus_timeout_id')
+        next_component(app)
+
+    app.root.bind('<space>', on_space)
 
 def apply_formatting_tags(text_widget, component):
     """
@@ -554,47 +567,37 @@ def show_session_complete_screen(app):
     except Exception as e:
         print(f"Failed to save stimulus log: {e}")
 
- # === Write all reaction times in one single CSV row, prefixed by name & number ===
     try:
-        os.makedirs(app.save_location, exist_ok=True)
-        csv_path = os.path.join(app.save_location, "stimulus_times.csv")
+            os.makedirs(app.save_location, exist_ok=True)
+            csv_path = os.path.join(app.save_location, "stimulus_times.csv")
 
-        # 1) collect reaction times in order
-        reaction_times = [trial["reaction_time_seconds"] for trial in app.stimulus_log]
+            # Build headers:
+            metadata_keys = list(app.metadata.keys())
+            # For each trial i, we want two columns: reaction_time_i and no_target_i
+            trial_headers = []
+            for i in range(len(app.stimulus_log)):
+                trial_headers += [f"stimulus_{i+1}_time", f"stimulus_{i+1}_no_target"]
 
-        # 2) build header:
-        #    - fixed columns: name & number
-        #    - one column per metadata key (in insertion order)
-        #    - one column per stimulus
-        metadata_keys   = list(app.metadata.keys())
-        stimulus_cols   = [f"stimulus_{i+1}" for i in range(len(reaction_times))]
-        headers = (
-            ["participant_name", "participant_number"]
-            + metadata_keys
-            + stimulus_cols
-        )
+            headers = ["participant_name", "participant_number"] + metadata_keys + trial_headers
 
-        # 3) build the row:
-        #    - participant info
-        #    - metadata values (in the same order as metadata_keys)
-        #    - reaction times
-        row = (
-            [app.participant_name, app.participant_number]
-            +[app.metadata[k] for k in metadata_keys]
-            +reaction_times
-        )
+            # Build one row: metadata + for each trial: time, no_target
+            row = [app.participant_name, app.participant_number]
+            row += [app.metadata[k] for k in metadata_keys]
+            for trial in app.stimulus_log:
+                # reaction_time_seconds is a float
+                row.append(trial["reaction_time_seconds"])
+                # no_target is a bool
+                row.append(trial.get("no_target", False))
 
-        # 4) decide whether to write header
-        write_header = not os.path.isfile(csv_path)
+            # Write (or append) to CSV
+            write_header = not os.path.isfile(csv_path)
+            with open(csv_path, "a", newline="") as csvfile:
+                writer = csv.writer(csvfile)
+                if write_header:
+                    writer.writerow(headers)
+                writer.writerow(row)
 
-        # 5) append to CSV
-        with open(csv_path, "a", newline="") as csvfile:
-            writer = csv.writer(csvfile)
-            if write_header:
-                writer.writerow(headers)
-            writer.writerow(row)
-
-        print(f"Wrote single‐row stimulus times (with participant info) to {csv_path}")
+            print(f"Wrote reaction times + no_target flags to {csv_path}")
 
     except Exception as e:
         print(f"Failed to write stimulus_times.csv: {e}")

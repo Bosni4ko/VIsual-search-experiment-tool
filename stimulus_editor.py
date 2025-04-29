@@ -128,7 +128,7 @@ def open_image_selector(comp, target_type):
     # Build a stable grid layout (no dynamic reflow)
     # -------------------------------
     # In this example we choose a fixed number of columns.
-    images_per_row = 5
+    images_per_row = 8
 
     # Loop through categories. (If you have multiple categories,
     # each will appear with a separate label and grid.)
@@ -370,7 +370,7 @@ def open_distractor_selector(comp, distractor_type):
         selected_label.config(text=f"Selected: {len(selected_distractors)} images")
 
     # Build a stable grid layout (fixed number of columns).
-    images_per_row = 5
+    images_per_row = 8
     for cat, folder in categories.items():
         Label(content_frame, text=cat.capitalize(),
               font=("Segoe UI", 10, "bold")).pack(anchor="w", padx=10, pady=(10, 0))

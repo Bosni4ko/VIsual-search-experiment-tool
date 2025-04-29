@@ -9,187 +9,150 @@
   "stimulus_log": [
     {
       "stimulus_number": 1,
-      "number_of_distractors": 5,
+      "no_target": false,
+      "number_of_distractors": 7,
       "target_present": true,
       "placements": [
         {
+          "row": 4,
+          "col": 2,
+          "is_target": false,
+          "image_path": "experiments\\Default_Experiment_name\\distractors\\P125.bmp"
+        },
+        {
+          "row": 3,
+          "col": 0,
+          "is_target": true,
+          "image_path": "experiments\\Default_Experiment_name\\selections\\Sp151.bmp"
+        },
+        {
+          "row": 0,
+          "col": 3,
+          "is_target": false,
+          "image_path": "experiments\\Default_Experiment_name\\distractors\\P041.bmp"
+        },
+        {
+          "row": 3,
+          "col": 3,
+          "is_target": false,
+          "image_path": "experiments\\Default_Experiment_name\\distractors\\P090.bmp"
+        },
+        {
+          "row": 1,
+          "col": 1,
+          "is_target": false,
+          "image_path": "experiments\\Default_Experiment_name\\distractors\\P058.bmp"
+        },
+        {
           "row": 1,
           "col": 0,
           "is_target": false,
-          "image_path": "experiments\\Default_Experiment_name\\distractors\\P070.bmp"
-        },
-        {
-          "row": 1,
-          "col": 1,
-          "is_target": false,
-          "image_path": "experiments\\Default_Experiment_name\\distractors\\P093.bmp"
-        },
-        {
-          "row": 2,
-          "col": 1,
-          "is_target": false,
-          "image_path": "experiments\\Default_Experiment_name\\distractors\\P106.bmp"
+          "image_path": "experiments\\Default_Experiment_name\\distractors\\P016.bmp"
         },
         {
           "row": 4,
-          "col": 3,
+          "col": 0,
           "is_target": false,
-          "image_path": "experiments\\Default_Experiment_name\\distractors\\P067.bmp"
+          "image_path": "experiments\\Default_Experiment_name\\distractors\\P094.bmp"
         },
         {
-          "row": 3,
-          "col": 3,
-          "is_target": true,
-          "image_path": "experiments\\Default_Experiment_name\\selections\\Sp031.bmp"
-        },
-        {
-          "row": 3,
+          "row": 0,
           "col": 4,
           "is_target": false,
-          "image_path": "experiments\\Default_Experiment_name\\distractors\\P084.bmp"
+          "image_path": "experiments\\Default_Experiment_name\\distractors\\P082.bmp"
         }
       ],
-      "reaction_time_seconds": 2.2024899
+      "reaction_time_seconds": 2.5585053
     },
     {
       "stimulus_number": 2,
-      "number_of_distractors": 24,
+      "no_target": true,
+      "number_of_distractors": 9,
       "target_present": false,
       "placements": [
         {
-          "row": 4,
-          "col": 0,
-          "is_target": false,
-          "image_path": "experiments\\Default_Experiment_name\\distractors\\71_9.jpg"
-        },
-        {
-          "row": 2,
-          "col": 0,
-          "is_target": false,
-          "image_path": "experiments\\Default_Experiment_name\\distractors\\134_6.jpg"
-        },
-        {
-          "row": 0,
-          "col": 2,
-          "is_target": false,
-          "image_path": "experiments\\Default_Experiment_name\\distractors\\9_0.jpg"
-        },
-        {
-          "row": 4,
-          "col": 2,
-          "is_target": false,
-          "image_path": "experiments\\Default_Experiment_name\\distractors\\13_9.jpg"
-        },
-        {
-          "row": 2,
-          "col": 1,
-          "is_target": false,
-          "image_path": "experiments\\Default_Experiment_name\\distractors\\127_24.jpg"
-        },
-        {
-          "row": 3,
-          "col": 2,
-          "is_target": false,
-          "image_path": "experiments\\Default_Experiment_name\\distractors\\64_13.jpg"
-        },
-        {
           "row": 3,
           "col": 0,
           "is_target": false,
-          "image_path": "experiments\\Default_Experiment_name\\distractors\\65_2.jpg"
-        },
-        {
-          "row": 4,
-          "col": 4,
-          "is_target": false,
-          "image_path": "experiments\\Default_Experiment_name\\distractors\\43_28.jpg"
-        },
-        {
-          "row": 3,
-          "col": 3,
-          "is_target": false,
-          "image_path": "experiments\\Default_Experiment_name\\distractors\\103_29.jpg"
+          "image_path": "experiments\\Default_Experiment_name\\distractors\\23_13.jpg"
         },
         {
           "row": 0,
           "col": 4,
           "is_target": false,
-          "image_path": "experiments\\Default_Experiment_name\\distractors\\64_10.jpg"
-        },
-        {
-          "row": 1,
-          "col": 3,
-          "is_target": false,
-          "image_path": "experiments\\Default_Experiment_name\\distractors\\116_8.jpg"
-        },
-        {
-          "row": 2,
-          "col": 3,
-          "is_target": false,
-          "image_path": "experiments\\Default_Experiment_name\\distractors\\34_16.jpg"
-        },
-        {
-          "row": 2,
-          "col": 4,
-          "is_target": false,
-          "image_path": "experiments\\Default_Experiment_name\\distractors\\32_9.jpg"
-        },
-        {
-          "row": 2,
-          "col": 2,
-          "is_target": false,
-          "image_path": "experiments\\Default_Experiment_name\\distractors\\129_14.jpg"
-        },
-        {
-          "row": 0,
-          "col": 3,
-          "is_target": false,
-          "image_path": "experiments\\Default_Experiment_name\\distractors\\40_4.jpg"
-        },
-        {
-          "row": 3,
-          "col": 4,
-          "is_target": false,
-          "image_path": "experiments\\Default_Experiment_name\\distractors\\42_0.jpg"
-        },
-        {
-          "row": 0,
-          "col": 1,
-          "is_target": false,
-          "image_path": "experiments\\Default_Experiment_name\\distractors\\101_10.jpg"
+          "image_path": "experiments\\Default_Experiment_name\\distractors\\89_9.jpg"
         },
         {
           "row": 4,
-          "col": 1,
+          "col": 4,
           "is_target": false,
-          "image_path": "experiments\\Default_Experiment_name\\distractors\\77_22.jpg"
-        },
-        {
-          "row": 3,
-          "col": 1,
-          "is_target": false,
-          "image_path": "experiments\\Default_Experiment_name\\distractors\\14_8.jpg"
+          "image_path": "experiments\\Default_Experiment_name\\distractors\\51_30.jpg"
         },
         {
           "row": 1,
-          "col": 2,
+          "col": 4,
           "is_target": false,
-          "image_path": "experiments\\Default_Experiment_name\\distractors\\57_9.jpg"
+          "image_path": "experiments\\Default_Experiment_name\\distractors\\112_1.jpg"
+        },
+        {
+          "row": 2,
+          "col": 3,
+          "is_target": false,
+          "image_path": "experiments\\Default_Experiment_name\\distractors\\48_12.jpg"
+        },
+        {
+          "row": 2,
+          "col": 1,
+          "is_target": false,
+          "image_path": "experiments\\Default_Experiment_name\\distractors\\59_0.jpg"
+        },
+        {
+          "row": 2,
+          "col": 0,
+          "is_target": false,
+          "image_path": "experiments\\Default_Experiment_name\\distractors\\115_25.jpg"
         },
         {
           "row": 1,
           "col": 0,
           "is_target": false,
-          "image_path": "experiments\\Default_Experiment_name\\distractors\\92_2.jpg"
+          "image_path": "experiments\\Default_Experiment_name\\distractors\\61_28.jpg"
         },
         {
-          "row": 1,
+          "row": 0,
+          "col": 2,
+          "is_target": false,
+          "image_path": "experiments\\Default_Experiment_name\\distractors\\9_4.jpg"
+        }
+      ],
+      "reaction_time_seconds": 6.2123213
+    },
+    {
+      "stimulus_number": 3,
+      "no_target": false,
+      "number_of_distractors": 12,
+      "target_present": true,
+      "placements": [
+        {
+          "row": 4,
+          "col": 1,
+          "is_target": true,
+          "image_path": "experiments\\Default_Experiment_name\\selections\\135_15.jpg"
+        },
+        {
+          "row": 2,
           "col": 4,
           "is_target": false,
-          "image_path": "experiments\\Default_Experiment_name\\distractors\\33_11.jpg"
+          "image_path": "experiments\\Default_Experiment_name\\distractors\\41_18.jpg"
         },
         {
-          "row": 1,
+          "row": 0,
+          "col": 2,
+          "is_target": false,
+          "image_path": "experiments\\Default_Experiment_name\\distractors\\34_19.jpg"
+        },
+        {
+          "row": 2,
           "col": 1,
           "is_target": false,
           "image_path": "experiments\\Default_Experiment_name\\distractors\\62_27.jpg"
@@ -198,132 +161,58 @@
           "row": 4,
           "col": 3,
           "is_target": false,
-          "image_path": "experiments\\Default_Experiment_name\\distractors\\12_14.jpg"
+          "image_path": "experiments\\Default_Experiment_name\\distractors\\110_1.jpg"
+        },
+        {
+          "row": 3,
+          "col": 1,
+          "is_target": false,
+          "image_path": "experiments\\Default_Experiment_name\\distractors\\64_13.jpg"
+        },
+        {
+          "row": 0,
+          "col": 1,
+          "is_target": false,
+          "image_path": "experiments\\Default_Experiment_name\\distractors\\24_24.jpg"
+        },
+        {
+          "row": 1,
+          "col": 2,
+          "is_target": false,
+          "image_path": "experiments\\Default_Experiment_name\\distractors\\133_18.jpg"
+        },
+        {
+          "row": 1,
+          "col": 0,
+          "is_target": false,
+          "image_path": "experiments\\Default_Experiment_name\\distractors\\97_3.jpg"
+        },
+        {
+          "row": 4,
+          "col": 2,
+          "is_target": false,
+          "image_path": "experiments\\Default_Experiment_name\\distractors\\21_2.jpg"
+        },
+        {
+          "row": 1,
+          "col": 4,
+          "is_target": false,
+          "image_path": "experiments\\Default_Experiment_name\\distractors\\61_28.jpg"
+        },
+        {
+          "row": 2,
+          "col": 0,
+          "is_target": false,
+          "image_path": "experiments\\Default_Experiment_name\\distractors\\76_7.jpg"
+        },
+        {
+          "row": 0,
+          "col": 3,
+          "is_target": false,
+          "image_path": "experiments\\Default_Experiment_name\\distractors\\79_5.jpg"
         }
       ],
-      "reaction_time_seconds": 1.2188422
-    },
-    {
-      "stimulus_number": 3,
-      "number_of_distractors": 18,
-      "target_present": true,
-      "placements": [
-        {
-          "row": 1,
-          "col": 4,
-          "is_target": true,
-          "image_path": "experiments\\Default_Experiment_name\\selections\\112_7.jpg"
-        },
-        {
-          "row": 1,
-          "col": 3,
-          "is_target": false,
-          "image_path": "experiments\\Default_Experiment_name\\distractors\\2_4.jpg"
-        },
-        {
-          "row": 0,
-          "col": 3,
-          "is_target": false,
-          "image_path": "experiments\\Default_Experiment_name\\distractors\\90_2.jpg"
-        },
-        {
-          "row": 2,
-          "col": 4,
-          "is_target": false,
-          "image_path": "experiments\\Default_Experiment_name\\distractors\\131_34.jpg"
-        },
-        {
-          "row": 0,
-          "col": 2,
-          "is_target": false,
-          "image_path": "experiments\\Default_Experiment_name\\distractors\\47_22.jpg"
-        },
-        {
-          "row": 3,
-          "col": 4,
-          "is_target": false,
-          "image_path": "experiments\\Default_Experiment_name\\distractors\\13_10.jpg"
-        },
-        {
-          "row": 1,
-          "col": 1,
-          "is_target": false,
-          "image_path": "experiments\\Default_Experiment_name\\distractors\\42_5.jpg"
-        },
-        {
-          "row": 1,
-          "col": 0,
-          "is_target": false,
-          "image_path": "experiments\\Default_Experiment_name\\distractors\\36_13.jpg"
-        },
-        {
-          "row": 4,
-          "col": 4,
-          "is_target": false,
-          "image_path": "experiments\\Default_Experiment_name\\distractors\\132_13.jpg"
-        },
-        {
-          "row": 2,
-          "col": 1,
-          "is_target": false,
-          "image_path": "experiments\\Default_Experiment_name\\distractors\\134_28.jpg"
-        },
-        {
-          "row": 1,
-          "col": 2,
-          "is_target": false,
-          "image_path": "experiments\\Default_Experiment_name\\distractors\\119_16.jpg"
-        },
-        {
-          "row": 4,
-          "col": 3,
-          "is_target": false,
-          "image_path": "experiments\\Default_Experiment_name\\distractors\\25_31.jpg"
-        },
-        {
-          "row": 0,
-          "col": 0,
-          "is_target": false,
-          "image_path": "experiments\\Default_Experiment_name\\distractors\\101_34.jpg"
-        },
-        {
-          "row": 3,
-          "col": 2,
-          "is_target": false,
-          "image_path": "experiments\\Default_Experiment_name\\distractors\\85_7.jpg"
-        },
-        {
-          "row": 3,
-          "col": 3,
-          "is_target": false,
-          "image_path": "experiments\\Default_Experiment_name\\distractors\\4_1.jpg"
-        },
-        {
-          "row": 3,
-          "col": 0,
-          "is_target": false,
-          "image_path": "experiments\\Default_Experiment_name\\distractors\\132_11.jpg"
-        },
-        {
-          "row": 2,
-          "col": 3,
-          "is_target": false,
-          "image_path": "experiments\\Default_Experiment_name\\distractors\\92_8.jpg"
-        },
-        {
-          "row": 3,
-          "col": 1,
-          "is_target": false,
-          "image_path": "experiments\\Default_Experiment_name\\distractors\\52_32.jpg"
-        },
-        {
-          "row": 4,
-          "col": 0,
-          "is_target": false,
-          "image_path": "experiments\\Default_Experiment_name\\distractors\\70_18.jpg"
-        }
-      ],
-      "reaction_time_seconds": 4.2282159
+      "reaction_time_seconds": 11.0452442
     }
   ]
 }

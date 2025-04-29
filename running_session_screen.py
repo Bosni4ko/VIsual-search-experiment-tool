@@ -71,7 +71,7 @@ def render_current_component(app):
     app.root.configure(bg="#d0d0d0")
 
     if not hasattr(app, 'experiment_components') or app.current_component_index >= len(app.experiment_components):
-        show_session_complete_screen(app)
+        show_metadata_entry_screen(app)
         return
 
     component = app.experiment_components[app.current_component_index]
@@ -347,6 +347,157 @@ def next_component(app):
     app.current_component_index += 1
     render_current_component(app)
 
+def show_metadata_entry_screen(app):
+    # Clear existing UI
+    for widget in app.root.winfo_children():
+        widget.destroy()
+    app.root.configure(bg="#d0d0d0")
+
+    frame = tk.Frame(app.root, bg="#d0d0d0")
+    frame.pack(expand=True, fill="both")
+
+    # Title
+    tk.Label(
+        frame,
+        text=app.tr("enter_metadata"),
+        font=("Segoe UI", 20, "bold"),
+        bg="#d0d0d0"
+    ).pack(pady=20)
+
+    # Load metadata schema
+    create_state_path = os.path.join(app.experiment_path, "create_screen_state.json")
+    metadata_items = []
+    if os.path.exists(create_state_path):
+        try:
+            with open(create_state_path, "r") as f:
+                create_state = json.load(f)
+                metadata_items = create_state.get("metadata", [])
+        except Exception as e:
+            print(f"Error loading metadata schema: {e}")
+
+    metadata_fields = {}
+    if metadata_items:
+        # === Metadata Section (with Scroll) ===
+        metadata_label = ttk.Label(
+            frame,
+            text=app.tr("metadata"),
+            font=("Segoe UI", 18, "bold"),
+            background="#d0d0d0"
+        )
+        metadata_label.pack(pady=(10, 5))
+
+        metadata_container = tk.Frame(
+            frame,
+            bg="#e8e8e8",
+            relief="groove",
+            bd=2
+        )
+        metadata_container.pack(
+            padx=20, pady=5,
+            fill="both", expand=False
+        )
+
+        # — Build canvas + scrollbar + frame —
+        canvas = tk.Canvas(
+            metadata_container,
+            bg="#e8e8e8",
+            height=250,
+            highlightthickness=0
+        )
+        scrollbar = ttk.Scrollbar(
+            metadata_container,
+            orient="vertical",
+            command=canvas.yview
+        )
+        scrollable_frame = tk.Frame(canvas, bg="#e8e8e8")
+
+        canvas.create_window((0, 0), window=scrollable_frame, anchor="nw")
+        canvas.configure(yscrollcommand=scrollbar.set)
+
+        canvas.pack(side="left", fill="both", expand=True)
+        scrollbar.pack(side="right", fill="y")
+
+        # — Mousewheel handler (clamped) —
+        def _on_mousewheel(event):
+            if hasattr(event, "delta") and event.delta:
+                direction = int(-1 * (event.delta / 120))
+            else:
+                direction = -1 if event.num == 4 else 1
+            top, bottom = canvas.yview()
+            if (direction < 0 and top <= 0.0) or (direction > 0 and bottom >= 1.0):
+                return "break"
+            canvas.yview_scroll(direction, "units")
+            return "break"
+
+        canvas.bind("<MouseWheel>", _on_mousewheel)
+        canvas.bind("<Button-4>",    _on_mousewheel)
+        canvas.bind("<Button-5>",    _on_mousewheel)
+
+        # — Clamp scrollregion when content ≤ view —
+        def _refresh_scrollregion(event=None):
+            canvas.update_idletasks()
+            bbox = canvas.bbox("all") or (0, 0, 0, 0)
+            content_h = bbox[3] - bbox[1]
+            view_h    = canvas.winfo_height()
+
+            if content_h <= view_h:
+                # lock the region and snap to top
+                canvas.configure(scrollregion=(0, 0, 0, view_h))
+                canvas.yview_moveto(0)
+                scrollbar.state(["disabled"])
+            else:
+                canvas.configure(scrollregion=bbox)
+                scrollbar.state(["!disabled"])
+
+        scrollable_frame.bind("<Configure>", _refresh_scrollregion)
+        canvas.bind("<Configure>",           _refresh_scrollregion)
+        app.root.after(50, _refresh_scrollregion)
+
+        # — Populate metadata fields —
+        for item in metadata_items:
+            name = item.get("name", "Unknown Field")
+            field_type = item.get("type", "Value")
+            values = item.get("value", [])
+
+            field_frame = tk.Frame(scrollable_frame, bg="#e8e8e8")
+            field_frame.pack(pady=5, fill="x", padx=10)
+
+            field_label = ttk.Label(
+                field_frame,
+                text=f"{name}:",
+                font=("Segoe UI", 14),
+                background="#e8e8e8"
+            )
+            field_label.pack(side="left", padx=(0, 10))
+
+            if field_type == "List" and isinstance(values, list):
+                combobox = ttk.Combobox(
+                    field_frame,
+                    font=("Segoe UI", 12),
+                    values=values,
+                    state="readonly",
+                    width=28
+                )
+                combobox.pack(side="left", fill="x", expand=True)
+                if values:
+                    combobox.set(values[0])
+                metadata_fields[name] = combobox
+            else:
+                entry = ttk.Entry(field_frame, font=("Segoe UI", 12), width=30)
+                entry.pack(side="left", fill="x", expand=True)
+                metadata_fields[name] = entry
+
+    # Next button
+    def on_next():
+        app.metadata = {k: w.get().strip() for k, w in metadata_fields.items()}
+        show_session_complete_screen(app)
+
+    ttk.Button(
+        frame,
+        text=app.tr("next"),
+        width=20,
+        command=on_next
+    ).pack(pady=20)
 
 def show_session_complete_screen(app):
     for widget in app.root.winfo_children():

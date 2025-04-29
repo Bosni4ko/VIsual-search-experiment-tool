@@ -1,5 +1,7 @@
-participant_name,participant_number,Vecums,Alga,stimulus_1
-Participant,1,23,1000+,5.2813849
-Participant,1,1-1000,1,2,2.3781732,0.6811928,0.4520746,1.3598086
-Participant,1,1-1000,1,2,1.685623
-Participant,1,1-1000,,,1.6152629
+participant_name,participant_number,a,b,c,stimulus_1,stimulus_2
+Participant,1,1-1000,2,3,0.7545226,0.8580969
+Participant,1,1-1000,2,3,0.7088962,0.4523186
+Participant,2,1-1000,,,0.3347513,0.4084457
+Participant,1,1-1000,2,3,0.3346532,0.3164113
+Participant,2,1-1000,4,5,0.3928063,0.4548033
+Participant,3,1-1000,,

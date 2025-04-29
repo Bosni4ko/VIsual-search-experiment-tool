@@ -74,7 +74,9 @@ translations = {
         "yes":                    "Yes",
         "no":                     "No",
         "no_additional_info":     "No stimulus info available",
-        "path": "Path: "
+        "path": "Path: ",
+        "enter_metadata":       "Enter metadata",
+        "next":                 "Next",
 
 
     },
@@ -151,6 +153,8 @@ translations = {
         "yes":                    "Jā",
         "no":                     "Nē",
         "no_additional_info":     "Informācija par stimulu nav pieejama",
-        "path": "Ceļš: "
+        "path": "Ceļš: ",
+        "enter_metadata":       "Ievadiet datus",
+        "next":                 "Tālāk"
     },
 }

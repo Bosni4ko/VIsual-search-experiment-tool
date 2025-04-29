@@ -10,7 +10,7 @@ from component_block import ComponentBlock
 from palette import setup_components_palette
 from text_editor import setup_text_editor, setup_text_options,save_formatting
 from stimulus_editor import setup_stimulus_options
-from TEXT_AND_TAGS import NOTIFICATION_DEFAULT_TEXT,NOTIFICATION_DEFAULT_TAGS,END_DEFAULT_TEXT,END_DEFAULT_TAGS,START_DEFAULT_TEXT, START_DEFAULT_TAGS
+from TEXT_AND_TAGS import NOTIFICATION_DEFAULT_TAGS,END_DEFAULT_TAGS, START_DEFAULT_TAGS
 STATE_FILE = "timeline_state.json"
 
 def save_visual_search_experiment(app, base_save_dir, compress_images=True, image_quality=85):
@@ -60,7 +60,7 @@ def save_visual_search_experiment(app, base_save_dir, compress_images=True, imag
         stimulus_set = raw_data.get("stimulus_set", "Faces")
         target_type = raw_data.get("target_type", "positive")
         no_target = raw_data.get("no_target", False)
-        
+
         if selected_target_mode == "Random" or no_target:
             from random import choice
             base_path = os.path.join("images", "faces", target_type)
@@ -430,16 +430,16 @@ def show_editor_screen(app):
             # If it's a Stimulus notification, set up default text if empty
             if comp.component_type == "Stimulus notification":
                 if not hasattr(comp, 'saved_text') or not comp.saved_text:
-                    comp.saved_text = NOTIFICATION_DEFAULT_TEXT
-                    comp.saved_tags = NOTIFICATION_DEFAULT_TAGS
+                    comp.saved_text = app.tr("notification_default_text")
+                    comp.saved_tags = NOTIFICATION_DEFAULT_TAGS.get(app.current_language, NOTIFICATION_DEFAULT_TAGS["EN"])
             elif comp.component_type == "Start":
                 if not hasattr(comp, 'saved_text') or not comp.saved_text:
-                    comp.saved_text = START_DEFAULT_TEXT
-                    comp.saved_tags = START_DEFAULT_TAGS
+                    comp.saved_text = app.tr("start_default_text")
+                    comp.saved_tags = START_DEFAULT_TAGS.get(app.current_language, START_DEFAULT_TAGS["EN"])
             elif comp.component_type == "End":
                 if not hasattr(comp, 'saved_text') or not comp.saved_text:
-                    comp.saved_text = END_DEFAULT_TEXT
-                    comp.saved_tags = END_DEFAULT_TAGS  
+                    comp.saved_text = app.tr("end_default_text")
+                    comp.saved_tags = END_DEFAULT_TAGS.get(app.current_language, END_DEFAULT_TAGS["EN"])  
             setup_text_editor(app, main_panel, comp)
             setup_text_options(app, left_panel, comp)
 

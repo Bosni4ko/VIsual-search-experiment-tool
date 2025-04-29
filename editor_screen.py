@@ -59,8 +59,9 @@ def save_visual_search_experiment(app, base_save_dir, compress_images=True, imag
         selected_target_mode = raw_data.get("selected_target", "Random")
         stimulus_set = raw_data.get("stimulus_set", "Faces")
         target_type = raw_data.get("target_type", "positive")
-
-        if selected_target_mode == "Random":
+        no_target = raw_data.get("no_target", False)
+        
+        if selected_target_mode == "Random" or no_target:
             from random import choice
             base_path = os.path.join("images", "faces", target_type)
             if os.path.isdir(base_path):

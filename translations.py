@@ -77,6 +77,8 @@ translations = {
         "path": "Path: ",
         "enter_metadata":       "Enter metadata",
         "next":                 "Next",
+        "session_complete":         "Session complete",
+        "back_to_launch_screen":    "Back to launch screen"
 
 
     },
@@ -154,7 +156,7 @@ translations = {
         "no":                     "Nē",
         "no_additional_info":     "Informācija par stimulu nav pieejama",
         "path": "Ceļš: ",
-        "enter_metadata":       "Ievadiet datus",
-        "next":                 "Tālāk"
+        "session_complete":         "Sesija pabeigta",
+        "back_to_launch_screen":    "Atgriezties palaišanās ekrānā"
     },
 }

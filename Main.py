@@ -293,18 +293,27 @@ class ExperimentApp:
             name_entry.insert(0, initial_data["name"])
 
        # Determine initial mode (default to "Value")
-        initial_mode = initial_data.get("type", "Value") if initial_data else "Value"
-        print(initial_mode)
-        # Combobox for selecting type, pre‑seeded to the saved choice
-        type_var = tk.StringVar(value=initial_mode)
+        internal_mode = initial_data.get("type", "Value") if initial_data else "Value"
+
+        # build the translated values list
+        value_label = self.tr("value")
+        list_label  = self.tr("list")
+        values = [value_label, list_label]
+
+        # create the combobox exactly like the language selector
         type_combobox = ttk.Combobox(
             row_frame,
-            textvariable=type_var,
-            values=[self.tr("value"), self.tr("list")],
+            values=values,
             state="readonly",
             width=6
-        )        
+        )
         type_combobox.pack(side="left", padx=5)
+
+        # pick the right one
+        if internal_mode == "Value":
+            type_combobox.current(0)
+        else:
+            type_combobox.current(1)
         # Content frame that will hold either the white placeholder or list input controls.
         content_frame = tk.Frame(row_frame, bg="#ffffff")
         content_frame.pack(side="left", padx=5, fill="x", expand=True)
@@ -397,7 +406,7 @@ class ExperimentApp:
         Callback when the metadata type is changed between "Value" and "List".
         This method clears the current content and recreates the appropriate widget(s).
         """
-        type_val = row_data["type_combobox"].get()
+        type_val = self.get_real_type(row_data["type_combobox"].get())
         if type_val == "Value":
             # Show the white placeholder.
             row_data["value_placeholder"].pack(side="left", padx=5, pady=5)

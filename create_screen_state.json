@@ -2,5 +2,13 @@
   "exp_name": "Default_Experiment_name",
   "participant_name": "Participant",
   "save_location": "C:\\Users\\User\\Desktop\\mag\\Program\\experiments",
-  "metadata": []
+  "metadata": [
+    {
+      "name": "a",
+      "type": "List",
+      "value": [
+        "1-1000"
+      ]
+    }
+  ]
 }

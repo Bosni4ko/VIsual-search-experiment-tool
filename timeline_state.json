@@ -363,251 +363,18 @@
     "last_distractors": []
   },
   {
-    "type": "Stimulus notification",
-    "label": "Stimulus notification",
-    "color": "purple",
-    "index": 2,
-    "saved_text": "\n\n\n\n\n\n\n\nL\u016bdzu, noklik\u0161\u0137iniet uz tausti\u0146u\n, kad atrad\u012bsiet \u0161o att\u0113lu:\n\n[/image/]",
-    "saved_tags": [
-      {
-        "name": "align_55455efb205342389090c3de31dfcde6",
-        "ranges": [
-          [
-            "10.27",
-            "12.9"
-          ]
-        ],
-        "font_info": {
-          "family": "Arial",
-          "size": 12,
-          "weight": "normal",
-          "slant": "roman"
-        },
-        "foreground": "",
-        "justify": "center"
-      },
-      {
-        "name": "color_afe506d20cd341f2a4c91a7a9297662a",
-        "ranges": [
-          [
-            "9.0",
-            "10.27"
-          ]
-        ],
-        "font_info": {
-          "family": "Arial",
-          "size": 12,
-          "weight": "normal",
-          "slant": "roman"
-        },
-        "foreground": "#000000",
-        "justify": ""
-      },
-      {
-        "name": "align_b5409b91065145afb5cbf226b5ec6c43",
-        "ranges": [
-          [
-            "9.0",
-            "10.27"
-          ]
-        ],
-        "font_info": {
-          "family": "Arial",
-          "size": 12,
-          "weight": "normal",
-          "slant": "roman"
-        },
-        "foreground": "",
-        "justify": "center"
-      },
-      {
-        "name": "font_3ccb0a2b006d48cf829c2e3e83b7354f",
-        "ranges": [
-          [
-            "9.0",
-            "10.27"
-          ]
-        ],
-        "font_info": {
-          "family": "Courier New",
-          "size": 12,
-          "weight": "bold",
-          "slant": "roman"
-        },
-        "foreground": "#000000",
-        "justify": ""
-      },
-      {
-        "name": "font_7de11928896f4be8985623e9ed0d2168",
-        "ranges": [
-          [
-            "9.0",
-            "10.27"
-          ]
-        ],
-        "font_info": {
-          "family": "Courier New",
-          "size": 13,
-          "weight": "bold",
-          "slant": "roman"
-        },
-        "foreground": "#000000",
-        "justify": ""
-      },
-      {
-        "name": "font_a67f5397c9c34fb8b8546c961a9322f0",
-        "ranges": [
-          [
-            "9.0",
-            "10.27"
-          ]
-        ],
-        "font_info": {
-          "family": "Courier New",
-          "size": 14,
-          "weight": "bold",
-          "slant": "roman"
-        },
-        "foreground": "#000000",
-        "justify": ""
-      },
-      {
-        "name": "font_016c1ad524cb40ac96ff80a5816bbb08",
-        "ranges": [
-          [
-            "9.0",
-            "10.27"
-          ]
-        ],
-        "font_info": {
-          "family": "Courier New",
-          "size": 15,
-          "weight": "bold",
-          "slant": "roman"
-        },
-        "foreground": "#000000",
-        "justify": ""
-      },
-      {
-        "name": "font_f0e460bee0444c45acd0eaa5f7c8afe5",
-        "ranges": [
-          [
-            "9.0",
-            "10.27"
-          ]
-        ],
-        "font_info": {
-          "family": "Courier New",
-          "size": 16,
-          "weight": "bold",
-          "slant": "roman"
-        },
-        "foreground": "#000000",
-        "justify": ""
-      },
-      {
-        "name": "font_4a042499aa7f40649d32f7cdc769fe62",
-        "ranges": [
-          [
-            "9.0",
-            "10.27"
-          ]
-        ],
-        "font_info": {
-          "family": "Courier New",
-          "size": 17,
-          "weight": "bold",
-          "slant": "roman"
-        },
-        "foreground": "#000000",
-        "justify": ""
-      },
-      {
-        "name": "font_e83384c42ae444dba4db3491eea51293",
-        "ranges": [
-          [
-            "9.0",
-            "10.27"
-          ]
-        ],
-        "font_info": {
-          "family": "Courier New",
-          "size": 18,
-          "weight": "bold",
-          "slant": "roman"
-        },
-        "foreground": "#000000",
-        "justify": ""
-      },
-      {
-        "name": "font_b32b06b3536f4eaa884e6f3969bd5865",
-        "ranges": [
-          [
-            "9.0",
-            "10.27"
-          ]
-        ],
-        "font_info": {
-          "family": "Courier New",
-          "size": 19,
-          "weight": "bold",
-          "slant": "roman"
-        },
-        "foreground": "#000000",
-        "justify": ""
-      },
-      {
-        "name": "font_012884b77aa547e38b4644745d4041fb",
-        "ranges": [
-          [
-            "9.0",
-            "10.27"
-          ]
-        ],
-        "font_info": {
-          "family": "Courier New",
-          "size": 20,
-          "weight": "bold",
-          "slant": "roman"
-        },
-        "foreground": "#000000",
-        "justify": ""
-      },
-      {
-        "name": "font_b07f67b2244440ebbd8b95060e5cc3ee",
-        "ranges": [
-          [
-            "9.0",
-            "10.27"
-          ]
-        ],
-        "font_info": {
-          "family": "Courier New",
-          "size": 20,
-          "weight": "bold",
-          "slant": "roman"
-        },
-        "foreground": "#000000",
-        "justify": ""
-      }
-    ],
-    "data": {},
-    "last_selections": [],
-    "last_distractors": [],
-    "attachment": {
-      "label": "Stimulus",
-      "color": "yellow",
-      "index": 3
-    }
-  },
-  {
     "type": "Stimulus",
     "label": "Stimulus",
     "color": "yellow",
-    "index": 3,
+    "index": 2,
     "saved_text": "",
     "saved_tags": [],
-    "data": {},
+    "data": {
+      "stimulus_size_mode": "random",
+      "stimulus_set": "Faces",
+      "no_target": false,
+      "target_type": "negative"
+    },
     "last_selections": [],
     "last_distractors": []
   },
@@ -615,7 +382,7 @@
     "type": "End",
     "label": "End",
     "color": "red",
-    "index": 4,
+    "index": 3,
     "saved_text": "\n\n\n\n\n\n\n\n\nPaldies par piedal\u012b\u0161anos eksperiment\u0101!",
     "saved_tags": [
       {

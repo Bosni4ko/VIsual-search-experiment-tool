@@ -55,7 +55,18 @@ translations = {
 
         "notification_default_text" : "\n\n\n\n\n\n\n\nPlease click the button\nwhen you see the following image:\n\n[/image/]",
         "end_default_text" : "\n\n\n\n\n\n\n\n\nThank you for participaing in the experiment!",
-        "start_default_text" : "\n\n\n\n\n\n\n\n\nWelcome to the experiment. \nPlease follow the instructions carefully.\nUse \"space\" button to continue."
+        "start_default_text" : "\n\n\n\n\n\n\n\n\nWelcome to the experiment. \nPlease follow the instructions carefully.\nUse \"space\" button to continue.",
+
+        "selected_experiment": "Selected experiment: ",
+        "overview_total_stimuli":      "Total stimuli: {count}",
+        "overview_group":              "Set {group}: {count} items",
+        "target_index":                "Target #",
+        "distractor_index":            "Distractor #",
+        "distractor_types":            "Distractor types",
+        "distractor_type":             "Type",
+        "no_additional_info":          "No stimulus info available",
+        "unknown":                     "unknown",
+
 
     },
     "LV" : {
@@ -113,6 +124,17 @@ translations = {
 
         "notification_default_text" : "\n\n\n\n\n\n\n\nL\u016bdzu, noklik\u0161\u0137iniet uz tausti\u0146u\n, kad atrad\u012bsiet \u0161o att\u0113lu:\n\n[/image/]",
         "end_default_text" : "\n\n\n\n\n\n\n\n\nPaldies par piedal\u012b\u0161anos eksperiment\u0101!",
-        "start_default_text" : "\n\n\n\n\n\n\n\n\nLaipni l\u016bdzam piedal\u012bties eksperiment\u0101. \nL\u016bdzu, uzman\u012bgi sekojiet instrukcij\u0101m.\nLai turpin\u0101tu, izmantojiet tausti\u0146u \u201cspace\u201d."
+        "start_default_text" : "\n\n\n\n\n\n\n\n\nLaipni l\u016bdzam piedal\u012bties eksperiment\u0101. \nL\u016bdzu, uzman\u012bgi sekojiet instrukcij\u0101m.\nLai turpin\u0101tu, izmantojiet tausti\u0146u \u201cspace\u201d.",
+        
+        "selected_experiment": "Selected experiment: ",
+        "overview_total_stimuli":      "Total stimuli: {count}",
+        "overview_group":              "Set {group}: {count} items",
+        "target_index":                "Target #",
+        "distractor_index":            "Distractor #",
+        "distractor_types":            "Distractor types",
+        "distractor_type":             "Type",
+        "no_additional_info":          "No stimulus info available",
+        "unknown":                     "unknown",
+
     },
 }

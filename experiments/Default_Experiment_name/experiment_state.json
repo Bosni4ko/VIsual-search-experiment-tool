@@ -1,0 +1,1007 @@
+[
+  {
+    "type": "Start",
+    "label": "Start",
+    "color": "green",
+    "index": 0,
+    "saved_text": "\n\n\n\n\n\n\n\n\nWelcome to the experiment. \nPlease follow the instructions carefully.\nUse \"space\" button to continue.",
+    "saved_tags": [
+      {
+        "name": "align_6a719f49bf9f4651a0776e04b4e0925c",
+        "ranges": [
+          [
+            "10.0",
+            "12.31"
+          ]
+        ],
+        "font_info": {
+          "family": "Arial",
+          "size": 12,
+          "weight": "normal",
+          "slant": "roman"
+        },
+        "foreground": "",
+        "justify": "center"
+      },
+      {
+        "name": "font_28de7a4564af48f38cbb5d693e6036b9",
+        "ranges": [
+          [
+            "10.0",
+            "12.31"
+          ]
+        ],
+        "font_info": {
+          "family": "Courier New",
+          "size": 12,
+          "weight": "bold",
+          "slant": "roman"
+        },
+        "foreground": "SystemHighlightText",
+        "justify": ""
+      },
+      {
+        "name": "font_bd92b5a108b44b4a90f392b8f5e6266c",
+        "ranges": [
+          [
+            "10.0",
+            "12.31"
+          ]
+        ],
+        "font_info": {
+          "family": "Courier New",
+          "size": 13,
+          "weight": "bold",
+          "slant": "roman"
+        },
+        "foreground": "SystemHighlightText",
+        "justify": ""
+      },
+      {
+        "name": "font_940954951cd14f4d8d12640c19b542e8",
+        "ranges": [
+          [
+            "10.0",
+            "12.31"
+          ]
+        ],
+        "font_info": {
+          "family": "Courier New",
+          "size": 14,
+          "weight": "bold",
+          "slant": "roman"
+        },
+        "foreground": "SystemHighlightText",
+        "justify": ""
+      },
+      {
+        "name": "font_5e569014dac949c8bd2695dd35eef0d0",
+        "ranges": [
+          [
+            "10.0",
+            "12.31"
+          ]
+        ],
+        "font_info": {
+          "family": "Courier New",
+          "size": 15,
+          "weight": "bold",
+          "slant": "roman"
+        },
+        "foreground": "SystemHighlightText",
+        "justify": ""
+      },
+      {
+        "name": "font_1997d3b3db574d74bda84300712513dd",
+        "ranges": [
+          [
+            "10.0",
+            "12.31"
+          ]
+        ],
+        "font_info": {
+          "family": "Courier New",
+          "size": 16,
+          "weight": "bold",
+          "slant": "roman"
+        },
+        "foreground": "SystemHighlightText",
+        "justify": ""
+      },
+      {
+        "name": "font_a54e6681d3364c47adcf1843b42a97fb",
+        "ranges": [
+          [
+            "10.0",
+            "12.31"
+          ]
+        ],
+        "font_info": {
+          "family": "Courier New",
+          "size": 17,
+          "weight": "bold",
+          "slant": "roman"
+        },
+        "foreground": "SystemHighlightText",
+        "justify": ""
+      },
+      {
+        "name": "font_f45684325d474a7c937bedd65088272c",
+        "ranges": [
+          [
+            "10.0",
+            "12.31"
+          ]
+        ],
+        "font_info": {
+          "family": "Courier New",
+          "size": 18,
+          "weight": "bold",
+          "slant": "roman"
+        },
+        "foreground": "SystemHighlightText",
+        "justify": ""
+      },
+      {
+        "name": "font_18b5096f4d42442ea098691b386b5b03",
+        "ranges": [
+          [
+            "10.0",
+            "12.31"
+          ]
+        ],
+        "font_info": {
+          "family": "Courier New",
+          "size": 17,
+          "weight": "bold",
+          "slant": "roman"
+        },
+        "foreground": "SystemHighlightText",
+        "justify": ""
+      },
+      {
+        "name": "font_5c7f1fa6a7cc45e28178f3f297e98e93",
+        "ranges": [
+          [
+            "10.0",
+            "12.31"
+          ]
+        ],
+        "font_info": {
+          "family": "Courier New",
+          "size": 16,
+          "weight": "bold",
+          "slant": "roman"
+        },
+        "foreground": "SystemHighlightText",
+        "justify": ""
+      },
+      {
+        "name": "font_59c2a0bde04d4bb99de99223ee885520",
+        "ranges": [
+          [
+            "10.0",
+            "12.31"
+          ]
+        ],
+        "font_info": {
+          "family": "Courier New",
+          "size": 15,
+          "weight": "bold",
+          "slant": "roman"
+        },
+        "foreground": "SystemHighlightText",
+        "justify": ""
+      },
+      {
+        "name": "font_232bfcc062354233acad799f4c625a19",
+        "ranges": [
+          [
+            "10.0",
+            "12.31"
+          ]
+        ],
+        "font_info": {
+          "family": "Courier New",
+          "size": 14,
+          "weight": "bold",
+          "slant": "roman"
+        },
+        "foreground": "SystemHighlightText",
+        "justify": ""
+      },
+      {
+        "name": "font_f2ddf7258be94d8785f2e4a9bf69f0ab",
+        "ranges": [
+          [
+            "10.0",
+            "12.31"
+          ]
+        ],
+        "font_info": {
+          "family": "Courier New",
+          "size": 15,
+          "weight": "bold",
+          "slant": "roman"
+        },
+        "foreground": "SystemHighlightText",
+        "justify": ""
+      },
+      {
+        "name": "color_0c7458256006402883bde5603e6e796a",
+        "ranges": [
+          [
+            "10.0",
+            "12.31"
+          ]
+        ],
+        "font_info": {
+          "family": "Arial",
+          "size": 12,
+          "weight": "normal",
+          "slant": "roman"
+        },
+        "foreground": "#000000",
+        "justify": ""
+      },
+      {
+        "name": "font_a4872eedecd740b1a118382bc81df36b",
+        "ranges": [
+          [
+            "10.0",
+            "12.31"
+          ]
+        ],
+        "font_info": {
+          "family": "Courier New",
+          "size": 16,
+          "weight": "bold",
+          "slant": "roman"
+        },
+        "foreground": "#000000",
+        "justify": ""
+      },
+      {
+        "name": "font_495c6f1633274e54aef3fadf1d291116",
+        "ranges": [
+          [
+            "10.0",
+            "12.31"
+          ]
+        ],
+        "font_info": {
+          "family": "Courier New",
+          "size": 15,
+          "weight": "bold",
+          "slant": "roman"
+        },
+        "foreground": "#000000",
+        "justify": ""
+      },
+      {
+        "name": "font_e3222b3bd5714a9c9bca332a06f15e2f",
+        "ranges": [
+          [
+            "10.0",
+            "12.31"
+          ]
+        ],
+        "font_info": {
+          "family": "Ebrima",
+          "size": 15,
+          "weight": "bold",
+          "slant": "roman"
+        },
+        "foreground": "#000000",
+        "justify": ""
+      },
+      {
+        "name": "font_ab2927c534a744f2a3e192b157e06297",
+        "ranges": [
+          [
+            "10.0",
+            "12.31"
+          ]
+        ],
+        "font_info": {
+          "family": "Ebrima",
+          "size": 16,
+          "weight": "bold",
+          "slant": "roman"
+        },
+        "foreground": "#000000",
+        "justify": ""
+      },
+      {
+        "name": "font_b1d694978d5a4ae88705ec0ae8bc9736",
+        "ranges": [
+          [
+            "10.0",
+            "12.31"
+          ]
+        ],
+        "font_info": {
+          "family": "Ebrima",
+          "size": 17,
+          "weight": "bold",
+          "slant": "roman"
+        },
+        "foreground": "#000000",
+        "justify": ""
+      },
+      {
+        "name": "font_86eeaafecc5a42878b03885018230a50",
+        "ranges": [
+          [
+            "10.0",
+            "12.31"
+          ]
+        ],
+        "font_info": {
+          "family": "Ebrima",
+          "size": 18,
+          "weight": "bold",
+          "slant": "roman"
+        },
+        "foreground": "#000000",
+        "justify": ""
+      }
+    ],
+    "data": {}
+  },
+  {
+    "type": "Text",
+    "label": "Text",
+    "color": "gray",
+    "index": 1,
+    "saved_text": "",
+    "saved_tags": [],
+    "data": {}
+  },
+  {
+    "type": "Stimulus",
+    "label": "Stimulus",
+    "color": "yellow",
+    "index": 2,
+    "saved_text": "",
+    "saved_tags": [],
+    "data": {
+      "stimulus_size_mode": "random",
+      "stimulus_set": "Faces",
+      "no_target": false,
+      "target_type": "negative"
+    },
+    "last_selections": [
+      {
+        "stimulus_set": "Faces",
+        "stimulus_type": "negative",
+        "path": "selections\\104_19.jpg"
+      }
+    ],
+    "last_distractors": [
+      {
+        "stimulus_set": "Faces",
+        "distractor_type": "positive",
+        "paths": [
+          "distractors\\0_19.jpg",
+          "distractors\\0_24.jpg",
+          "distractors\\0_30.jpg",
+          "distractors\\100_10.jpg",
+          "distractors\\100_21.jpg",
+          "distractors\\100_33.jpg",
+          "distractors\\101_10.jpg",
+          "distractors\\101_24.jpg",
+          "distractors\\101_34.jpg",
+          "distractors\\102_19.jpg",
+          "distractors\\102_2.jpg",
+          "distractors\\102_26.jpg",
+          "distractors\\103_2.jpg",
+          "distractors\\103_29.jpg",
+          "distractors\\103_3.jpg",
+          "distractors\\104_1.jpg",
+          "distractors\\104_16.jpg",
+          "distractors\\104_26.jpg",
+          "distractors\\105_10.jpg",
+          "distractors\\105_32.jpg",
+          "distractors\\105_34.jpg",
+          "distractors\\106_14.jpg",
+          "distractors\\106_16.jpg",
+          "distractors\\106_17.jpg",
+          "distractors\\107_18.jpg",
+          "distractors\\107_27.jpg",
+          "distractors\\107_29.jpg",
+          "distractors\\108_17.jpg",
+          "distractors\\108_27.jpg",
+          "distractors\\108_33.jpg",
+          "distractors\\109_10.jpg",
+          "distractors\\109_20.jpg",
+          "distractors\\109_6.jpg",
+          "distractors\\10_10.jpg",
+          "distractors\\10_13.jpg",
+          "distractors\\10_17.jpg",
+          "distractors\\110_1.jpg",
+          "distractors\\110_27.jpg",
+          "distractors\\110_31.jpg",
+          "distractors\\111_12.jpg",
+          "distractors\\111_27.jpg",
+          "distractors\\111_34.jpg",
+          "distractors\\112_1.jpg",
+          "distractors\\112_7.jpg",
+          "distractors\\112_9.jpg",
+          "distractors\\113_0.jpg",
+          "distractors\\113_10.jpg",
+          "distractors\\113_16.jpg",
+          "distractors\\114_17.jpg",
+          "distractors\\114_26.jpg",
+          "distractors\\114_8.jpg",
+          "distractors\\115_16.jpg",
+          "distractors\\115_25.jpg",
+          "distractors\\115_4.jpg",
+          "distractors\\116_25.jpg",
+          "distractors\\116_31.jpg",
+          "distractors\\116_8.jpg",
+          "distractors\\117_0.jpg",
+          "distractors\\117_14.jpg",
+          "distractors\\117_17.jpg",
+          "distractors\\118_14.jpg",
+          "distractors\\118_26.jpg",
+          "distractors\\118_28.jpg",
+          "distractors\\119_16.jpg",
+          "distractors\\119_26.jpg",
+          "distractors\\119_31.jpg",
+          "distractors\\11_21.jpg",
+          "distractors\\11_5.jpg",
+          "distractors\\11_7.jpg",
+          "distractors\\120_12.jpg",
+          "distractors\\120_29.jpg",
+          "distractors\\120_6.jpg",
+          "distractors\\121_15.jpg",
+          "distractors\\121_17.jpg",
+          "distractors\\121_29.jpg",
+          "distractors\\122_13.jpg",
+          "distractors\\122_16.jpg",
+          "distractors\\122_34.jpg",
+          "distractors\\123_11.jpg",
+          "distractors\\123_15.jpg",
+          "distractors\\123_28.jpg",
+          "distractors\\124_26.jpg",
+          "distractors\\124_28.jpg",
+          "distractors\\124_6.jpg",
+          "distractors\\125_23.jpg",
+          "distractors\\125_31.jpg",
+          "distractors\\125_33.jpg",
+          "distractors\\126_16.jpg",
+          "distractors\\126_19.jpg",
+          "distractors\\126_6.jpg",
+          "distractors\\127_21.jpg",
+          "distractors\\127_24.jpg",
+          "distractors\\127_9.jpg",
+          "distractors\\128_1.jpg",
+          "distractors\\128_19.jpg",
+          "distractors\\128_29.jpg",
+          "distractors\\129_14.jpg",
+          "distractors\\129_22.jpg",
+          "distractors\\129_28.jpg",
+          "distractors\\12_13.jpg",
+          "distractors\\12_14.jpg",
+          "distractors\\12_24.jpg",
+          "distractors\\130_11.jpg",
+          "distractors\\130_14.jpg",
+          "distractors\\130_28.jpg",
+          "distractors\\131_19.jpg",
+          "distractors\\131_34.jpg",
+          "distractors\\131_5.jpg",
+          "distractors\\132_10.jpg",
+          "distractors\\132_11.jpg",
+          "distractors\\132_13.jpg",
+          "distractors\\133_13.jpg",
+          "distractors\\133_18.jpg",
+          "distractors\\133_26.jpg",
+          "distractors\\134_28.jpg",
+          "distractors\\134_30.jpg",
+          "distractors\\134_6.jpg",
+          "distractors\\135_10.jpg",
+          "distractors\\135_15.jpg",
+          "distractors\\135_34.jpg",
+          "distractors\\136_10.jpg",
+          "distractors\\136_29.jpg",
+          "distractors\\136_30.jpg",
+          "distractors\\137_11.jpg",
+          "distractors\\137_21.jpg",
+          "distractors\\137_25.jpg",
+          "distractors\\138_10.jpg",
+          "distractors\\138_17.jpg",
+          "distractors\\138_6.jpg",
+          "distractors\\139_25.jpg",
+          "distractors\\139_30.jpg",
+          "distractors\\139_7.jpg",
+          "distractors\\13_10.jpg",
+          "distractors\\13_30.jpg",
+          "distractors\\13_9.jpg",
+          "distractors\\14_24.jpg",
+          "distractors\\14_6.jpg",
+          "distractors\\14_8.jpg",
+          "distractors\\15_10.jpg",
+          "distractors\\15_21.jpg",
+          "distractors\\15_33.jpg",
+          "distractors\\16_12.jpg",
+          "distractors\\16_22.jpg",
+          "distractors\\16_25.jpg",
+          "distractors\\17_21.jpg",
+          "distractors\\17_23.jpg",
+          "distractors\\17_7.jpg",
+          "distractors\\18_13.jpg",
+          "distractors\\18_18.jpg",
+          "distractors\\18_2.jpg",
+          "distractors\\19_3.jpg",
+          "distractors\\19_5.jpg",
+          "distractors\\19_8.jpg",
+          "distractors\\1_30.jpg",
+          "distractors\\1_32.jpg",
+          "distractors\\1_6.jpg",
+          "distractors\\20_11.jpg",
+          "distractors\\20_32.jpg",
+          "distractors\\20_33.jpg",
+          "distractors\\21_2.jpg",
+          "distractors\\21_24.jpg",
+          "distractors\\21_8.jpg",
+          "distractors\\22_12.jpg",
+          "distractors\\22_16.jpg",
+          "distractors\\22_23.jpg",
+          "distractors\\23_11.jpg",
+          "distractors\\23_13.jpg",
+          "distractors\\23_5.jpg",
+          "distractors\\24_13.jpg",
+          "distractors\\24_24.jpg",
+          "distractors\\24_27.jpg",
+          "distractors\\25_23.jpg",
+          "distractors\\25_31.jpg",
+          "distractors\\25_9.jpg",
+          "distractors\\26_13.jpg",
+          "distractors\\26_30.jpg",
+          "distractors\\26_4.jpg",
+          "distractors\\27_1.jpg",
+          "distractors\\27_18.jpg",
+          "distractors\\27_21.jpg",
+          "distractors\\28_22.jpg",
+          "distractors\\28_31.jpg",
+          "distractors\\28_33.jpg",
+          "distractors\\29_24.jpg",
+          "distractors\\29_29.jpg",
+          "distractors\\29_34.jpg",
+          "distractors\\2_14.jpg",
+          "distractors\\2_32.jpg",
+          "distractors\\2_4.jpg",
+          "distractors\\30_16.jpg",
+          "distractors\\30_20.jpg",
+          "distractors\\30_33.jpg",
+          "distractors\\31_11.jpg",
+          "distractors\\31_24.jpg",
+          "distractors\\31_31.jpg",
+          "distractors\\32_1.jpg",
+          "distractors\\32_21.jpg",
+          "distractors\\32_9.jpg",
+          "distractors\\33_11.jpg",
+          "distractors\\33_22.jpg",
+          "distractors\\33_6.jpg",
+          "distractors\\34_16.jpg",
+          "distractors\\34_19.jpg",
+          "distractors\\34_28.jpg",
+          "distractors\\35_13.jpg",
+          "distractors\\35_23.jpg",
+          "distractors\\35_26.jpg",
+          "distractors\\36_12.jpg",
+          "distractors\\36_13.jpg",
+          "distractors\\36_6.jpg",
+          "distractors\\37_20.jpg",
+          "distractors\\37_23.jpg",
+          "distractors\\37_3.jpg",
+          "distractors\\38_11.jpg",
+          "distractors\\38_17.jpg",
+          "distractors\\38_9.jpg",
+          "distractors\\39_0.jpg",
+          "distractors\\39_19.jpg",
+          "distractors\\39_24.jpg",
+          "distractors\\3_0.jpg",
+          "distractors\\3_11.jpg",
+          "distractors\\3_28.jpg",
+          "distractors\\40_11.jpg",
+          "distractors\\40_23.jpg",
+          "distractors\\40_4.jpg",
+          "distractors\\41_18.jpg",
+          "distractors\\41_33.jpg",
+          "distractors\\41_9.jpg",
+          "distractors\\42_0.jpg",
+          "distractors\\42_5.jpg",
+          "distractors\\42_7.jpg",
+          "distractors\\43_12.jpg",
+          "distractors\\43_21.jpg",
+          "distractors\\43_28.jpg",
+          "distractors\\44_28.jpg",
+          "distractors\\44_3.jpg",
+          "distractors\\44_9.jpg",
+          "distractors\\45_15.jpg",
+          "distractors\\45_16.jpg",
+          "distractors\\45_8.jpg",
+          "distractors\\46_23.jpg",
+          "distractors\\46_32.jpg",
+          "distractors\\46_9.jpg",
+          "distractors\\47_10.jpg",
+          "distractors\\47_22.jpg",
+          "distractors\\47_26.jpg",
+          "distractors\\48_12.jpg",
+          "distractors\\48_17.jpg",
+          "distractors\\48_29.jpg",
+          "distractors\\49_12.jpg",
+          "distractors\\49_27.jpg",
+          "distractors\\49_33.jpg",
+          "distractors\\4_1.jpg",
+          "distractors\\4_15.jpg",
+          "distractors\\4_16.jpg",
+          "distractors\\50_10.jpg",
+          "distractors\\50_16.jpg",
+          "distractors\\50_5.jpg",
+          "distractors\\51_10.jpg",
+          "distractors\\51_13.jpg",
+          "distractors\\51_30.jpg",
+          "distractors\\52_32.jpg",
+          "distractors\\52_6.jpg",
+          "distractors\\52_7.jpg",
+          "distractors\\53_10.jpg",
+          "distractors\\53_16.jpg",
+          "distractors\\53_3.jpg",
+          "distractors\\54_13.jpg",
+          "distractors\\54_27.jpg",
+          "distractors\\54_30.jpg",
+          "distractors\\55_25.jpg",
+          "distractors\\55_6.jpg",
+          "distractors\\55_7.jpg",
+          "distractors\\56_23.jpg",
+          "distractors\\56_32.jpg",
+          "distractors\\56_6.jpg",
+          "distractors\\57_20.jpg",
+          "distractors\\57_25.jpg",
+          "distractors\\57_9.jpg",
+          "distractors\\58_12.jpg",
+          "distractors\\58_29.jpg",
+          "distractors\\58_34.jpg",
+          "distractors\\59_0.jpg",
+          "distractors\\59_21.jpg",
+          "distractors\\59_23.jpg",
+          "distractors\\5_2.jpg",
+          "distractors\\5_34.jpg",
+          "distractors\\5_6.jpg",
+          "distractors\\60_0.jpg",
+          "distractors\\60_32.jpg",
+          "distractors\\60_33.jpg",
+          "distractors\\61_21.jpg",
+          "distractors\\61_28.jpg",
+          "distractors\\61_8.jpg",
+          "distractors\\62_10.jpg",
+          "distractors\\62_27.jpg",
+          "distractors\\62_34.jpg",
+          "distractors\\63_14.jpg",
+          "distractors\\63_31.jpg",
+          "distractors\\63_7.jpg",
+          "distractors\\64_10.jpg",
+          "distractors\\64_13.jpg",
+          "distractors\\64_26.jpg",
+          "distractors\\65_14.jpg",
+          "distractors\\65_18.jpg",
+          "distractors\\65_2.jpg",
+          "distractors\\66_10.jpg",
+          "distractors\\66_28.jpg",
+          "distractors\\66_8.jpg",
+          "distractors\\67_22.jpg",
+          "distractors\\67_5.jpg",
+          "distractors\\67_8.jpg",
+          "distractors\\68_2.jpg",
+          "distractors\\68_28.jpg",
+          "distractors\\68_33.jpg",
+          "distractors\\69_14.jpg",
+          "distractors\\69_20.jpg",
+          "distractors\\69_9.jpg",
+          "distractors\\6_23.jpg",
+          "distractors\\6_25.jpg",
+          "distractors\\6_3.jpg",
+          "distractors\\70_18.jpg",
+          "distractors\\70_22.jpg",
+          "distractors\\70_25.jpg",
+          "distractors\\71_19.jpg",
+          "distractors\\71_27.jpg",
+          "distractors\\71_9.jpg",
+          "distractors\\72_0.jpg",
+          "distractors\\72_24.jpg",
+          "distractors\\72_25.jpg",
+          "distractors\\73_12.jpg",
+          "distractors\\73_2.jpg",
+          "distractors\\73_25.jpg",
+          "distractors\\74_0.jpg",
+          "distractors\\74_1.jpg",
+          "distractors\\74_25.jpg",
+          "distractors\\75_26.jpg",
+          "distractors\\75_34.jpg",
+          "distractors\\75_9.jpg",
+          "distractors\\76_2.jpg",
+          "distractors\\76_7.jpg",
+          "distractors\\76_8.jpg",
+          "distractors\\77_22.jpg",
+          "distractors\\77_23.jpg",
+          "distractors\\77_24.jpg",
+          "distractors\\78_10.jpg",
+          "distractors\\78_16.jpg",
+          "distractors\\78_2.jpg",
+          "distractors\\79_20.jpg",
+          "distractors\\79_33.jpg",
+          "distractors\\79_5.jpg",
+          "distractors\\7_10.jpg",
+          "distractors\\7_16.jpg",
+          "distractors\\7_9.jpg",
+          "distractors\\80_2.jpg",
+          "distractors\\80_21.jpg",
+          "distractors\\80_30.jpg",
+          "distractors\\81_22.jpg",
+          "distractors\\81_3.jpg",
+          "distractors\\81_7.jpg",
+          "distractors\\82_0.jpg",
+          "distractors\\82_1.jpg",
+          "distractors\\82_8.jpg",
+          "distractors\\83_1.jpg",
+          "distractors\\83_14.jpg",
+          "distractors\\83_17.jpg",
+          "distractors\\84_12.jpg",
+          "distractors\\84_14.jpg",
+          "distractors\\84_3.jpg",
+          "distractors\\85_16.jpg",
+          "distractors\\85_20.jpg",
+          "distractors\\85_7.jpg",
+          "distractors\\86_17.jpg",
+          "distractors\\86_2.jpg",
+          "distractors\\86_20.jpg",
+          "distractors\\87_22.jpg",
+          "distractors\\87_25.jpg",
+          "distractors\\87_6.jpg",
+          "distractors\\88_14.jpg",
+          "distractors\\88_15.jpg",
+          "distractors\\88_17.jpg",
+          "distractors\\89_18.jpg",
+          "distractors\\89_3.jpg",
+          "distractors\\89_9.jpg",
+          "distractors\\8_17.jpg",
+          "distractors\\8_6.jpg",
+          "distractors\\8_8.jpg",
+          "distractors\\90_15.jpg",
+          "distractors\\90_2.jpg",
+          "distractors\\90_3.jpg",
+          "distractors\\91_19.jpg",
+          "distractors\\91_22.jpg",
+          "distractors\\91_28.jpg",
+          "distractors\\92_2.jpg",
+          "distractors\\92_3.jpg",
+          "distractors\\92_8.jpg",
+          "distractors\\93_19.jpg",
+          "distractors\\93_21.jpg",
+          "distractors\\93_4.jpg",
+          "distractors\\94_13.jpg",
+          "distractors\\94_20.jpg",
+          "distractors\\94_29.jpg",
+          "distractors\\95_20.jpg",
+          "distractors\\95_22.jpg",
+          "distractors\\95_8.jpg",
+          "distractors\\96_20.jpg",
+          "distractors\\96_3.jpg",
+          "distractors\\96_30.jpg",
+          "distractors\\97_11.jpg",
+          "distractors\\97_3.jpg",
+          "distractors\\97_7.jpg",
+          "distractors\\98_17.jpg",
+          "distractors\\98_21.jpg",
+          "distractors\\98_25.jpg",
+          "distractors\\99_13.jpg",
+          "distractors\\99_19.jpg",
+          "distractors\\99_32.jpg",
+          "distractors\\9_0.jpg",
+          "distractors\\9_28.jpg",
+          "distractors\\9_4.jpg"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "End",
+    "label": "End",
+    "color": "red",
+    "index": 3,
+    "saved_text": "\n\n\n\n\n\n\n\n\nPaldies par piedal\u012b\u0161anos eksperiment\u0101!",
+    "saved_tags": [
+      {
+        "name": "align_e46c8ecdfcfe40aa8fadc58437e1a566",
+        "ranges": [
+          [
+            "10.0",
+            "10.38"
+          ]
+        ],
+        "font_info": {
+          "family": "Arial",
+          "size": 12,
+          "weight": "normal",
+          "slant": "roman"
+        },
+        "foreground": "",
+        "justify": "center"
+      },
+      {
+        "name": "color_60e79e652af1404d9c75b7731c4e349b",
+        "ranges": [
+          [
+            "10.0",
+            "10.38"
+          ]
+        ],
+        "font_info": {
+          "family": "Arial",
+          "size": 12,
+          "weight": "normal",
+          "slant": "roman"
+        },
+        "foreground": "#000000",
+        "justify": ""
+      },
+      {
+        "name": "font_dd285f8759b54aa2a3e297db0fbdbadd",
+        "ranges": [
+          [
+            "10.0",
+            "10.38"
+          ]
+        ],
+        "font_info": {
+          "family": "Courier New",
+          "size": 12,
+          "weight": "bold",
+          "slant": "roman"
+        },
+        "foreground": "#000000",
+        "justify": ""
+      },
+      {
+        "name": "font_30762582e05e401b9ef980ac1b0045d9",
+        "ranges": [
+          [
+            "10.0",
+            "10.38"
+          ]
+        ],
+        "font_info": {
+          "family": "Courier New",
+          "size": 13,
+          "weight": "bold",
+          "slant": "roman"
+        },
+        "foreground": "#000000",
+        "justify": ""
+      },
+      {
+        "name": "font_e27b0195393942cb9b893468cc72699d",
+        "ranges": [
+          [
+            "10.0",
+            "10.38"
+          ]
+        ],
+        "font_info": {
+          "family": "Courier New",
+          "size": 14,
+          "weight": "bold",
+          "slant": "roman"
+        },
+        "foreground": "#000000",
+        "justify": ""
+      },
+      {
+        "name": "font_123323cae0b44ff890f02f772faa77b4",
+        "ranges": [
+          [
+            "10.0",
+            "10.38"
+          ]
+        ],
+        "font_info": {
+          "family": "Courier New",
+          "size": 15,
+          "weight": "bold",
+          "slant": "roman"
+        },
+        "foreground": "#000000",
+        "justify": ""
+      },
+      {
+        "name": "font_7e5819abf4254b6abcd7cfaeb7c8b51f",
+        "ranges": [
+          [
+            "10.0",
+            "10.38"
+          ]
+        ],
+        "font_info": {
+          "family": "Courier New",
+          "size": 16,
+          "weight": "bold",
+          "slant": "roman"
+        },
+        "foreground": "#000000",
+        "justify": ""
+      },
+      {
+        "name": "font_76655058094544eaac75bfa0b5111c9b",
+        "ranges": [
+          [
+            "10.0",
+            "10.38"
+          ]
+        ],
+        "font_info": {
+          "family": "Courier New",
+          "size": 17,
+          "weight": "bold",
+          "slant": "roman"
+        },
+        "foreground": "#000000",
+        "justify": ""
+      },
+      {
+        "name": "font_6c8024d06621427d93dec7da749bd583",
+        "ranges": [
+          [
+            "10.0",
+            "10.38"
+          ]
+        ],
+        "font_info": {
+          "family": "Courier New",
+          "size": 18,
+          "weight": "bold",
+          "slant": "roman"
+        },
+        "foreground": "#000000",
+        "justify": ""
+      },
+      {
+        "name": "font_eb36838bf81e4ce49ba8673e3d4ce775",
+        "ranges": [
+          [
+            "10.0",
+            "10.38"
+          ]
+        ],
+        "font_info": {
+          "family": "Courier New",
+          "size": 19,
+          "weight": "bold",
+          "slant": "roman"
+        },
+        "foreground": "#000000",
+        "justify": ""
+      },
+      {
+        "name": "font_abfab8db7ef6407d95af77b27c4e1df1",
+        "ranges": [
+          [
+            "10.0",
+            "10.38"
+          ]
+        ],
+        "font_info": {
+          "family": "Courier New",
+          "size": 20,
+          "weight": "bold",
+          "slant": "roman"
+        },
+        "foreground": "#000000",
+        "justify": ""
+      }
+    ],
+    "data": {}
+  }
+]

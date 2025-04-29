@@ -54,71 +54,91 @@ def save_visual_search_experiment(app, base_save_dir, compress_images=True, imag
         raw_data = getattr(block, "data", {}) or {}
         main_data = {k: v for k, v in raw_data.items() if k not in ("last_selections", "last_distractors")}
         entry["data"] = main_data
-        # Handle last_selections
-        last_sel = raw_data.get("last_selections", {}).copy()
-        selected_target_mode = raw_data.get("selected_target", "Random")
-        stimulus_set = raw_data.get("stimulus_set", "Faces")
-        target_type = raw_data.get("target_type", "positive")
-        no_target = raw_data.get("no_target", False)
 
-        if selected_target_mode == "Random" or no_target:
-            from random import choice
-            base_path = os.path.join("images", "faces", target_type)
-            if os.path.isdir(base_path):
-                all_imgs = [os.path.join(base_path, f) for f in os.listdir(base_path)
-                            if f.lower().endswith((".jpg", ".jpeg", ".png"))]
-                if all_imgs:
-                    random_img = choice(all_imgs)
-                    last_sel[(stimulus_set, target_type)] = random_img
+        if block.component_type == "Stimulus":
+            # Handle last_selections
+            last_sel = raw_data.get("last_selections", {}).copy()
+            selected_target_mode = raw_data.get("selected_target", "Random")
+            stimulus_set = raw_data.get("stimulus_set", "Faces")
+            target_type = raw_data.get("target_type", "positive")
+            no_target = raw_data.get("no_target", False)
 
+            if selected_target_mode == "Random" or no_target:
+                from random import choice
+                stim_set = raw_data.get("stimulus_set", "Faces")
+                if stim_set == "Faces":
+                    root_dir = os.path.join("images", "faces")
+                elif stim_set == "Images":
+                    root_dir = os.path.join("images", "images")
+                else:
+                    # handle any imported sets you’ve registered on app.imported_stimulus_sets
+                    root_dir = app.imported_stimulus_sets.get(stim_set, "")
+                base_path = os.path.join(root_dir, target_type)
+                if os.path.isdir(base_path):
+                    # Walk through base_path and all its subdirectories
+                    all_imgs = []
+                    for root, dirs, files in os.walk(base_path):
+                        for fname in files:
+                            if fname.lower().endswith((".jpg", ".jpeg", ".png")):
+                                all_imgs.append(os.path.join(root, fname))
+                    if all_imgs:
+                        random_img = choice(all_imgs)
+                        last_sel[(stimulus_set, target_type)] = random_img
 
-        new_last_sel = []
-        for key, path in last_sel.items():
-            new_path = copy_and_compress_image(
-                path, selections_dir, ("selections",), image_map, compress_images, image_quality
-            )
-            new_last_sel.append({
-                "stimulus_set": key[0],
-                "stimulus_type": key[1],
-                "path": new_path
-            })
-        entry["last_selections"] = new_last_sel
-
-        last_dist = raw_data.get("last_distractors", {}).copy()
-        distractor_set_mode = raw_data.get("distractor_set", "All")
-        distractor_type = raw_data.get("distractor_type", "positive")
-        grid_x = raw_data.get("field_x", 10)
-        grid_y = raw_data.get("field_y", 10)
-
-        base_path = os.path.join("images", "faces", distractor_type)
-        if os.path.isdir(base_path):
-            all_imgs = [os.path.join(base_path, f) for f in os.listdir(base_path)
-                        if f.lower().endswith((".jpg", ".jpeg", ".png"))]
-
-            if distractor_set_mode == "Random":
-                total_needed = max(0, grid_x * grid_y - 1)
-                if len(all_imgs) >= total_needed:
-                    random_set = sample(all_imgs, total_needed)
-                    last_dist[(stimulus_set, distractor_type)] = random_set
-
-            elif distractor_set_mode == "All":
-                last_dist[(stimulus_set, distractor_type)] = all_imgs
-
-
-        new_last_dist = []
-        for key, paths in last_dist.items():
-            new_paths = [
-                copy_and_compress_image(
-                    p, distractors_dir, ("distractors",), image_map, compress_images, image_quality
+            new_last_sel = []
+            for key, path in last_sel.items():
+                new_path = copy_and_compress_image(
+                    path, selections_dir, ("selections",), image_map, compress_images, image_quality
                 )
-                for p in paths
-            ]
-            new_last_dist.append({
-                "stimulus_set": key[0],
-                "distractor_type": key[1],
-                "paths": new_paths
-            })
-        entry["last_distractors"] = new_last_dist
+                new_last_sel.append({
+                    "stimulus_set": key[0],
+                    "stimulus_type": key[1],
+                    "path": new_path
+                })
+            entry["last_selections"] = new_last_sel
+
+            last_dist = raw_data.get("last_distractors", {}).copy()
+            distractor_set_mode = raw_data.get("distractor_set", "All")
+            distractor_type = raw_data.get("distractor_type", "positive")
+            grid_x = raw_data.get("field_x", 10)
+            grid_y = raw_data.get("field_y", 10)
+
+            if stim_set == "Faces":
+                root_dir = os.path.join("images", "faces")
+            elif stim_set == "Images":
+                root_dir = os.path.join("images", "images")
+            else:
+                root_dir = app.imported_stimulus_sets.get(stim_set, "")
+
+            base_path = os.path.join(root_dir, distractor_type)
+            if os.path.isdir(base_path):
+                all_imgs = []
+                for root, dirs, files in os.walk(base_path):
+                    for fname in files:
+                        if fname.lower().endswith((".jpg", ".jpeg", ".png")):
+                            all_imgs.append(os.path.join(root, fname))
+                if distractor_set_mode == "Random":
+                    total_needed = max(0, grid_x * grid_y - 1)
+                    if len(all_imgs) >= total_needed:
+                        random_set = sample(all_imgs, total_needed)
+                        last_dist[(stimulus_set, distractor_type)] = random_set
+                elif distractor_set_mode == "All":
+                    last_dist[(stimulus_set, distractor_type)] = all_imgs
+
+            new_last_dist = []
+            for key, paths in last_dist.items():
+                new_paths = [
+                    copy_and_compress_image(
+                        p, distractors_dir, ("distractors",), image_map, compress_images, image_quality
+                    )
+                    for p in paths
+                ]
+                new_last_dist.append({
+                    "stimulus_set": key[0],
+                    "distractor_type": key[1],
+                    "paths": new_paths
+                })
+            entry["last_distractors"] = new_last_dist
 
         # Handle attachment if any
         if block.component_type == "Stimulus notification" and block.attachment:

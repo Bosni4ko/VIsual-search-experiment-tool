@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import ttk, filedialog
 from experiment_session_start import show_experiment_session_start
 import os
+import json
 from tkinter import messagebox
 
 
@@ -16,6 +17,39 @@ def show_launch_screen(app):
         # dict mapping exp_name -> full_path
         app.added_experiments = {}
 
+# Helper to extract stimulus overview from experiment_state.json
+    def get_experiment_overview(exp_path):
+        overview_file = os.path.join(exp_path, 'experiment_state.json')
+        try:
+            with open(overview_file, 'r', encoding='utf-8') as f:
+                data = json.load(f)
+        except Exception:
+            return app.tr("no_additional_info")
+        # Collect all Stimulus entries
+        stimuli = [e for e in data if e.get('type') == 'Stimulus']
+        total = len(stimuli)
+        # Find all attachment indices from Stimulus notifications
+        attachment_indices = {e.get('attachment', {}).get('index') for e in data if e.get('type') == 'Stimulus notification'}
+        # Build overview lines
+        lines = [app.tr("overview_total_stimuli").format(count=total)]
+        # Enumerate each stimulus by its order in the file
+        for num, s in enumerate(stimuli, start=1):
+            file_idx = s.get('index')
+            is_target = file_idx in attachment_indices
+            # Gather distractor types for this stimulus
+            dt_list = list({d.get('distractor_type', 'unknown') for d in s.get('last_distractors', [])})
+            dt_str = ', '.join(dt_list) if dt_list else app.tr("unknown")
+            # Summary per stimulus
+            lines.append(f"{app.tr('stimulus_index')} {num}: {app.tr('is_target')} {app.tr('yes') if is_target else app.tr('no')}")
+            if is_target:
+                lines.append(f"  {app.tr('target_type')}: {dt_str}")
+            else:
+                lines.append(f"  {app.tr('distractor_type')}: {dt_str}")
+        # Overall target presence
+        has_target = bool(attachment_indices & {s.get('index') for s in stimuli})
+        lines.append(f"{app.tr('has_target')}: {app.tr('yes') if has_target else app.tr('no')}")
+        return "\n".join(lines)
+    
     # === Top Back Arrow ===
     top_frame = tk.Frame(app.root, bg="#f0f0f0")
     top_frame.pack(fill="x", pady=(10, 0))
@@ -167,22 +201,24 @@ def show_launch_screen(app):
         lbl.bind("<Button-1>", on_click)
         experiment_labels[exp_name] = lbl
 
-    # --- Handle experiment selection ---
     def select_experiment(exp_name):
-        # Deselect previous
-        for name, label in experiment_labels.items():
+        # Clear previous highlights
+        for label in experiment_labels.values():
             label.configure(background="#ffffff")
-
         # Highlight selected
-        experiment_labels[exp_name].configure(background="#d0ebff")  # light blue
-
+        experiment_labels[exp_name].configure(background="#d0ebff")
         selected_experiment.set(exp_name)
 
-        # Update info box
-        path = loaded_experiments.get(exp_name, "Unknown path")
+        exp_path = loaded_experiments.get(exp_name, '')
+        info_lines = [
+            f"{app.tr('selected_experiment')} {exp_name}",
+            f"{app.tr('path')} {exp_path}",
+            "",
+            get_experiment_overview(exp_path)
+        ]
         experiment_info_text.config(state="normal")
         experiment_info_text.delete("1.0", tk.END)
-        experiment_info_text.insert(tk.END, f"Selected Experiment: {exp_name}\n\nPath:\n{path}\n\n(Additional info coming soon)")
+        experiment_info_text.insert(tk.END, "\n".join(info_lines))
         experiment_info_text.config(state="disabled")
 
     # --- Load default experiments ---

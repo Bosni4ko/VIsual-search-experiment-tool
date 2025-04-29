@@ -17,7 +17,6 @@ def show_launch_screen(app):
         # dict mapping exp_name -> full_path
         app.added_experiments = {}
 
-# Helper to extract stimulus overview from experiment_state.json
     def get_experiment_overview(exp_path):
         overview_file = os.path.join(exp_path, 'experiment_state.json')
         try:
@@ -28,26 +27,23 @@ def show_launch_screen(app):
         # Collect all Stimulus entries
         stimuli = [e for e in data if e.get('type') == 'Stimulus']
         total = len(stimuli)
-        # Find all attachment indices from Stimulus notifications
-        attachment_indices = {e.get('attachment', {}).get('index') for e in data if e.get('type') == 'Stimulus notification'}
-        # Build overview lines
         lines = [app.tr("overview_total_stimuli").format(count=total)]
-        # Enumerate each stimulus by its order in the file
+        # Enumerate each stimulus and display its properties
         for num, s in enumerate(stimuli, start=1):
-            file_idx = s.get('index')
-            is_target = file_idx in attachment_indices
+            d = s.get('data', {})
+            stimulus_set = d.get('stimulus_set', app.tr('unknown'))
+            target_type = d.get('target_type', app.tr('unknown'))
+            no_target_flag = d.get('no_target', False)
             # Gather distractor types for this stimulus
-            dt_list = list({d.get('distractor_type', 'unknown') for d in s.get('last_distractors', [])})
-            dt_str = ', '.join(dt_list) if dt_list else app.tr("unknown")
+            dt_list = list({d.get('distractor_type', app.tr('unknown')) for d in s.get('last_distractors', [])})
+            dt_str = ', '.join(dt_list) if dt_list else app.tr('unknown')
             # Summary per stimulus
-            lines.append(f"{app.tr('stimulus_index')} {num}: {app.tr('is_target')} {app.tr('yes') if is_target else app.tr('no')}")
-            if is_target:
-                lines.append(f"  {app.tr('target_type')}: {dt_str}")
-            else:
-                lines.append(f"  {app.tr('distractor_type')}: {dt_str}")
-        # Overall target presence
-        has_target = bool(attachment_indices & {s.get('index') for s in stimuli})
-        lines.append(f"{app.tr('has_target')}: {app.tr('yes') if has_target else app.tr('no')}")
+            lines.append(f"{app.tr('stimulus_index')} {num}")
+            lines.append(f"  {app.tr('stimulus_set')}: {stimulus_set}")
+            lines.append(f"  {app.tr('target_type')}: {target_type}")
+            lines.append(f"  {app.tr('distractor_type')}: {dt_str}")
+            lines.append(f"  {app.tr('no_target')}: {app.tr('yes') if no_target_flag else app.tr('no')}")
+            lines.append("")  # blank line after each stimulus
         return "\n".join(lines)
     
     # === Top Back Arrow ===

@@ -350,19 +350,10 @@
     "data": {}
   },
   {
-    "type": "Text",
-    "label": "Text",
-    "color": "gray",
-    "index": 1,
-    "saved_text": "",
-    "saved_tags": [],
-    "data": {}
-  },
-  {
     "type": "Stimulus",
     "label": "Stimulus",
     "color": "yellow",
-    "index": 2,
+    "index": 1,
     "saved_text": "",
     "saved_tags": [],
     "data": {
@@ -375,7 +366,7 @@
       {
         "stimulus_set": "Faces",
         "stimulus_type": "negative",
-        "path": "selections\\104_19.jpg"
+        "path": "selections\\88_33.jpg"
       }
     ],
     "last_distractors": [
@@ -804,6 +795,28 @@
           "distractors\\9_28.jpg",
           "distractors\\9_4.jpg"
         ]
+      }
+    ]
+  },
+  {
+    "type": "Stimulus",
+    "label": "Stimulus",
+    "color": "yellow",
+    "index": 2,
+    "saved_text": "",
+    "saved_tags": [],
+    "data": {
+      "stimulus_size_mode": "random",
+      "stimulus_set": "Images",
+      "no_target": true,
+      "target_type": "negative"
+    },
+    "last_selections": [],
+    "last_distractors": [
+      {
+        "stimulus_set": "Images",
+        "distractor_type": "positive",
+        "paths": []
       }
     ]
   },

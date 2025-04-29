@@ -352,13 +352,18 @@
     "last_distractors": []
   },
   {
-    "type": "Text",
-    "label": "Text",
-    "color": "gray",
+    "type": "Stimulus",
+    "label": "Stimulus",
+    "color": "yellow",
     "index": 1,
     "saved_text": "",
     "saved_tags": [],
-    "data": {},
+    "data": {
+      "stimulus_size_mode": "random",
+      "stimulus_set": "Faces",
+      "no_target": false,
+      "target_type": "negative"
+    },
     "last_selections": [],
     "last_distractors": []
   },
@@ -371,8 +376,8 @@
     "saved_tags": [],
     "data": {
       "stimulus_size_mode": "random",
-      "stimulus_set": "Faces",
-      "no_target": false,
+      "stimulus_set": "Images",
+      "no_target": true,
       "target_type": "negative"
     },
     "last_selections": [],

@@ -7,11 +7,14 @@ import json
 from translations import translations
 from editor_screen import show_editor_screen
 from launch_screen import show_launch_screen
+from styles import apply_theme
+from styles import ENTRY_FONT,COMBO_FONT,METADATA_ENTRY,SELECT_METADATA,CANVAS_BG
 STATE_FILE = "create_screen_state.json"
 
 class ScrollableFrame(tk.Frame):
     def __init__(self, container, *args, **kwargs):
         super().__init__(container, *args, **kwargs)
+        apply_theme(container)
         self.canvas = tk.Canvas(self, bg="#ffffff", highlightthickness=0)
         vsb = ttk.Scrollbar(self, orient="vertical", command=self.canvas.yview)
         self.canvas.configure(yscrollcommand=vsb.set)
@@ -65,22 +68,7 @@ class ExperimentApp:
         self.root.geometry("1200x800")
         self.root.minsize(600, 400)
         self.root.configure(bg="#f0f0f0")  # Light, neutral background
-
-        # Configure ttk styles
-        self.style = ttk.Style()
-        self.style.theme_use("clam")
-
-        # Main button style
-        self.style.configure("TButton", font=("Segoe UI", 14), padding=10)
-        # Small button style for the remove metadata button and list item removal
-        self.style.configure("Small.TButton", font=("Segoe UI", 10), padding=(2, 2))
-
-        # Global style for Labels and Entry fields
-        self.style.configure("TLabel", font=("Segoe UI", 20, "bold"), background="#f0f0f0")
-        self.style.configure("TEntry", font=("Segoe UI", 16))  # Increased font size
-        
-        # Custom smaller style for the "Add Item" button
-        self.style.configure("AddItem.TButton", font=("Segoe UI", 8), padding=(1, 1))
+        apply_theme(self.root)  
 
         # Stored values for persistence
         self.saved_exp_name = "Default_Experiment_name"
@@ -148,6 +136,8 @@ class ExperimentApp:
             textvariable=self.language_var,
             values=self.languages,
             state="readonly",
+            font=SELECT_METADATA,
+            style="Language.TCombobox",
             width=12
         )
         lang_dropdown.pack(side="left")
@@ -201,6 +191,8 @@ class ExperimentApp:
             textvariable=self.language_var,
             values=self.languages,
             state="readonly",
+            font=SELECT_METADATA,
+            style="Language.TCombobox",
             width=12
         )
         lang_dropdown.pack(side="left")
@@ -226,7 +218,7 @@ class ExperimentApp:
         # Save Location row
         save_label = ttk.Label(form_frame, text=self.tr("save_location"), font=("Segoe UI", 18, "bold"), background="#f0f0f0")
         save_label.grid(row=0, column=0, sticky="e", padx=5, pady=5)
-        self.save_location_entry = ttk.Entry(form_frame, width=50)
+        self.save_location_entry = ttk.Entry(form_frame, width=50,font=ENTRY_FONT,style="TEntry")
         self.save_location_entry.grid(row=0, column=1, sticky="w", padx=5, pady=5)
         self.save_location_entry.insert(0, self.saved_save_location)
         choose_button = ttk.Button(form_frame, text=self.tr("choose"),command=self.choose_save_location,style="Small.TButton")
@@ -234,13 +226,13 @@ class ExperimentApp:
         
         exp_label = ttk.Label(form_frame, text=self.tr("experiment_name"), font=("Segoe UI", 18, "bold"), background="#f0f0f0")
         exp_label.grid(row=1, column=0, sticky="e", padx=5, pady=5)
-        self.exp_name_entry = ttk.Entry(form_frame, width=50)
+        self.exp_name_entry = ttk.Entry(form_frame, width=50,font=ENTRY_FONT,style="TEntry")
         self.exp_name_entry.grid(row=1, column=1, sticky="w", padx=5, pady=5)
         self.exp_name_entry.insert(0, self.saved_exp_name)
         
         part_label = ttk.Label(form_frame, text=self.tr("participant_default_name"), font=("Segoe UI", 18, "bold"), background="#f0f0f0")
         part_label.grid(row=2, column=0, sticky="e", padx=5, pady=5)
-        self.participant_entry = ttk.Entry(form_frame, width=50)
+        self.participant_entry = ttk.Entry(form_frame, width=50,font=ENTRY_FONT,style="TEntry")
         self.participant_entry.grid(row=2, column=1, sticky="w", padx=5, pady=5)
         self.participant_entry.insert(0, self.saved_participant_name)
         
@@ -287,7 +279,7 @@ class ExperimentApp:
         row_frame.pack(fill="x", pady=5)
 
         # Metadata name entry field
-        name_entry = ttk.Entry(row_frame, width=20)
+        name_entry = ttk.Entry(row_frame, width=20,font=COMBO_FONT)
         name_entry.pack(side="left", padx=5)
         if initial_data and "name" in initial_data:
             name_entry.insert(0, initial_data["name"])
@@ -300,12 +292,14 @@ class ExperimentApp:
         list_label  = self.tr("list")
         values = [value_label, list_label]
 
-        # create the combobox exactly like the language selector
+        # create the combobox 
         type_combobox = ttk.Combobox(
             row_frame,
             values=values,
             state="readonly",
-            width=6
+            width=10,
+            font=SELECT_METADATA,
+            style="Listbox.TCombobox"
         )
         type_combobox.pack(side="left", padx=5)
 
@@ -387,7 +381,7 @@ class ExperimentApp:
         """
         row = tk.Frame(container, bg="#ffffff")
         row.pack(fill="x", pady=2)
-        entry = ttk.Entry(row, width=35)
+        entry = ttk.Entry(row, width=35,font=METADATA_ENTRY)
         entry.pack(side="left", padx=5)
         entry.insert(0, initial_text)
         remove_btn = ttk.Button(row, text=self.tr("remove"), style="Small.TButton", command=row.destroy)
@@ -499,5 +493,9 @@ class ExperimentApp:
 
 if __name__ == "__main__":
     root = tk.Tk()
+    root.option_add('*TCombobox*Listbox.font', SELECT_METADATA)
+    root.option_add('*TCombobox*Listbox.background', CANVAS_BG)
+    root.option_add('*TCombobox*Listbox.foreground', '#000000')
+    apply_theme(root)
     app = ExperimentApp(root)
     root.mainloop()

@@ -18,12 +18,13 @@ COMBO_FONT = (FONT_FAMILY_SEMI_BOLD, 12)
 METADATA_ENTRY=(FONT_FAMILY,10)  
 SELECT_METADATA=(FONT_FAMILY, 12)
 ADD_ITEM_FONT = (FONT_FAMILY, 8)
+COMPONENT_FONT        = (FONT_FAMILY, 14,"bold")  # inside the colored block
+COMPONENT_LABEL_FONT  = (FONT_FAMILY_SEMI_BOLD, 11)            # under the block in the palette
 
 # Padding
 BUTTON_PADDING = 10
 SMALL_BUTTON_PADDING = (2, 2)
 ADD_ITEM_PADDING = (1, 1)
-
 
 def apply_theme(root: tk.Tk) -> ttk.Style:
     """
@@ -92,3 +93,4 @@ def apply_theme(root: tk.Tk) -> ttk.Style:
         foreground=[("disabled", "#888888"), ("!disabled", "#000000")],
     )
     return style
+

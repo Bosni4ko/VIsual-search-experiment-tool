@@ -78,7 +78,14 @@ translations = {
         "enter_metadata":       "Enter metadata",
         "next":                 "Next",
         "session_complete":         "Session complete",
-        "back_to_launch_screen":    "Back to launch screen"
+        "back_to_launch_screen":    "Back to launch screen",
+
+        "components":"Components",
+        "components":              "Components",              
+        "Text":                    "Text",                   
+        "Stimulus":                "Stimulus",
+        "Stimulus notification":   "Stimulus notification",
+        "End":                     "End"
 
 
     },
@@ -157,6 +164,12 @@ translations = {
         "no_additional_info":     "Informācija par stimulu nav pieejama",
         "path": "Ceļš: ",
         "session_complete":         "Sesija pabeigta",
-        "back_to_launch_screen":    "Atgriezties palaišanās ekrānā"
+        "back_to_launch_screen":    "Atgriezties palaišanās ekrānā",
+
+        "components":"Komponenti",            
+        "Text":                    "Teksts",                   
+        "Stimulus":                "Stimuls",
+        "Stimulus notification":   "Stimula paziņojums",
+        "End":                     "Beigas"
     },
 }

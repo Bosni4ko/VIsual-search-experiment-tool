@@ -92,5 +92,110 @@ def apply_theme(root: tk.Tk) -> ttk.Style:
         fieldbackground=[("readonly", CANVAS_BG)],
         foreground=[("disabled", "#888888"), ("!disabled", "#000000")],
     )
+     # Combobox for font family & size
+    style.configure(
+        "TextOpt.TCombobox",
+        font=COMBO_FONT,
+        padding=(5, 4),
+        fieldbackground=CANVAS_BG,
+        background=CANVAS_BG,
+        foreground="#333333",
+    )
+    style.map(
+        "TextOpt.TCombobox",
+        fieldbackground=[("readonly", CANVAS_BG)],
+        foreground=[("disabled", "#888888"), ("!disabled", "#333333")],
+    )
+
+    # Spinbox
+    style.configure(
+        "TextOpt.TSpinbox",
+        font=COMBO_FONT,
+        padding=(5, 4),
+        background="#ffffff",       # overall bg
+        fieldbackground="#ffffff",  # entry area
+        arrowsize=14,
+        arrowcolor="#333333",       # dark arrows
+    )
+
+    # Checkbuttons for Bold/Italic
+    style.configure(
+        "TextOpt.TCheckbutton",
+        font=(FONT_FAMILY, 14),     # ↑ bump text size to 14pt
+        padding=(8, 8),             # ↑ more space around box & text
+        indicatorpadding=10,        # ↑ extra gap between box and label
+        background=BG_COLOR,
+    )
+    style.map(
+        "TextOpt.TCheckbutton",
+        background=[("active", CANVAS_BG)],
+    )
+
+    # Radiobuttons for Alignment
+    style.configure(
+        "TextOpt.TRadiobutton",
+        font=SMALL_BUTTON_FONT,
+        background=BG_COLOR,
+        padding=(3, 3),
+    )
+    style.map(
+        "TextOpt.TRadiobutton",
+        background=[("active", CANVAS_BG)],
+    )
+
+    default_bg = style.lookup("TButton", "background") or "#d9d9d9"
+    # Make your “Font Color” button stand out with accent styling
+    style.configure(
+        "TextOptAccent.TButton",
+        font=(FONT_FAMILY, 12, "bold"),
+        foreground="black",     # black text
+        background=default_bg,  # grey button face
+        relief="raised",
+        padding=(6, 4),
+    )
+    style.map(
+        "TextOptAccent.TButton",
+        # on press/hover, use the same default so there’s no blue flash
+        background=[("active", default_bg)],
+        foreground=[("disabled", "#888888"), ("!disabled", "black")],
+    )
+       # ——— Checkbuttons (Bold/Italic): larger clickable area & text ———
+    style.configure(
+        "TextOpt.TCheckbutton",
+        font=(FONT_FAMILY, 12),    # ↑ match spinbox font size
+        padding=(4, 4),            # ↑ a bit more space around the box
+        background=BG_COLOR,
+    )
+    style.map(
+        "TextOpt.TCheckbutton",
+        background=[("active", CANVAS_BG)],
+    )
+    # ——— Alignment LabelFrame ———
+    style.configure(
+        "TextOptAlign.TLabelframe",
+        background=CANVAS_BG,
+        borderwidth=0,
+        padding=(5,8)         
+    )
+#    Center the text in the header     :
+    style.configure(
+        "TextOptAlign.TLabelframe.Label",
+        font=(FONT_FAMILY, 12, "bold"),
+        background=CANVAS_BG,
+        foreground="#333333",
+        anchor="center"        # try to center the label text
+    )
+
+    # ——— Alignment Radiobuttons ———
+    style.configure(
+        "TextOptAlign.TRadiobutton",
+        font=(FONT_FAMILY, 12),            # bump text size
+        background=CANVAS_BG,              # white bg
+        padding=(6, 6),
+    )
+    style.map(
+        "TextOptAlign.TRadiobutton",
+        background=[("active", CANVAS_BG)],
+    )
     return style
 

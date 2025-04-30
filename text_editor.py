@@ -42,6 +42,9 @@ def setup_text_options(app, left_panel, comp):
     Uses record_selection to capture selected range before any control steals focus.
     Also binds cursor events to refresh formatting controls after options exist.
     """
+
+    left_panel.configure(padx=10, pady=10)
+    
     def record_selection(event=None):
         try:
             comp._sel_start = comp.text_widget.index('sel.first')
@@ -56,7 +59,8 @@ def setup_text_options(app, left_panel, comp):
         left_panel,
         textvariable=comp.font_family_var,
         values=families,
-        state='readonly'
+        state='readonly',
+        style='TextOpt.TCombobox'
     )
     font_menu.pack(fill=tk.X, pady=2)
     font_menu.bind('<Button-1>', record_selection)
@@ -70,6 +74,7 @@ def setup_text_options(app, left_panel, comp):
         to=72,
         textvariable=comp.font_size_var,
         width=5,
+        style='TextOpt.TSpinbox',
         command=lambda: update_font(comp)
     )
     size_spin.pack(fill=tk.X, pady=2)
@@ -81,7 +86,8 @@ def setup_text_options(app, left_panel, comp):
         left_panel,
         text='Bold',
         variable=comp.bold_var,
-        command=lambda: update_font(comp)
+        command=lambda: update_font(comp),
+        style='TextOpt.TCheckbutton'
     )
     bold_check.pack(anchor='w', pady=2)
     bold_check.bind('<Button-1>', record_selection)
@@ -91,7 +97,8 @@ def setup_text_options(app, left_panel, comp):
         left_panel,
         text='Italic',
         variable=comp.italic_var,
-        command=lambda: update_font(comp)
+        command=lambda: update_font(comp),
+        style='TextOpt.TCheckbutton'
     )
     italic_check.pack(anchor='w', pady=2)
     italic_check.bind('<Button-1>', record_selection)
@@ -104,6 +111,7 @@ def setup_text_options(app, left_panel, comp):
         color_frame,
         text='Font Color',
         width=12,
+        style='TextOptAccent.TButton',
         command=lambda: (record_selection(), choose_color(comp))
     )
     color_button.pack(side=tk.LEFT)
@@ -120,15 +128,16 @@ def setup_text_options(app, left_panel, comp):
 
     # Text alignment options
     comp.align_var = tk.StringVar(value='left')
-    align_frame = ttk.LabelFrame(left_panel, text='Alignment')
-    align_frame.pack(fill=tk.X, pady=5)
+    align_frame = ttk.LabelFrame(left_panel, text='Alignment',style='TextOptAlign.TLabelframe',labelanchor='n')
+    align_frame.pack(fill=tk.X, pady=(25, 5))
     for align in ('left', 'center', 'right'):
         rb = ttk.Radiobutton(
             align_frame,
             text=align.capitalize(),
             value=align,
             variable=comp.align_var,
-            command=lambda: set_alignment(comp)
+            command=lambda: set_alignment(comp),
+            style='TextOptAlign.TRadiobutton'
         )
         rb.pack(side=tk.LEFT, padx=5)
         rb.bind('<Button-1>', record_selection)

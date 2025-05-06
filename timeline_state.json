@@ -575,11 +575,14 @@
     "saved_tags": [],
     "data": {
       "stimulus_size_mode": "random",
-      "stimulus_set": "Images",
+      "stimulus_set": "Sejas",
       "no_target": false,
       "field_x": 5,
       "field_y": 5,
-      "distractor_type": "negative"
+      "distractor_type": "negative",
+      "selected_target": "Select from list",
+      "distractor_set": "Select set from list",
+      "target_type": "positive"
     },
     "last_selections": [],
     "last_distractors": []
@@ -797,7 +800,7 @@
     "saved_tags": [],
     "data": {
       "stimulus_size_mode": "fixed",
-      "stimulus_set": "Faces",
+      "stimulus_set": "Att\u0113li",
       "no_target": false,
       "field_x": 5,
       "field_y": 5,

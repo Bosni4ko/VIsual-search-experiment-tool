@@ -8,7 +8,7 @@ MAX_GRID_SIZE = 10
 MIN_GRID_SIZE = 2
 
 
-def open_image_selector(comp, target_type):
+def open_image_selector(comp, target_type,app):
     # Get the currently selected stimulus set.
     stimulus_set = comp.data.get("stimulus_set", "Faces")
     # Allow the selector if the current stimulus set is either "Faces" or an imported set.
@@ -50,11 +50,11 @@ def open_image_selector(comp, target_type):
         return
 
     selector_win = Toplevel()
-    selector_win.title("Select Target Image")
+    selector_win.title(app.tr("select_target_image_title"))
     selector_win.geometry("800x500")
     selector_win.image_refs = []  # Prevent image garbage collection
 
-    selected_label = Label(selector_win, text="No image selected.")
+    selected_label = Label(selector_win, text=app.tr("No image selected."))
     selected_label.pack(pady=5)
 
     # Create scrollable canvas
@@ -118,7 +118,7 @@ def open_image_selector(comp, target_type):
     def select_image(path, name, container):
         # Save the current selected image path in comp.data.
         comp.data["target_image"] = path
-        selected_label.config(text=f"Selected: {name}")
+        selected_label.config(text=app.tr("selected_label").format(name=name))
         # Un-highlight previous selection
         if selected_frame["ref"]:
             selected_frame["ref"].config(bg="SystemButtonFace")
@@ -162,7 +162,7 @@ def open_image_selector(comp, target_type):
             container.grid(row=row_base, column=col, padx=5, pady=5)
 
             # Placeholder label inside the container (centered)
-            placeholder = Label(container, text="Loading...")
+            placeholder = Label(container, text=app.tr("loading_placeholder"))
             placeholder.place(relx=0.5, rely=0.5, anchor="center")
 
             # Caption label below for the filename
@@ -201,12 +201,12 @@ def open_image_selector(comp, target_type):
             comp.data["last_selections"][prev_key] = comp.data["target_image"]
         selector_win.destroy()
 
-    Button(selector_win, text="Confirm", command=on_confirm).pack(pady=10)
+    Button(selector_win, text=app.tr("button_confirm"), command=on_confirm).pack(pady=10)
 
     # Run an initial lazy loading pass.
     lazy_load_images()
 
-def open_distractor_selector(comp, distractor_type):
+def open_distractor_selector(comp, distractor_type,app):
     # Get the current stimulus set.
     stimulus_set = comp.data.get("stimulus_set", "Faces")
     # Proceed only if it's "Faces", "Images" or an imported set.
@@ -249,12 +249,15 @@ def open_distractor_selector(comp, distractor_type):
         return
 
     selector_win = Toplevel()
-    selector_win.title("Select Distractor Images")
+    selector_win.title(app.tr("select_distractor_images_title"))
     selector_win.geometry("800x500")
     selector_win.image_refs = []  # Prevent image garbage collection
 
     # Label to show how many images are selected.
-    selected_label = Label(selector_win, text="Selected: 0 images")
+    selected_label = Label(
+    selector_win,
+    text=app.tr("selected_images_count").format(n=0)
+    )
     selected_label.pack(pady=5)
 
     # Create a scrollable canvas.
@@ -445,7 +448,7 @@ def setup_stimulus_options(app, left_panel,main_panel,comp):
     
 
     # ---------- Field Size ----------
-    add_label("Field Size")
+    add_label(app.tr("field_size_label"))
     field_frame = ttk.Frame(left_panel)
     field_frame.pack(anchor="w", padx=10)
 
@@ -507,7 +510,7 @@ def setup_stimulus_options(app, left_panel,main_panel,comp):
         return max(lo, min(val, hi))
 
     # --------- Stimulus Set Size ----------
-    add_label("Stimulus Set Size")
+    add_label(app.tr("stimulus_set_size_label"))
     size_var = tk.StringVar(value=comp.data.get("stimulus_size_mode", "random"))
     size_menu = ttk.Combobox(left_panel, textvariable=size_var, values=["random", "fixed", "random in range"], state="readonly", style="Small.TCombobox")
     size_menu.pack(anchor="w", padx=10, fill="x")
@@ -523,7 +526,7 @@ def setup_stimulus_options(app, left_panel,main_panel,comp):
         mode = size_var.get()
         comp.data["stimulus_size_mode"] = mode
 
-        ttk.Label(amount_frame, text="Amount:", style="Small.TLabel").pack(side="left", padx=(0, 5))
+        ttk.Label(amount_frame, text=app.tr("amount_label"), style="Small.TLabel").pack(side="left", padx=(0, 5))
 
         # the maximum possible stimuli
         total = comp.data.get("field_x", 10) * comp.data.get("field_y", 10)
@@ -615,7 +618,7 @@ def setup_stimulus_options(app, left_panel,main_panel,comp):
 
 
     # ---------- Stimulus Set ----------
-    add_label("Stimulus Set")
+    add_label(app.tr("stimulus_set_label"))
     stim_set_var = tk.StringVar(value=comp.data.get("stimulus_set", "Images"))
     # Default options.
     stimulus_options = ["Images", "Faces", "Import"]
@@ -649,18 +652,18 @@ def setup_stimulus_options(app, left_panel,main_panel,comp):
     def open_import_window():
         # Open a new window for importing a new stimulus set.
         import_win = Toplevel(left_panel)
-        import_win.title("Import Stimulus Set")
+        import_win.title(app.tr("import_window_title"))
         
-        Label(import_win, text="Stimulus Set Name:").pack(pady=(10, 5))
+        Label(import_win, text=app.tr("import_name_label")).pack(pady=(10, 5))
         name_entry = tk.Entry(import_win)
         name_entry.pack(pady=(0, 10))
         
-        Button(import_win, text="Browse Folder", command=lambda: browse_folder()).pack(pady=(0, 5))
+        Button(import_win, text=app.tr("browse_folder_button"), command=lambda: browse_folder()).pack(pady=(0, 5))
         folder_entry = tk.Entry(import_win, width=50)
         folder_entry.pack(pady=(0, 10))
         
         def browse_folder():
-            folder = filedialog.askdirectory(title="Select Stimulus Set Folder")
+            folder = filedialog.askdirectory(title=app.tr("import_folder_prompt"))
             folder_entry.delete(0, tk.END)
             folder_entry.insert(0, folder)
         
@@ -682,7 +685,7 @@ def setup_stimulus_options(app, left_panel,main_panel,comp):
                 stim_set_var.set(new_name)
                 import_win.destroy()
         
-        Button(import_win, text="Add", command=add_stimulus_set).pack(pady=(0, 10))
+        Button(import_win, text=app.tr("add_button"), command=add_stimulus_set).pack(pady=(0, 10))
 
     def handle_stim_set(*args):
         selection = stim_set_var.get()
@@ -694,15 +697,10 @@ def setup_stimulus_options(app, left_panel,main_panel,comp):
     stim_set_var.trace_add("write", handle_stim_set)
 
     # ---------- Target Type ----------
-    add_label("Target Type")
+    add_label(app.tr("target_type_label"))
     target_type_var = tk.StringVar(value=comp.data.get("target_type", "positive"))
-    target_type_menu = ttk.Combobox(
-        left_panel,
-        textvariable=target_type_var,
-        values=["positive", "negative", "neutral"],
-        state="readonly",
-        style="Small.TCombobox"      # ← same small, white-bg style
-    )
+    target_type_menu = add_dropdown(target_type_var, ["positive", "negative", "neutral"])
+
     target_type_menu.pack(anchor="w", padx=10, fill="x")
     def on_target_type_change(*_):
         comp.data["target_type"] = target_type_var.get()
@@ -711,7 +709,7 @@ def setup_stimulus_options(app, left_panel,main_panel,comp):
 
 
     # ---------- Selected Target ----------
-    add_label("Selected Target")
+    add_label(app.tr("selected_target_label"))
     selected_target_var = tk.StringVar(value=comp.data.get("selected_target", "Random"))
     selected_target_menu = ttk.Combobox(
         left_panel,
@@ -724,14 +722,14 @@ def setup_stimulus_options(app, left_panel,main_panel,comp):
     def handle_target_select(*_):
         comp.data["selected_target"] = selected_target_var.get()
         if selected_target_var.get() == "Select from list":
-            open_image_selector(comp, target_type_var.get())
+            open_image_selector(comp, target_type_var.get(),app)
     selected_target_var.trace_add("write", handle_target_select)
 
     # ---------- No Target ----------
     no_target_var = tk.BooleanVar(value=comp.data.get("no_target", False))
     no_target_chk = ttk.Checkbutton(
         left_panel,
-        text="No Target",
+        text=app.tr("no_target_checkbox"),
         variable=no_target_var,
         style="Small.TCheckbutton"      # ← use your small, white‐bg checkbox style
     )
@@ -745,8 +743,8 @@ def setup_stimulus_options(app, left_panel,main_panel,comp):
             target_type_menu.config(state="disabled")
             selected_target_menu.config(state="disabled")
         else:
-            target_type_menu.config(state="normal")
-            selected_target_menu.config(state="normal")
+            target_type_menu.config(state="readonly")
+            selected_target_menu.config(state="readonly")
         setup_field_grid(main_panel, comp)
 
     # Set the initial state based on the value of no_target_var and bind the toggle.
@@ -754,7 +752,7 @@ def setup_stimulus_options(app, left_panel,main_panel,comp):
     no_target_chk.config(command=toggle_target_lock)
 
     # ---------- Distractor Type ----------
-    add_label("Distractor Type")
+    add_label(app.tr("distractor_type_label"))
     distractor_type_var = tk.StringVar(value=comp.data.get("distractor_type", "positive"))
     dropdown = add_dropdown(distractor_type_var, ["positive", "negative", "neutral"])
     dropdown.pack(anchor="w", padx=10, fill="x")
@@ -765,7 +763,7 @@ def setup_stimulus_options(app, left_panel,main_panel,comp):
     distractor_type_var.trace_add("write", on_distractor_type_change)
 
     # ---------- Distractor Set ----------
-    add_label("Distractor Set")
+    add_label(app.tr("distractor_set_label"))
     distractor_set_var = tk.StringVar(value=comp.data.get("distractor_set", "All"))
     distractor_dropdown = add_dropdown(distractor_set_var, ["All", "Random", "Select set from list"])  # use a unique name for distractor set
     distractor_dropdown.pack(anchor="w", padx=10, fill="x")
@@ -775,7 +773,7 @@ def setup_stimulus_options(app, left_panel,main_panel,comp):
         comp.data["distractor_set"] = selection
         if selection == "Select set from list":
             # Call the distractor selector.
-            open_distractor_selector(comp, comp.data.get("distractor_type", "positive"))
+            open_distractor_selector(comp, comp.data.get("distractor_type", "positive"),app)
     
     distractor_set_var.trace_add("write", handle_distractor_set)
 

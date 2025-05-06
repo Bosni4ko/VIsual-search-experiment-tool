@@ -4,431 +4,232 @@ import os
 from tkinter import Toplevel, Scrollbar, Label, Button, filedialog
 from PIL import Image, ImageTk
 from grid import setup_field_grid
+from styles import BG_COLOR, CANVAS_BG, ACCENT_COLOR, SMALL_TEXT_FONT, LABEL_FONT
 MAX_GRID_SIZE = 10
 MIN_GRID_SIZE = 2
-
-
-def open_image_selector(comp, target_type,app):
-    # Get the currently selected stimulus set.
+def open_media_selector(comp, kind, sel_type, app, multi_select=False):
     stimulus_set = comp.data.get("stimulus_set", "Faces")
-    # Allow the selector if the current stimulus set is either "Faces" or an imported set.
-    # Allow the selector if the current stimulus set is "Faces", "Images" or an imported set.
-    if stimulus_set not in ("Faces", "Images") and stimulus_set not in comp.data.get("imported_stimulus_sets", {}):
+    imported_sets = comp.data.get("imported_stimulus_sets", {})
+    if stimulus_set not in ("Faces","Images") and stimulus_set not in imported_sets:
         return
-
-    # Set the base path according to the stimulus set.
     if stimulus_set == "Faces":
-        base_path = os.path.join("images", "faces")
+        base_path = os.path.join("images","faces")
     elif stimulus_set == "Images":
         base_path = os.path.join("images","images")
     else:
-        base_path = comp.data["imported_stimulus_sets"][stimulus_set]
+        base_path = imported_sets[stimulus_set]
 
-
-    # Create a unique key for this stimulus set and target type
-    prev_key = (stimulus_set, target_type)
-    # Ensure that a dictionary for remembering selections exists.
-    comp.data.setdefault("last_selections", {})
-
-    def get_categories(base_path, target_type):
-        """Return a dictionary mapping subfolder names to their full paths 
-        for a given target type folder inside base_path.
-        """
-        target_dir = os.path.join(base_path, target_type)
-        if os.path.isdir(target_dir):
-            subdirs = [d for d in os.listdir(target_dir) 
-                    if os.path.isdir(os.path.join(target_dir, d))]
-            if subdirs:
-                return {d: os.path.join(target_dir, d) for d in subdirs}
-            else:
-                return {target_type: target_dir}
+    if sel_type not in ("positive","neutral","negative"):
+        return
+    def get_categories(bp, fld):
+        d = os.path.join(bp, fld)
+        if os.path.isdir(d):
+            subs = [x for x in os.listdir(d) if os.path.isdir(os.path.join(d, x))]
+            return {s: os.path.join(d,s) for s in subs} if subs else {fld: d}
         return {}
-    
-    if target_type in ["positive", "neutral", "negative"]:
-        categories = get_categories(base_path, target_type)
-    else:
-        return
+    categories = get_categories(base_path, sel_type)
 
-    selector_win = Toplevel()
-    selector_win.title(app.tr("select_target_image_title"))
-    selector_win.geometry("800x500")
-    selector_win.image_refs = []  # Prevent image garbage collection
+    win = Toplevel()
+    win.title(app.tr(f"select_{kind.lower()}_image_title"))
+    win.configure(bg=BG_COLOR)
+    win.geometry("1050x650")
+    win.image_refs = []
 
-    selected_label = Label(selector_win, text=app.tr("No image selected."))
-    selected_label.pack(pady=5)
+    # one blank thumbnail
+    THUMB_SIZE = (90,90)
+    blank = Image.new("RGB", THUMB_SIZE, CANVAS_BG)
+    blank_tk = ImageTk.PhotoImage(blank)
+    win.image_refs.append(blank_tk)
 
-    # Create scrollable canvas
-    canvas = tk.Canvas(selector_win)
-    canvas.pack(side="left", fill="both", expand=True)
+    # header & info
+    hdr = ttk.Frame(win, style="TFrame", height=50)
+    hdr.pack(fill="x")
+    ttk.Label(
+        hdr,
+        text=app.tr("image_selector_title").format(type=sel_type.capitalize()),
+        font=LABEL_FONT, background=ACCENT_COLOR, foreground="white", padding=(15,10)
+    ).pack(fill="x")
 
-    scrollbar = Scrollbar(selector_win, orient="vertical", command=canvas.yview)
-    scrollbar.pack(side="right", fill="y")
-    canvas.configure(yscrollcommand=scrollbar.set)
+    info_var = tk.StringVar(master=win, value=app.tr("No image selected."))
+    ttk.Label(win, textvariable=info_var,
+              font=SMALL_TEXT_FONT, background=BG_COLOR)\
+       .pack(fill="x", padx=15, pady=(5,0))
 
-    content_frame = tk.Frame(canvas)
-    canvas.create_window((0, 0), window=content_frame, anchor="nw")
+    # canvas + scrollbar
+    canvas = tk.Canvas(win, bg=CANVAS_BG, highlightthickness=0)
+    canvas.pack(side="left", fill="both", expand=True, padx=(15,0), pady=10)
+    sb = Scrollbar(win, orient="vertical", command=canvas.yview)
+    sb.pack(side="left", fill="y", pady=10)
 
-    def on_frame_configure(event):
-        canvas.configure(scrollregion=canvas.bbox("all"))
-    content_frame.bind("<Configure>", on_frame_configure)
+    def on_yscroll(*args):
+        sb.set(*args)
+        schedule_load()
+    canvas.configure(yscrollcommand=on_yscroll)
 
-    # Optional mouse wheel scrolling (with lazy loading)
+    content = ttk.Frame(canvas, style="TFrame")
+    canvas.create_window((0,0), window=content, anchor="nw")
+    content.bind("<Configure>", lambda e: (canvas.configure(scrollregion=canvas.bbox("all")), schedule_load()))
+
     def _on_mousewheel(event):
-        canvas.yview_scroll(-1 * (event.delta // 120), "units")
-        lazy_load_images()
-    canvas.bind_all("<MouseWheel>", _on_mousewheel)
+        # Windows, macOS
+        delta = event.delta
+        canvas.yview_scroll(int(-1 * (delta / 120)), "units")
+        schedule_load()
 
-    selected_frame = {"ref": None}
-    # Store references for image placeholders for lazy loading
-    placeholders = {}
-    loaded_images = set()
+        # bind when mouse enters/exits the canvas region
+    canvas.bind("<Enter>", lambda e: (
+        canvas.bind_all("<MouseWheel>", _on_mousewheel),
+    ))
+    canvas.bind("<Leave>", lambda e: (
+        canvas.unbind_all("<MouseWheel>"),
+        canvas.unbind_all("<Button-4>"),
+        canvas.unbind_all("<Button-5>")
+    ))
+    # lazy-loading state
+    placeholders = {}   # (cat,idx) -> {"frame", "label", "path"}
+    all_keys = []       # flat list in display order
+    loaded = set()
+    load_queue = []
+    load_scheduled = False
 
-    # -------------------------------
-    # Lazy loading logic
-    # -------------------------------
-    def is_visible(widget):
+    def is_visible(frame):
         try:
-            widget_top = widget.winfo_rooty()
-            widget_bottom = widget_top + widget.winfo_height()
-            canvas_top = canvas.winfo_rooty()
-            canvas_bottom = canvas_top + canvas.winfo_height()
-            return (widget_bottom > canvas_top) and (widget_top < canvas_bottom)
-        except:
+            t, b = frame.winfo_rooty(), frame.winfo_rooty() + frame.winfo_height()
+            ct, cb = canvas.winfo_rooty(), canvas.winfo_rooty() + canvas.winfo_height()
+            return b > ct and t < cb
+        except tk.TclError:
             return False
 
-    def lazy_load_images():
-        for img_id, widget in placeholders.items():
-            if img_id in loaded_images:
-                continue
-            if is_visible(widget["container"]):
-                try:
-                    img = Image.open(widget["path"]).convert("RGB")
-                    img.thumbnail((90, 90), Image.Resampling.LANCZOS)
-                    img_tk = ImageTk.PhotoImage(img)
-                    selector_win.image_refs.append(img_tk)
-                    widget["placeholder"].config(image=img_tk, text="")
-                    widget["placeholder"].image = img_tk
-                    loaded_images.add(img_id)
-                except Exception as e:
-                    print(f"Could not load {widget['path']}: {e}")
+    def schedule_load():
+        nonlocal load_scheduled
+        if load_scheduled: return
+        load_scheduled = True
+        win.after(50, do_load_pass)
 
-    # -------------------------------
-    # Image selection callback
-    # -------------------------------
-    def select_image(path, name, container):
-        # Save the current selected image path in comp.data.
-        comp.data["target_image"] = path
-        selected_label.config(text=app.tr("selected_label").format(name=name))
-        # Un-highlight previous selection
-        if selected_frame["ref"]:
-            selected_frame["ref"].config(bg="SystemButtonFace")
-        container.config(bg="lightblue")
-        selected_frame["ref"] = container
+    def do_load_pass():
+        nonlocal load_scheduled
+        load_scheduled = False
+        # queue newly-visible
+        load_queue[:] = [
+            k for k,v in placeholders.items()
+            if k not in loaded and is_visible(v["frame"])
+        ]
+        # load up to 5 per pass
+        for _ in range(min(5, len(load_queue))):
+            key = load_queue.pop(0)
+            v = placeholders[key]
+            img = Image.open(v["path"]).convert("RGB")
+            img.thumbnail(THUMB_SIZE, Image.Resampling.LANCZOS)
+            tkimg = ImageTk.PhotoImage(img)
+            win.image_refs.append(tkimg)
+            v["label"].config(image=tkimg)
+            loaded.add(key)
+        if load_queue:
+            schedule_load()
 
-    # -------------------------------
-    # Build a stable grid layout (no dynamic reflow)
-    # -------------------------------
-    # In this example we choose a fixed number of columns.
-    images_per_row = 8
+    # selection state + handlers
+    sel = set() if multi_select else {None}
+    last_click_key = None
 
-    # Loop through categories. (If you have multiple categories,
-    # each will appear with a separate label and grid.)
-    for cat, folder in categories.items():
-        Label(content_frame, text=cat.capitalize(),
-              font=("Segoe UI", 10, "bold")).pack(anchor="w", padx=10, pady=(10, 0))
-        img_grid = tk.Frame(content_frame)
-        img_grid.pack(anchor="w", padx=10, pady=5)
-        
-
-        try:
-            images = [f for f in os.listdir(folder)
-                      if f.lower().endswith((".jpg", ".png", ".jpeg", ".bmp", ".gif"))]
-        except FileNotFoundError:
-            images = []
-
-        for i, img_name in enumerate(images):
-            # if i % 200 == 0:
-            #     img_grid = tk.Frame(content_frame)
-            #     img_grid.pack(anchor="w", padx=10, pady=5)
-
-            path = os.path.join(folder, img_name)
-            # Each image occupies two grid rows (one for the container and one for the caption)
-            row_base = (i // images_per_row) * 2  
-            col = i % images_per_row
-
-            # Create a fixed-size container for the image
-            container = tk.Frame(img_grid, bd=2, relief="solid", width=100, height=100)
-            container.grid_propagate(False)
-            container.grid(row=row_base, column=col, padx=5, pady=5)
-
-            # Placeholder label inside the container (centered)
-            placeholder = Label(container, text=app.tr("loading_placeholder"))
-            placeholder.place(relx=0.5, rely=0.5, anchor="center")
-
-            # Caption label below for the filename
-            caption = Label(img_grid, text=img_name, wraplength=90)
-            caption.grid(row=row_base + 1, column=col, padx=5, pady=(0, 5))
-
-            # Bind clicks on both container and placeholder to the select callback.
-            container.bind("<Button-1>",
-                           lambda e, p=path, n=img_name, c=container: select_image(p, n, c))
-            placeholder.bind("<Button-1>",
-                             lambda e, p=path, n=img_name, c=container: select_image(p, n, c))
-
-            placeholders[(cat, i)] = {
-                "container": container,
-                "placeholder": placeholder,
-                "caption": caption,
-                "path": path
-            }
-
-    # -------------------------------
-    # Preselect the previous image (if one was confirmed before)
-    # -------------------------------
-    previous_selected_path = comp.data["last_selections"].get(prev_key)
-    if previous_selected_path:
-        for key, widget in placeholders.items():
-            if widget["path"] == previous_selected_path:
-                select_image(widget["path"], widget["caption"].cget("text"), widget["container"])
-                break
-
-    # -------------------------------
-    # Confirm button: Remember selection and close
-    # -------------------------------
-    def on_confirm():
-        # Save the current selection (if any) for this stimulus set and target type.
-        if comp.data.get("target_image"):
-            comp.data["last_selections"][prev_key] = comp.data["target_image"]
-        selector_win.destroy()
-
-    Button(selector_win, text=app.tr("button_confirm"), command=on_confirm).pack(pady=10)
-
-    # Run an initial lazy loading pass.
-    lazy_load_images()
-
-def open_distractor_selector(comp, distractor_type,app):
-    # Get the current stimulus set.
-    stimulus_set = comp.data.get("stimulus_set", "Faces")
-    # Proceed only if it's "Faces", "Images" or an imported set.
-    if stimulus_set not in ("Faces", "Images") and stimulus_set not in comp.data.get("imported_stimulus_sets", {}):
-        print("returned")
-        return
-
-
-    # Determine the base folder.
-    if stimulus_set == "Faces":
-        base_path = os.path.join("images", "faces")
-    elif stimulus_set == "Images":
-        base_path = os.path.join("images","images")
-    else:
-        base_path = comp.data["imported_stimulus_sets"][stimulus_set]
-
-
-    # Create a unique key for this stimulus set and distractor type.
-    prev_key = (stimulus_set, distractor_type)
-    # Ensure that a dictionary for remembering distractor selections exists.
-    comp.data.setdefault("last_distractors", {})
-
-    def get_categories(base_path, distractor_type):
-            """Return a dictionary mapping subfolder names to their full paths 
-            for a given target type folder inside base_path.
-            """
-            target_dir = os.path.join(base_path, distractor_type)
-            if os.path.isdir(target_dir):
-                subdirs = [d for d in os.listdir(target_dir) 
-                        if os.path.isdir(os.path.join(target_dir, d))]
-                if subdirs:
-                    return {d: os.path.join(target_dir, d) for d in subdirs}
-                else:
-                    return {distractor_type: target_dir}
-            return {}
-    
-    if distractor_type in ["positive", "neutral", "negative"]:
-        categories = get_categories(base_path, distractor_type)
-    else:
-        return
-
-    selector_win = Toplevel()
-    selector_win.title(app.tr("select_distractor_images_title"))
-    selector_win.geometry("800x500")
-    selector_win.image_refs = []  # Prevent image garbage collection
-
-    # Label to show how many images are selected.
-    selected_label = Label(
-    selector_win,
-    text=app.tr("selected_images_count").format(n=0)
-    )
-    selected_label.pack(pady=5)
-
-    # Create a scrollable canvas.
-    canvas = tk.Canvas(selector_win)
-    canvas.pack(side="left", fill="both", expand=True)
-
-    scrollbar = Scrollbar(selector_win, orient="vertical", command=canvas.yview)
-    scrollbar.pack(side="right", fill="y")
-    canvas.configure(yscrollcommand=scrollbar.set)
-
-    content_frame = tk.Frame(canvas)
-    canvas.create_window((0, 0), window=content_frame, anchor="nw")
-
-    def on_frame_configure(event):
-        canvas.configure(scrollregion=canvas.bbox("all"))
-    content_frame.bind("<Configure>", on_frame_configure)
-
-        # Optional mouse wheel scrolling (with lazy loading)
-    def _on_mousewheel(event):
-        canvas.yview_scroll(-1 * (event.delta // 120), "units")
-        lazy_load_images()
-    canvas.bind_all("<MouseWheel>", _on_mousewheel)
-
-    # When the distractor selection window is destroyed, remove the global mouse wheel binding.
-    def on_destroy(event):
-        canvas.unbind_all("<MouseWheel>")
-    selector_win.bind("<Destroy>", on_destroy)
-
-    # For multi-selection, we use a set to store selected distractor image paths.
-    selected_distractors = set()
-    # To allow shift-selection, we store the key (a tuple like (category, index)) of the last clicked image.
-    last_clicked = {"key": None}
-
-    # Dictionaries for lazy loading.
-    placeholders = {}
-    loaded_images = set()
-
-    def is_visible(widget):
-        try:
-            widget_top = widget.winfo_rooty()
-            widget_bottom = widget_top + widget.winfo_height()
-            canvas_top = canvas.winfo_rooty()
-            canvas_bottom = canvas_top + canvas.winfo_height()
-            return (widget_bottom > canvas_top) and (widget_top < canvas_bottom)
-        except:
-            return False
-
-    def lazy_load_images():
-        for img_id, widget in placeholders.items():
-            if img_id in loaded_images:
-                continue
-            if is_visible(widget["container"]):
-                try:
-                    img = Image.open(widget["path"]).convert("RGB")
-                    img.thumbnail((90, 90), Image.Resampling.LANCZOS)
-                    img_tk = ImageTk.PhotoImage(img)
-                    selector_win.image_refs.append(img_tk)
-                    widget["placeholder"].config(image=img_tk, text="")
-                    widget["placeholder"].image = img_tk
-                    loaded_images.add(img_id)
-                except Exception as e:
-                    print(f"Could not load {widget['path']}: {e}")
-
-    # Toggle selection for multi-select.
-    # event: the click event
-    # key: a tuple (cat, i) identifying the image in placeholders
-    # path: image file path; container: the widget frame for the image.
-    def toggle_selection(event, key, path, container):
-        nonlocal selected_distractors
-        # Check if Shift is held down.
-        if event.state & 0x0001:
-            if last_clicked["key"] is not None:
-                # Create an ordered list (using the insertion order) of keys.
-                ordered_keys = list(placeholders.keys())
-                try:
-                    anchor_index = ordered_keys.index(last_clicked["key"])
-                    current_index = ordered_keys.index(key)
-                except ValueError:
-                    anchor_index = 0
-                    current_index = 0
-                start = min(anchor_index, current_index)
-                end = max(anchor_index, current_index)
-                # Determine base action: if the current image is selected, we deselect the range, otherwise select it.
-                base_action = "deselect" if path in selected_distractors else "select"
-                for k in ordered_keys[start:end+1]:
-                    widget = placeholders[k]
-                    if base_action == "select":
-                        if widget["path"] not in selected_distractors:
-                            selected_distractors.add(widget["path"])
-                            widget["container"].config(bg="lightblue")
-                    else:
-                        if widget["path"] in selected_distractors:
-                            selected_distractors.remove(widget["path"])
-                            widget["container"].config(bg="SystemButtonFace")
+    def on_click(event, path, key, frame):
+        nonlocal last_click_key
+        # simple toggle
+        if multi_select:
+            if path in sel:
+                sel.remove(path); frame.config(bg=CANVAS_BG)
             else:
-                # If no anchor exists, do a normal toggle.
-                if path in selected_distractors:
-                    selected_distractors.remove(path)
-                    container.config(bg="SystemButtonFace")
-                else:
-                    selected_distractors.add(path)
-                    container.config(bg="lightblue")
+                sel.add(path); frame.config(bg=ACCENT_COLOR)
         else:
-            # Normal (non-shift) click toggles single selection.
-            if path in selected_distractors:
-                selected_distractors.remove(path)
-                container.config(bg="SystemButtonFace")
-            else:
-                selected_distractors.add(path)
-                container.config(bg="lightblue")
-            # Update the last clicked anchor only if shift is not held.
-            last_clicked["key"] = key
+            old = next(iter(sel), None)
+            if old:
+                for v in placeholders.values():
+                    if v["path"] == old:
+                        v["frame"].config(bg=CANVAS_BG)
+            sel.clear(); sel.add(path)
+            frame.config(bg=ACCENT_COLOR)
+            info_var.set(app.tr("selected_label").format(name=os.path.basename(path)))
+        last_click_key = key
+        schedule_load()
 
-        selected_label.config(text=f"Selected: {len(selected_distractors)} images")
+    def on_shift_click(event, path, key, frame):
+        nonlocal last_click_key
+        if not multi_select or last_click_key is None or last_click_key not in all_keys:
+            return on_click(event, path, key, frame)
+        i1 = all_keys.index(last_click_key)
+        i2 = all_keys.index(key)
+        lo, hi = sorted((i1, i2))
+        # decide: are we selecting (if new not in sel) or deselecting (if new in sel)?
+        selecting = path not in sel
+        for k in all_keys[lo:hi+1]:
+            p = placeholders[k]["path"]
+            f = placeholders[k]["frame"]
+            if selecting and p not in sel:
+                sel.add(p); f.config(bg=ACCENT_COLOR)
+            elif not selecting and p in sel:
+                sel.remove(p); f.config(bg=CANVAS_BG)
+        last_click_key = key
+        schedule_load()
 
-    # Build a stable grid layout (fixed number of columns).
-    images_per_row = 8
+    # build placeholders & bindings
+    cols = 8
     for cat, folder in categories.items():
-        Label(content_frame, text=cat.capitalize(),
-              font=("Segoe UI", 10, "bold")).pack(anchor="w", padx=10, pady=(10, 0))
-        img_grid = tk.Frame(content_frame)
-        img_grid.pack(anchor="w", padx=10, pady=5)
-        try:
-            images = [f for f in os.listdir(folder)
-                      if f.lower().endswith((".jpg", ".png", ".jpeg", ".bmp", ".gif"))]
-        except FileNotFoundError:
-            images = []
-        for i, img_name in enumerate(images):
-            # if i % 200 == 0:
-            #     img_grid = tk.Frame(content_frame)
-            #     img_grid.pack(anchor="w", padx=10, pady=5)
+        ttk.Label(content, text=cat.capitalize(),
+                  font=SMALL_TEXT_FONT, background=CANVAS_BG)\
+           .pack(anchor="w", pady=(10,0), padx=5)
 
-            path = os.path.join(folder, img_name)
-            row_base = (i // images_per_row) * 2  # using two grid rows per image cell.
-            col = i % images_per_row
-            # Fixed-size container.
-            container = tk.Frame(img_grid, bd=2, relief="solid", width=100, height=100)
-            container.grid_propagate(False)
-            container.grid(row=row_base, column=col, padx=5, pady=5)
-            placeholder = Label(container, text="Loading...")
-            placeholder.place(relx=0.5, rely=0.5, anchor="center")
-            caption = Label(img_grid, text=img_name, wraplength=90)
-            caption.grid(row=row_base+1, column=col, padx=5, pady=(0, 5))
-            # Bind both container and placeholder. Pass the event, key, path, and container.
-            container.bind("<Button-1>", lambda e, p=path, c=container, key=(cat, i): toggle_selection(e, key, p, c))
-            placeholder.bind("<Button-1>", lambda e, p=path, c=container, key=(cat, i): toggle_selection(e, key, p, c))
-            placeholders[(cat, i)] = {
-                "container": container,
-                "placeholder": placeholder,
-                "caption": caption,
-                "path": path
-            }
+        grid = ttk.Frame(content, style="TFrame")
+        grid.pack(anchor="w", padx=5, pady=(0,10))
 
-    # Preselect previously confirmed distractor images (if any exist).
-    previous_distractors = comp.data["last_distractors"].get(prev_key, [])
-    if previous_distractors:
-        # For each placeholder whose path is in previous_distractors, mark it as selected.
-        for key, widget in placeholders.items():
-            if widget["path"] in previous_distractors:
-                # We use the same toggle_selection function without needing shift.
-                # Here we simulate a normal click event (state 0).
-                fake_event = type("Event", (object,), {"state": 0})()
-                toggle_selection(fake_event, key, widget["path"], widget["container"])
+        files = [f for f in os.listdir(folder)
+                 if f.lower().endswith((".jpg",".png",".jpeg",".bmp",".gif"))]
+        for i, name in enumerate(files):
+            path = os.path.join(folder, name)
+            key = (cat, i)
+            all_keys.append(key)
 
-    def on_confirm():
-        # Save the list of selected distractor image paths.
-        comp.data["last_distractors"][prev_key] = list(selected_distractors)
-        selector_win.destroy()
+            r, c = (i//cols)*2, i%cols
+            frm = tk.Frame(grid, width=100, height=100,
+                           bg=CANVAS_BG, bd=1, relief="solid")
+            frm.grid_propagate(False)
+            frm.grid(row=r, column=c, padx=5, pady=5)
 
-    Button(selector_win, text="Confirm", command=on_confirm).pack(pady=10)
-    lazy_load_images()
+            lbl = tk.Label(frm, image=blank_tk, bg=CANVAS_BG)
+            lbl.place(relx=0.5, rely=0.5, anchor="center")
+
+            caption = tk.Label(grid, text=name, wraplength=90,
+                               bg=CANVAS_BG, font=SMALL_TEXT_FONT)
+            caption.grid(row=r+1, column=c, padx=5, pady=(2,5))
+
+            for seq, handler in (("<Button-1>", on_click),
+                                 ("<Shift-Button-1>", on_shift_click)):
+                frm.bind(seq,    lambda e, p=path, k=key, f=frm: handler(e,p,k,f))
+                lbl.bind(seq,    lambda e, p=path, k=key, f=frm: handler(e,p,k,f))
+
+            placeholders[key] = {"frame":frm, "label":lbl, "path":path}
+
+    schedule_load()
+
+    # footer
+    footer = ttk.Frame(win, style="TFrame")
+    footer.pack(fill="x", pady=(0,15), padx=15)
+    Button(footer, text=app.tr("cancel"), command=win.destroy).pack(side="right", padx=(0,5))
+    Button(footer, text=app.tr("button_confirm"), bg=ACCENT_COLOR, fg="white",
+           command=lambda: _finish()).pack(side="right")
+
+    def _finish():
+        key = (stimulus_set, sel_type)
+        if multi_select:
+            comp.data.setdefault("last_distractors", {})[key] = list(sel)
+        else:
+            comp.data.setdefault("last_selections", {})[key] = next(iter(sel))
+        win.destroy()
+
+
+def open_image_selector(comp, target_type, app):
+    open_media_selector(comp, "Target", target_type, app, multi_select=False)
+
+def open_distractor_selector(comp, distractor_type, app):
+    open_media_selector(comp, "Distractor", distractor_type, app, multi_select=True)
 
 def setup_stimulus_options(app, left_panel,main_panel,comp):
     def add_label(text, pady=8):
@@ -688,11 +489,27 @@ def setup_stimulus_options(app, left_panel,main_panel,comp):
         Button(import_win, text=app.tr("add_button"), command=add_stimulus_set).pack(pady=(0, 10))
 
     def handle_stim_set(*args):
-        selection = stim_set_var.get()
-        if selection == "Import":
-            open_import_window()
-        else:
-            comp.data["stimulus_set"] = selection
+            selection = stim_set_var.get()
+            if selection == "Import":
+                open_import_window()
+            else:
+                # 1) Update the stimulus set
+                comp.data["stimulus_set"] = selection
+
+                # 2) Reset distractor‐set back to “All”
+                comp.data["distractor_set"] = "All"
+                distractor_set_var.set("All")
+
+                # 3) Reset selected‐target back to “Random”
+                comp.data["selected_target"] = "Random"
+                selected_target_var.set("Random")
+
+                # 4) Clear out any previous image picks
+                comp.data["last_selections"] = {}
+                comp.data["last_distractors"] = {}
+
+                # 5) Redraw the field grid to pick up the new state
+                setup_field_grid(main_panel, comp)
 
     stim_set_var.trace_add("write", handle_stim_set)
 

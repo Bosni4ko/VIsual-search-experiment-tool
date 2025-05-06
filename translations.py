@@ -121,7 +121,15 @@ translations = {
         "distractor_select_from_list":     "Select set from list",
         "error_invalid_number":            "Invalid number, resetting…",
         "unit_x_label":                    "X",
-        "import_folder_prompt":            "Select Stimulus Set Folder"
+        "import_folder_prompt":            "Select Stimulus Set Folder",
+
+        "select_image_image_title": "Select Image",
+        "image_selector_title":  "Image Selector",
+        "selected_label": "Selected: {name}",
+        "No image selected.": "No image selected.",
+        "loading_placeholder": "Loading...",
+        "cancel": "Cancel",
+        "button_confirm": "Confirm"
 
     },
     "LV" : {
@@ -241,6 +249,13 @@ translations = {
         "distractor_select_from_list":     "Atlasīt kopu no saraksta",
         "error_invalid_number":            "Nederīgs skaitlis, atiestatīšana…",
         "unit_x_label":                    "X",
-        "import_folder_prompt":            "Atlasīt stimulu kopas mapi"
+        "import_folder_prompt":            "Atlasīt stimulu kopas mapi",
+        "select_image_image_title": "Izvēlēties Attēlu",
+        "image_selector_title": "Attēla izvēle",
+        "selected_label": "Izvēlēts: {name}",
+        "No image selected.": "Nav izvēlēts neviens attēls.",
+        "loading_placeholder": "Ielādē...",
+        "cancel": "Atcelt",
+        "button_confirm": "Apstiprināt"
     },
 }

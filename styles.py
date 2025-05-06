@@ -270,6 +270,23 @@ def apply_theme(root: tk.Tk) -> ttk.Style:
         fieldbackground=[("readonly", CANVAS_BG), ("!readonly", CANVAS_BG)],
         background=[("readonly", CANVAS_BG), ("!readonly", CANVAS_BG)]
     )
+    style.map(
+        "Small.TCombobox",
+        fieldbackground=[
+            ("disabled", "#D9D9D9"),   # light grey background
+            ("readonly", CANVAS_BG),    # keep white when readonly/normal
+            ("!readonly", CANVAS_BG)
+        ],
+        background=[
+            ("disabled", "#D9D9D9"),   # overall widget face
+            ("readonly", CANVAS_BG),
+            ("!readonly", CANVAS_BG)
+        ],
+        foreground=[
+            ("disabled", "#888888"),   # dark grey text when disabled
+            ("!disabled", "#000000")   # black text when enabled
+        ]
+    )
     # —— Small Checkbutton ——  
     style.configure(
         "Small.TCheckbutton",

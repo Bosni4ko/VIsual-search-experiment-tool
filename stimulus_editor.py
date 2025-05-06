@@ -30,31 +30,81 @@ def open_media_selector(comp, kind, sel_type, app, multi_select=False):
     categories = get_categories(base_path, sel_type)
 
     win = Toplevel()
-    win.title(app.tr(f"select_{kind.lower()}_image_title"))
     win.configure(bg=BG_COLOR)
-    win.geometry("1050x650")
+    win.geometry("900x650")
     win.image_refs = []
 
     # one blank thumbnail
     THUMB_SIZE = (90,90)
     blank = Image.new("RGB", THUMB_SIZE, CANVAS_BG)
     blank_tk = ImageTk.PhotoImage(blank)
+
     win.image_refs.append(blank_tk)
 
+    key_tuple = (stimulus_set, sel_type)
+    if multi_select:
+        prev = comp.data.get("last_distractors", {}).get(key_tuple, [])
+        sel = set(prev)
+    else:
+        prev = comp.data.get("last_selections", {}).get(key_tuple)
+        sel = {prev} if prev is not None else set()
+    last_click_key = None
+            
     # header & info
     hdr = ttk.Frame(win, style="TFrame", height=50)
     hdr.pack(fill="x")
+
+    def _finish():
+        key = (stimulus_set, sel_type)
+        if multi_select:
+            comp.data.setdefault("last_distractors", {})[key] = list(sel)
+        else:
+            comp.data.setdefault("last_selections", {})[key] = next(iter(sel))
+        win.destroy()
+
+    # 2) Title label fills the rest of the header
     ttk.Label(
         hdr,
         text=app.tr("image_selector_title").format(type=sel_type.capitalize()),
-        font=LABEL_FONT, background=ACCENT_COLOR, foreground="white", padding=(15,10)
-    ).pack(fill="x")
+        font=LABEL_FONT,
+        background=ACCENT_COLOR,
+        foreground="white",
+        padding=(15,10)
+    ).pack(side="left", fill="x", expand=True)
+        # — Button row
+    btn_row = ttk.Frame(win, style="TFrame")
+    btn_row.pack(fill="x", padx=15, pady=(5,10))
 
-    info_var = tk.StringVar(master=win, value=app.tr("No image selected."))
+    ttk.Button(
+        btn_row,
+        text=app.tr("cancel"),
+        style="Media.Cancel.TButton",
+        command=win.destroy
+    ).pack(side="left", padx=(0,5))
+
+    ttk.Button(
+        btn_row,
+        text=app.tr("button_confirm"),
+        style="Media.Confirm.TButton",
+        command=_finish
+    ).pack(side="left")
+
+    info_var = tk.StringVar(master=win)
+    if multi_select:
+        cnt = len(sel)
+        info_var.set(
+            f"{cnt} images selected" if cnt else app.tr("No image selected.")
+        )
+    else:
+        if sel and next(iter(sel)):
+            name = os.path.basename(next(iter(sel)))
+            info_var.set(app.tr("selected_label").format(name=name))
+        else:
+           info_var.set(app.tr("No image selected."))
+
     ttk.Label(win, textvariable=info_var,
-              font=SMALL_TEXT_FONT, background=BG_COLOR)\
+              font=LABEL_FONT, background=BG_COLOR)\
        .pack(fill="x", padx=15, pady=(5,0))
-
     # canvas + scrollbar
     canvas = tk.Canvas(win, bg=CANVAS_BG, highlightthickness=0)
     canvas.pack(side="left", fill="both", expand=True, padx=(15,0), pady=10)
@@ -127,8 +177,6 @@ def open_media_selector(comp, kind, sel_type, app, multi_select=False):
         if load_queue:
             schedule_load()
 
-    # selection state + handlers
-    sel = set() if multi_select else {None}
     last_click_key = None
 
     def on_click(event, path, key, frame):
@@ -139,6 +187,7 @@ def open_media_selector(comp, kind, sel_type, app, multi_select=False):
                 sel.remove(path); frame.config(bg=CANVAS_BG)
             else:
                 sel.add(path); frame.config(bg=ACCENT_COLOR)
+            info_var.set(f"{len(sel)} images selected")
         else:
             old = next(iter(sel), None)
             if old:
@@ -168,6 +217,10 @@ def open_media_selector(comp, kind, sel_type, app, multi_select=False):
             elif not selecting and p in sel:
                 sel.remove(p); f.config(bg=CANVAS_BG)
         last_click_key = key
+        if multi_select:
+            info_var.set(f"{len(sel)} images selected")
+        else:
+            info_var.set(app.tr("selected_label").format(name=os.path.basename(path)))
         schedule_load()
 
     # build placeholders & bindings
@@ -201,28 +254,18 @@ def open_media_selector(comp, kind, sel_type, app, multi_select=False):
             caption.grid(row=r+1, column=c, padx=5, pady=(2,5))
 
             for seq, handler in (("<Button-1>", on_click),
-                                 ("<Shift-Button-1>", on_shift_click)):
-                frm.bind(seq,    lambda e, p=path, k=key, f=frm: handler(e,p,k,f))
-                lbl.bind(seq,    lambda e, p=path, k=key, f=frm: handler(e,p,k,f))
+                     ("<Shift-Button-1>", on_shift_click)):
+                frm.bind(seq,
+                    lambda e, p=path, k=key, f=frm, h=handler: h(e, p, k, f)
+                )
+                lbl.bind(seq,
+                    lambda e, p=path, k=key, f=frm, h=handler: h(e, p, k, f)
+                )
 
             placeholders[key] = {"frame":frm, "label":lbl, "path":path}
-
+            if path in sel:
+                frm.config(bg=ACCENT_COLOR)
     schedule_load()
-
-    # footer
-    footer = ttk.Frame(win, style="TFrame")
-    footer.pack(fill="x", pady=(0,15), padx=15)
-    Button(footer, text=app.tr("cancel"), command=win.destroy).pack(side="right", padx=(0,5))
-    Button(footer, text=app.tr("button_confirm"), bg=ACCENT_COLOR, fg="white",
-           command=lambda: _finish()).pack(side="right")
-
-    def _finish():
-        key = (stimulus_set, sel_type)
-        if multi_select:
-            comp.data.setdefault("last_distractors", {})[key] = list(sel)
-        else:
-            comp.data.setdefault("last_selections", {})[key] = next(iter(sel))
-        win.destroy()
 
 
 def open_image_selector(comp, target_type, app):

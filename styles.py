@@ -304,7 +304,35 @@ def apply_theme(root: tk.Tk) -> ttk.Style:
         foreground=[("disabled", "#888888"),       # greyed-out when disabled
                     ("!disabled", "#333333")],
         indicatorforeground=[("selected", "#007acc"),  # accent color when checked
-                            ("!selected", "#333333")],
+                            ("!selected", "#333333")],               
+    )
+     # ——— Media-selector footer buttons ———
+    style.configure(
+        "Media.Cancel.TButton",
+        font=BUTTON_FONT,
+        padding=BUTTON_PADDING,
+        relief="flat",
+        background="#e0e0e0",
+        foreground="#333333"
+    )
+    style.map(
+        "Media.Cancel.TButton",
+        background=[("active", "#d0d0d0"), ("!disabled", "#e0e0e0")],
+        foreground=[("disabled", "#888888"), ("!disabled", "#333333")]
+    )
+
+    style.configure(
+        "Media.Confirm.TButton",
+        font=BUTTON_FONT,
+        padding=BUTTON_PADDING,
+        relief="flat",
+        background=ACCENT_COLOR,
+        foreground="white"
+    )
+    style.map(
+        "Media.Confirm.TButton",
+        background=[("active", "#005f99"), ("!disabled", ACCENT_COLOR)],
+        foreground=[("disabled", "#aaaaaa"), ("!disabled", "white")]
     )
     return style
 

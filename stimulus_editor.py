@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import ttk
 import os
 from tkinter import Toplevel, Scrollbar, Label, Button, filedialog
 from PIL import Image, ImageTk
@@ -428,26 +429,33 @@ def open_distractor_selector(comp, distractor_type):
 
 def setup_stimulus_options(app, left_panel,main_panel,comp):
     def add_label(text, pady=8):
-        return tk.Label(left_panel, text=text, font=("Segoe UI", 10, "bold")).pack(anchor="w", padx=10, pady=(pady, 2))
+        label = ttk.Label(left_panel, text=text, style="Small.TLabel")
+        label.pack(anchor="w", padx=10, pady=(pady, 2))
+        return label
+
 
     def add_dropdown(var, options):
-        return tk.OptionMenu(left_panel, var, *options)
+        return ttk.Combobox(
+            left_panel,
+            textvariable=var,
+            values=options,
+            state="readonly",
+            style="Small.TCombobox",
+        )
     
 
     # ---------- Field Size ----------
     add_label("Field Size")
-    field_frame = tk.Frame(left_panel)
+    field_frame = ttk.Frame(left_panel)
     field_frame.pack(anchor="w", padx=10)
 
-    field_x = tk.Entry(field_frame, width=5)
-    field_y = tk.Entry(field_frame, width=5)
-
-    # initialize from comp.data (with safe defaults)
+    field_x = ttk.Entry(field_frame, width=5, style="TEntry")
+    field_y = ttk.Entry(field_frame, width=5, style="TEntry")
     field_x.insert(0, str(comp.data.get("field_x", 10)))
     field_y.insert(0, str(comp.data.get("field_y", 10)))
 
     field_x.pack(side="left")
-    tk.Label(field_frame, text="  X  ").pack(side="left")
+    ttk.Label(field_frame, text="  X  ", style="Small.TLabel").pack(side="left")
     field_y.pack(side="left")
 
     def save_field_size(*_):
@@ -501,10 +509,10 @@ def setup_stimulus_options(app, left_panel,main_panel,comp):
     # --------- Stimulus Set Size ----------
     add_label("Stimulus Set Size")
     size_var = tk.StringVar(value=comp.data.get("stimulus_size_mode", "random"))
-    size_menu = add_dropdown(size_var, ["random", "fixed", "random in range"])
+    size_menu = ttk.Combobox(left_panel, textvariable=size_var, values=["random", "fixed", "random in range"], state="readonly", style="Small.TCombobox")
     size_menu.pack(anchor="w", padx=10, fill="x")
 
-    amount_frame = tk.Frame(left_panel)
+    amount_frame = ttk.Frame(left_panel)
     amount_frame.pack(anchor="w", padx=10, pady=(5, 0))
 
     def update_amount_input(*args):
@@ -515,21 +523,21 @@ def setup_stimulus_options(app, left_panel,main_panel,comp):
         mode = size_var.get()
         comp.data["stimulus_size_mode"] = mode
 
-        tk.Label(amount_frame, text="Amount:").pack(side="left", padx=(0,5))
+        ttk.Label(amount_frame, text="Amount:", style="Small.TLabel").pack(side="left", padx=(0, 5))
 
         # the maximum possible stimuli
         total = comp.data.get("field_x", 10) * comp.data.get("field_y", 10)
 
         if mode == "random":
             # readonly dash, then rebuild grid
-            dash = tk.Entry(amount_frame, width=7, state="readonly", justify="center")
+            dash = ttk.Entry(amount_frame, width=7, state="readonly", justify="center", style="TEntry")
             dash.insert(0, "-")
             dash.pack(side="left")
             setup_field_grid(main_panel, comp)
 
         elif mode == "fixed":
             # show an entry for fixed amount
-            amt_e = tk.Entry(amount_frame, width=7)
+            amt_e = ttk.Entry(amount_frame, width=7, style="Small.TEntry")
             amt_e.insert(0, str(comp.data.get("fixed_amount", 2)))
             amt_e.pack(side="left")
 
@@ -555,12 +563,12 @@ def setup_stimulus_options(app, left_panel,main_panel,comp):
 
         else:  # "random in range"
             # two entries: start and end
-            start_e = tk.Entry(amount_frame, width=5)
-            end_e   = tk.Entry(amount_frame, width=5)
+            start_e = ttk.Entry(amount_frame, width=5, style="Small.TEntry")
+            end_e = ttk.Entry(amount_frame, width=5, style="Small.TEntry")
             start_e.insert(0, str(comp.data.get("range_start", 2)))
             end_e.insert(0,   str(comp.data.get("range_end",   total)))
             start_e.pack(side="left")
-            tk.Label(amount_frame, text=" to ").pack(side="left")
+            ttk.Label(amount_frame, text=" to ", style="Small.TLabel").pack(side="left")
             end_e.pack(side="left")
 
             def save_range(event=None):
@@ -629,7 +637,13 @@ def setup_stimulus_options(app, left_panel,main_panel,comp):
         stimulus_options.insert(-1, imported)
 
     # Create an OptionMenu with the combined options.
-    stim_dropdown = tk.OptionMenu(left_panel, stim_set_var, *stimulus_options)
+    stim_dropdown = ttk.Combobox(
+        left_panel,
+        textvariable=stim_set_var,
+        values=stimulus_options,
+        state="readonly",
+        style="Small.TCombobox"        # ← small white background
+    )
     stim_dropdown.pack(anchor="w", padx=10, fill="x")
 
     def open_import_window():
@@ -682,7 +696,13 @@ def setup_stimulus_options(app, left_panel,main_panel,comp):
     # ---------- Target Type ----------
     add_label("Target Type")
     target_type_var = tk.StringVar(value=comp.data.get("target_type", "positive"))
-    target_type_menu = add_dropdown(target_type_var, ["positive", "negative", "neutral"])  # Save return value here.
+    target_type_menu = ttk.Combobox(
+        left_panel,
+        textvariable=target_type_var,
+        values=["positive", "negative", "neutral"],
+        state="readonly",
+        style="Small.TCombobox"      # ← same small, white-bg style
+    )
     target_type_menu.pack(anchor="w", padx=10, fill="x")
     def on_target_type_change(*_):
         comp.data["target_type"] = target_type_var.get()
@@ -693,7 +713,13 @@ def setup_stimulus_options(app, left_panel,main_panel,comp):
     # ---------- Selected Target ----------
     add_label("Selected Target")
     selected_target_var = tk.StringVar(value=comp.data.get("selected_target", "Random"))
-    selected_target_menu = add_dropdown(selected_target_var, ["Random", "Select from list"])  # Save reference here.
+    selected_target_menu = ttk.Combobox(
+        left_panel,
+        textvariable=selected_target_var,
+        values=["Random", "Select from list"],
+        state="readonly",
+        style="Small.TCombobox"   
+    )
     selected_target_menu.pack(anchor="w", padx=10, fill="x")
     def handle_target_select(*_):
         comp.data["selected_target"] = selected_target_var.get()
@@ -703,7 +729,12 @@ def setup_stimulus_options(app, left_panel,main_panel,comp):
 
     # ---------- No Target ----------
     no_target_var = tk.BooleanVar(value=comp.data.get("no_target", False))
-    no_target_chk = tk.Checkbutton(left_panel, text="No Target", variable=no_target_var)
+    no_target_chk = ttk.Checkbutton(
+        left_panel,
+        text="No Target",
+        variable=no_target_var,
+        style="Small.TCheckbutton"      # ← use your small, white‐bg checkbox style
+    )
     no_target_chk.pack(anchor="w", padx=10, pady=(5, 0))
 
     # Function to toggle lock status of target type and selected target.

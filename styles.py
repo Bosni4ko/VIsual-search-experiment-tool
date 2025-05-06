@@ -20,6 +20,9 @@ SELECT_METADATA=(FONT_FAMILY, 12)
 ADD_ITEM_FONT = (FONT_FAMILY, 8)
 COMPONENT_FONT        = (FONT_FAMILY, 14,"bold")  # inside the colored block
 COMPONENT_LABEL_FONT  = (FONT_FAMILY_SEMI_BOLD, 11)            # under the block in the palette
+SMALL_COMBO_FONT = (FONT_FAMILY, 9)
+SMALL_TEXT_FONT     = (FONT_FAMILY, 12)   # 
+SMALL_TEXT_SEMIBOLD = (FONT_FAMILY_SEMI_BOLD, 13)
 
 # Padding
 BUTTON_PADDING = 10
@@ -196,6 +199,95 @@ def apply_theme(root: tk.Tk) -> ttk.Style:
     style.map(
         "TextOptAlign.TRadiobutton",
         background=[("active", CANVAS_BG)],
+    )
+    # —— Small Label ——  
+    style.configure(
+        "Small.TLabel",
+        font=SMALL_TEXT_SEMIBOLD,
+        background=CANVAS_BG,
+        foreground="#333333"   # whatever text color you want
+    )
+
+    # —— Small Button ——  
+    style.configure(
+        "Small.TButton",
+        font=SMALL_TEXT_SEMIBOLD,
+        padding=SMALL_BUTTON_PADDING,
+        background=CANVAS_BG,
+        foreground="#000000"
+    )
+    style.map(
+        "Small.TButton",
+        background=[("active", CANVAS_BG)],
+        foreground=[("disabled", "#888888"), ("!disabled", "#000000")]
+    )
+
+    # —— Small Entry ——  
+    style.configure(
+        "Small.TEntry",
+        font=SMALL_TEXT_SEMIBOLD,
+        fieldbackground=CANVAS_BG,
+        background=CANVAS_BG
+    )
+    style.map(
+        "Small.TEntry",
+        fieldbackground=[
+            ("disabled", "#A9A9A9"),   # dark grey when disabled
+            ("!disabled", CANVAS_BG)
+        ],
+        background=[
+            ("disabled", "#A9A9A9"),   # dark grey when disabled
+            ("!disabled", CANVAS_BG)
+        ]
+    )
+    style.map(
+        "TEntry",
+        fieldbackground=[
+            ("readonly", "#A9A9A9"),   # grey for readonly
+            ("!readonly", CANVAS_BG)
+        ],
+        background=[
+            ("readonly", "#A9A9A9"),
+            ("!readonly", CANVAS_BG)
+        ]
+    )
+
+    style.configure(
+        "Small.TCombobox",
+        font=SMALL_COMBO_FONT,
+        fieldbackground=CANVAS_BG,
+        background=CANVAS_BG,
+        foreground="#000000",
+    )
+    style.configure(
+        "Small.TCombobox.Listbox",
+        font=SMALL_COMBO_FONT,
+        background=CANVAS_BG,
+        foreground="#000000",
+    )
+    style.map(
+        "Small.TCombobox",
+        fieldbackground=[("readonly", CANVAS_BG), ("!readonly", CANVAS_BG)],
+        background=[("readonly", CANVAS_BG), ("!readonly", CANVAS_BG)]
+    )
+    # —— Small Checkbutton ——  
+    style.configure(
+        "Small.TCheckbutton",
+        font=SMALL_TEXT_FONT,       # your 10pt or 9pt font tuple
+        background=CANVAS_BG,       # white widget background
+        foreground="#333333",       # dark text
+        indicatorbackground=CANVAS_BG,  # white box background
+        indicatorforeground="#333333",  # dark check mark
+        padding=(4, 4),             # comfortable click area
+    )
+
+    style.map(
+        "Small.TCheckbutton",
+        background=[("active", CANVAS_BG)],        # stay white on hover
+        foreground=[("disabled", "#888888"),       # greyed-out when disabled
+                    ("!disabled", "#333333")],
+        indicatorforeground=[("selected", "#007acc"),  # accent color when checked
+                            ("!selected", "#333333")],
     )
     return style
 

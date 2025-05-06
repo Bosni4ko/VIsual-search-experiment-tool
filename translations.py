@@ -85,8 +85,8 @@ translations = {
         "Text":                    "Text",                   
         "Stimulus":                "Stimulus",
         "Stimulus notification":   "Stimulus notification",
-        "End":                     "End"
-
+        "End":                     "End",
+        'font_color':"Font Color",
 
     },
     "LV" : {
@@ -170,6 +170,8 @@ translations = {
         "Text":                    "Teksts",                   
         "Stimulus":                "Stimuls",
         "Stimulus notification":   "Stimula paziņojums",
-        "End":                     "Beigas"
+        "End":                     "Beigas",
+        'font_color':"Teksta krasa",
+
     },
 }

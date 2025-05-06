@@ -109,7 +109,7 @@ def setup_text_options(app, left_panel, comp):
     color_frame.pack(fill=tk.X, pady=2)
     color_button = ttk.Button(
         color_frame,
-        text='Font Color',
+        text=app.tr('font_color'),
         width=12,
         style='TextOptAccent.TButton',
         command=lambda: (record_selection(), choose_color(comp))

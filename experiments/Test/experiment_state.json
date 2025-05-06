@@ -1,0 +1,2130 @@
+[
+  {
+    "type": "Start",
+    "label": "Start",
+    "color": "green",
+    "index": 0,
+    "saved_text": "\n\n\n\n\n\n\n\n\nWelcome to the experiment. \nPlease follow the instructions carefully.\nUse \"space\" button to continue.",
+    "saved_tags": [
+      {
+        "name": "align_6a719f49bf9f4651a0776e04b4e0925c",
+        "ranges": [
+          [
+            "10.0",
+            "12.31"
+          ]
+        ],
+        "font_info": {
+          "family": "Arial",
+          "size": 12,
+          "weight": "normal",
+          "slant": "roman"
+        },
+        "foreground": "",
+        "justify": "center"
+      },
+      {
+        "name": "font_28de7a4564af48f38cbb5d693e6036b9",
+        "ranges": [
+          [
+            "10.0",
+            "12.31"
+          ]
+        ],
+        "font_info": {
+          "family": "Courier New",
+          "size": 12,
+          "weight": "bold",
+          "slant": "roman"
+        },
+        "foreground": "SystemHighlightText",
+        "justify": ""
+      },
+      {
+        "name": "font_bd92b5a108b44b4a90f392b8f5e6266c",
+        "ranges": [
+          [
+            "10.0",
+            "12.31"
+          ]
+        ],
+        "font_info": {
+          "family": "Courier New",
+          "size": 13,
+          "weight": "bold",
+          "slant": "roman"
+        },
+        "foreground": "SystemHighlightText",
+        "justify": ""
+      },
+      {
+        "name": "font_940954951cd14f4d8d12640c19b542e8",
+        "ranges": [
+          [
+            "10.0",
+            "12.31"
+          ]
+        ],
+        "font_info": {
+          "family": "Courier New",
+          "size": 14,
+          "weight": "bold",
+          "slant": "roman"
+        },
+        "foreground": "SystemHighlightText",
+        "justify": ""
+      },
+      {
+        "name": "font_5e569014dac949c8bd2695dd35eef0d0",
+        "ranges": [
+          [
+            "10.0",
+            "12.31"
+          ]
+        ],
+        "font_info": {
+          "family": "Courier New",
+          "size": 15,
+          "weight": "bold",
+          "slant": "roman"
+        },
+        "foreground": "SystemHighlightText",
+        "justify": ""
+      },
+      {
+        "name": "font_1997d3b3db574d74bda84300712513dd",
+        "ranges": [
+          [
+            "10.0",
+            "12.31"
+          ]
+        ],
+        "font_info": {
+          "family": "Courier New",
+          "size": 16,
+          "weight": "bold",
+          "slant": "roman"
+        },
+        "foreground": "SystemHighlightText",
+        "justify": ""
+      },
+      {
+        "name": "font_a54e6681d3364c47adcf1843b42a97fb",
+        "ranges": [
+          [
+            "10.0",
+            "12.31"
+          ]
+        ],
+        "font_info": {
+          "family": "Courier New",
+          "size": 17,
+          "weight": "bold",
+          "slant": "roman"
+        },
+        "foreground": "SystemHighlightText",
+        "justify": ""
+      },
+      {
+        "name": "font_f45684325d474a7c937bedd65088272c",
+        "ranges": [
+          [
+            "10.0",
+            "12.31"
+          ]
+        ],
+        "font_info": {
+          "family": "Courier New",
+          "size": 18,
+          "weight": "bold",
+          "slant": "roman"
+        },
+        "foreground": "SystemHighlightText",
+        "justify": ""
+      },
+      {
+        "name": "font_18b5096f4d42442ea098691b386b5b03",
+        "ranges": [
+          [
+            "10.0",
+            "12.31"
+          ]
+        ],
+        "font_info": {
+          "family": "Courier New",
+          "size": 17,
+          "weight": "bold",
+          "slant": "roman"
+        },
+        "foreground": "SystemHighlightText",
+        "justify": ""
+      },
+      {
+        "name": "font_5c7f1fa6a7cc45e28178f3f297e98e93",
+        "ranges": [
+          [
+            "10.0",
+            "12.31"
+          ]
+        ],
+        "font_info": {
+          "family": "Courier New",
+          "size": 16,
+          "weight": "bold",
+          "slant": "roman"
+        },
+        "foreground": "SystemHighlightText",
+        "justify": ""
+      },
+      {
+        "name": "font_59c2a0bde04d4bb99de99223ee885520",
+        "ranges": [
+          [
+            "10.0",
+            "12.31"
+          ]
+        ],
+        "font_info": {
+          "family": "Courier New",
+          "size": 15,
+          "weight": "bold",
+          "slant": "roman"
+        },
+        "foreground": "SystemHighlightText",
+        "justify": ""
+      },
+      {
+        "name": "font_232bfcc062354233acad799f4c625a19",
+        "ranges": [
+          [
+            "10.0",
+            "12.31"
+          ]
+        ],
+        "font_info": {
+          "family": "Courier New",
+          "size": 14,
+          "weight": "bold",
+          "slant": "roman"
+        },
+        "foreground": "SystemHighlightText",
+        "justify": ""
+      },
+      {
+        "name": "font_f2ddf7258be94d8785f2e4a9bf69f0ab",
+        "ranges": [
+          [
+            "10.0",
+            "12.31"
+          ]
+        ],
+        "font_info": {
+          "family": "Courier New",
+          "size": 15,
+          "weight": "bold",
+          "slant": "roman"
+        },
+        "foreground": "SystemHighlightText",
+        "justify": ""
+      },
+      {
+        "name": "color_0c7458256006402883bde5603e6e796a",
+        "ranges": [
+          [
+            "10.0",
+            "12.31"
+          ]
+        ],
+        "font_info": {
+          "family": "Arial",
+          "size": 12,
+          "weight": "normal",
+          "slant": "roman"
+        },
+        "foreground": "#000000",
+        "justify": ""
+      },
+      {
+        "name": "font_a4872eedecd740b1a118382bc81df36b",
+        "ranges": [
+          [
+            "10.0",
+            "12.31"
+          ]
+        ],
+        "font_info": {
+          "family": "Courier New",
+          "size": 16,
+          "weight": "bold",
+          "slant": "roman"
+        },
+        "foreground": "#000000",
+        "justify": ""
+      },
+      {
+        "name": "font_495c6f1633274e54aef3fadf1d291116",
+        "ranges": [
+          [
+            "10.0",
+            "12.31"
+          ]
+        ],
+        "font_info": {
+          "family": "Courier New",
+          "size": 15,
+          "weight": "bold",
+          "slant": "roman"
+        },
+        "foreground": "#000000",
+        "justify": ""
+      },
+      {
+        "name": "font_e3222b3bd5714a9c9bca332a06f15e2f",
+        "ranges": [
+          [
+            "10.0",
+            "12.31"
+          ]
+        ],
+        "font_info": {
+          "family": "Ebrima",
+          "size": 15,
+          "weight": "bold",
+          "slant": "roman"
+        },
+        "foreground": "#000000",
+        "justify": ""
+      },
+      {
+        "name": "font_ab2927c534a744f2a3e192b157e06297",
+        "ranges": [
+          [
+            "10.0",
+            "12.31"
+          ]
+        ],
+        "font_info": {
+          "family": "Ebrima",
+          "size": 16,
+          "weight": "bold",
+          "slant": "roman"
+        },
+        "foreground": "#000000",
+        "justify": ""
+      },
+      {
+        "name": "font_b1d694978d5a4ae88705ec0ae8bc9736",
+        "ranges": [
+          [
+            "10.0",
+            "12.31"
+          ]
+        ],
+        "font_info": {
+          "family": "Ebrima",
+          "size": 17,
+          "weight": "bold",
+          "slant": "roman"
+        },
+        "foreground": "#000000",
+        "justify": ""
+      },
+      {
+        "name": "font_86eeaafecc5a42878b03885018230a50",
+        "ranges": [
+          [
+            "10.0",
+            "12.31"
+          ]
+        ],
+        "font_info": {
+          "family": "Ebrima",
+          "size": 18,
+          "weight": "bold",
+          "slant": "roman"
+        },
+        "foreground": "#000000",
+        "justify": ""
+      }
+    ],
+    "data": {}
+  },
+  {
+    "type": "Text",
+    "label": "Teksts",
+    "color": "gray",
+    "index": 1,
+    "saved_text": "Whatever\n",
+    "saved_tags": [],
+    "data": {}
+  },
+  {
+    "type": "Stimulus notification",
+    "label": "Stimula pazi\u0146ojums",
+    "color": "purple",
+    "index": 2,
+    "saved_text": "\n\n\n\n\n\n\n\nPlease click the button\nwhen you see the following image:\n\n[/image/]",
+    "saved_tags": [
+      {
+        "name": "align_55455efb205342389090c3de31dfcde6",
+        "ranges": [
+          [
+            "9.0",
+            "12.9"
+          ]
+        ],
+        "font_info": {
+          "family": "Arial",
+          "size": 12,
+          "weight": "normal",
+          "slant": "roman"
+        },
+        "foreground": "",
+        "justify": "center"
+      },
+      {
+        "name": "color_69023e965329416ebf4a29b08b0158ec",
+        "ranges": [
+          [
+            "9.0",
+            "10.33"
+          ]
+        ],
+        "font_info": {
+          "family": "Arial",
+          "size": 12,
+          "weight": "normal",
+          "slant": "roman"
+        },
+        "foreground": "#000000",
+        "justify": ""
+      },
+      {
+        "name": "font_aeaa45bd314d40c6929ffd3ed317b902",
+        "ranges": [
+          [
+            "9.0",
+            "10.33"
+          ]
+        ],
+        "font_info": {
+          "family": "Courier New",
+          "size": 13,
+          "weight": "normal",
+          "slant": "roman"
+        },
+        "foreground": "#000000",
+        "justify": ""
+      },
+      {
+        "name": "font_91c9fed362854e8599d7d06efec511b6",
+        "ranges": [
+          [
+            "9.0",
+            "10.33"
+          ]
+        ],
+        "font_info": {
+          "family": "Courier New",
+          "size": 14,
+          "weight": "normal",
+          "slant": "roman"
+        },
+        "foreground": "#000000",
+        "justify": ""
+      },
+      {
+        "name": "font_f53e7bae55cc4933afb9151fa71a6cc1",
+        "ranges": [
+          [
+            "9.0",
+            "10.33"
+          ]
+        ],
+        "font_info": {
+          "family": "Courier New",
+          "size": 15,
+          "weight": "normal",
+          "slant": "roman"
+        },
+        "foreground": "#000000",
+        "justify": ""
+      },
+      {
+        "name": "font_08d5a0f916e7494d8d657f7345d270ef",
+        "ranges": [
+          [
+            "9.0",
+            "10.33"
+          ]
+        ],
+        "font_info": {
+          "family": "Courier New",
+          "size": 16,
+          "weight": "normal",
+          "slant": "roman"
+        },
+        "foreground": "#000000",
+        "justify": ""
+      },
+      {
+        "name": "font_aa18486ed17c4f43aadd7552f776dd7d",
+        "ranges": [
+          [
+            "9.0",
+            "10.33"
+          ]
+        ],
+        "font_info": {
+          "family": "Courier New",
+          "size": 17,
+          "weight": "normal",
+          "slant": "roman"
+        },
+        "foreground": "#000000",
+        "justify": ""
+      },
+      {
+        "name": "font_02d24d94c45149ff8689f006095018cf",
+        "ranges": [
+          [
+            "9.0",
+            "10.33"
+          ]
+        ],
+        "font_info": {
+          "family": "Courier New",
+          "size": 18,
+          "weight": "normal",
+          "slant": "roman"
+        },
+        "foreground": "#000000",
+        "justify": ""
+      },
+      {
+        "name": "font_017ec6b2afcb404fb12ab50ef5640564",
+        "ranges": [
+          [
+            "9.0",
+            "10.33"
+          ]
+        ],
+        "font_info": {
+          "family": "Courier New",
+          "size": 18,
+          "weight": "bold",
+          "slant": "roman"
+        },
+        "foreground": "#000000",
+        "justify": ""
+      },
+      {
+        "name": "font_2a93cc9490684e04b2c558e5452c6d50",
+        "ranges": [
+          [
+            "9.0",
+            "10.33"
+          ]
+        ],
+        "font_info": {
+          "family": "Courier New",
+          "size": 19,
+          "weight": "bold",
+          "slant": "roman"
+        },
+        "foreground": "#000000",
+        "justify": ""
+      },
+      {
+        "name": "font_9ab74dc009db46d6a44b2658d95b9308",
+        "ranges": [
+          [
+            "9.0",
+            "10.33"
+          ]
+        ],
+        "font_info": {
+          "family": "Courier New",
+          "size": 20,
+          "weight": "bold",
+          "slant": "roman"
+        },
+        "foreground": "#000000",
+        "justify": ""
+      }
+    ],
+    "data": {},
+    "attachment": {
+      "label": "Stimuls",
+      "color": "yellow",
+      "index": 3
+    }
+  },
+  {
+    "type": "Stimulus",
+    "label": "Stimuls",
+    "color": "yellow",
+    "index": 3,
+    "saved_text": "",
+    "saved_tags": [],
+    "data": {
+      "stimulus_size_mode": "random",
+      "stimulus_set": "Images",
+      "no_target": false,
+      "field_x": 5,
+      "field_y": 5,
+      "distractor_type": "negative"
+    },
+    "last_selections": [
+      {
+        "stimulus_set": "Images",
+        "stimulus_type": "positive",
+        "path": "selections\\P088.bmp"
+      }
+    ],
+    "last_distractors": [
+      {
+        "stimulus_set": "Images",
+        "distractor_type": "negative",
+        "paths": [
+          "distractors\\Sn001.bmp",
+          "distractors\\Sn002.bmp",
+          "distractors\\Sn003.bmp",
+          "distractors\\Sn004.bmp",
+          "distractors\\Sn005.bmp",
+          "distractors\\Sn006.bmp",
+          "distractors\\Sn007.bmp",
+          "distractors\\Sn008.bmp",
+          "distractors\\Sn009.bmp",
+          "distractors\\Sn010.bmp",
+          "distractors\\Sn011.bmp",
+          "distractors\\Sn012.bmp",
+          "distractors\\Sn013.bmp",
+          "distractors\\Sn014.bmp",
+          "distractors\\Sn015.bmp",
+          "distractors\\Sn016.bmp",
+          "distractors\\Sn017.bmp",
+          "distractors\\Sn018.bmp",
+          "distractors\\Sn019.bmp",
+          "distractors\\Sn020.bmp",
+          "distractors\\Sn021.bmp",
+          "distractors\\Sn022.bmp",
+          "distractors\\Sn023.bmp",
+          "distractors\\Sn024.bmp",
+          "distractors\\Sn025.bmp",
+          "distractors\\Sn026.bmp",
+          "distractors\\Sn027.bmp",
+          "distractors\\Sn028.bmp",
+          "distractors\\Sn029.bmp",
+          "distractors\\Sn030.bmp",
+          "distractors\\Sn031.bmp",
+          "distractors\\Sn032.bmp",
+          "distractors\\Sn033.bmp",
+          "distractors\\Sn034.bmp",
+          "distractors\\Sn035.bmp",
+          "distractors\\Sn036.bmp",
+          "distractors\\Sn037.bmp",
+          "distractors\\Sn038.bmp",
+          "distractors\\Sn039.bmp",
+          "distractors\\Sn040.bmp",
+          "distractors\\Sn041.bmp",
+          "distractors\\Sn042.bmp",
+          "distractors\\Sn043.bmp",
+          "distractors\\Sn044.bmp",
+          "distractors\\Sn045.bmp",
+          "distractors\\Sn046.bmp",
+          "distractors\\Sn047.bmp",
+          "distractors\\Sn048.bmp",
+          "distractors\\Sn049.bmp",
+          "distractors\\Sn050.bmp",
+          "distractors\\Sn051.bmp",
+          "distractors\\Sn052.bmp",
+          "distractors\\Sn053.bmp",
+          "distractors\\Sn054.bmp",
+          "distractors\\Sn055.bmp",
+          "distractors\\Sn056.bmp",
+          "distractors\\Sn057.bmp",
+          "distractors\\Sn058.bmp",
+          "distractors\\Sn059.bmp",
+          "distractors\\Sn060.bmp",
+          "distractors\\Sn061.bmp",
+          "distractors\\Sn062.bmp",
+          "distractors\\Sn063.bmp",
+          "distractors\\Sn064.bmp",
+          "distractors\\Sn065.bmp",
+          "distractors\\Sn066.bmp",
+          "distractors\\Sn067.bmp",
+          "distractors\\Sn068.bmp",
+          "distractors\\Sn069.bmp",
+          "distractors\\Sn070.bmp",
+          "distractors\\Sn071.bmp",
+          "distractors\\Sn072.bmp",
+          "distractors\\Sn073.bmp",
+          "distractors\\Sn074.bmp",
+          "distractors\\Sn075.bmp",
+          "distractors\\Sn076.bmp",
+          "distractors\\Sn077.bmp",
+          "distractors\\Sn078.bmp",
+          "distractors\\Sn079.bmp",
+          "distractors\\Sn080.bmp",
+          "distractors\\Sn081.bmp",
+          "distractors\\Sn082.bmp",
+          "distractors\\Sn083.bmp",
+          "distractors\\Sn084.bmp",
+          "distractors\\Sn085.bmp",
+          "distractors\\Sn086.bmp",
+          "distractors\\Sn087.bmp",
+          "distractors\\Sn088.bmp",
+          "distractors\\Sn089.bmp",
+          "distractors\\Sn090.bmp",
+          "distractors\\Sn091.bmp",
+          "distractors\\Sn092.bmp",
+          "distractors\\Sn093.bmp",
+          "distractors\\Sn094.bmp",
+          "distractors\\Sn095.bmp",
+          "distractors\\Sn096.bmp",
+          "distractors\\Sn097.bmp",
+          "distractors\\Sn098.bmp",
+          "distractors\\Sn099.bmp",
+          "distractors\\Sn100.bmp",
+          "distractors\\Sn101.bmp",
+          "distractors\\Sn102.bmp",
+          "distractors\\Sn103.bmp",
+          "distractors\\Sn104.bmp",
+          "distractors\\Sn105.bmp",
+          "distractors\\Sn106.bmp",
+          "distractors\\Sn107.bmp",
+          "distractors\\Sn108.bmp",
+          "distractors\\Sn109.bmp",
+          "distractors\\Sn110.bmp",
+          "distractors\\Sn111.bmp",
+          "distractors\\Sn112.bmp",
+          "distractors\\Sn113.bmp",
+          "distractors\\Sn114.bmp",
+          "distractors\\Sn115.bmp",
+          "distractors\\Sn116.bmp",
+          "distractors\\Sn117.bmp",
+          "distractors\\Sn118.bmp",
+          "distractors\\Sn119.bmp",
+          "distractors\\Sn120.bmp",
+          "distractors\\Sn121.bmp",
+          "distractors\\Sn122.bmp",
+          "distractors\\Sn123.bmp",
+          "distractors\\Sn124.bmp",
+          "distractors\\Sn125.bmp",
+          "distractors\\Sn126.bmp",
+          "distractors\\Sn127.bmp",
+          "distractors\\Sn128.bmp",
+          "distractors\\Sn129.bmp",
+          "distractors\\Sn130.bmp",
+          "distractors\\Sn131.bmp",
+          "distractors\\Sn132.bmp",
+          "distractors\\Sn133.bmp",
+          "distractors\\Sp001.bmp",
+          "distractors\\Sp002.bmp",
+          "distractors\\Sp003.bmp",
+          "distractors\\Sp004.bmp",
+          "distractors\\Sp005.bmp",
+          "distractors\\Sp006.bmp",
+          "distractors\\Sp007.bmp",
+          "distractors\\Sp008.bmp",
+          "distractors\\Sp009.bmp",
+          "distractors\\Sp010.bmp",
+          "distractors\\Sp011.bmp",
+          "distractors\\Sp012.bmp",
+          "distractors\\Sp013.bmp",
+          "distractors\\Sp014.bmp",
+          "distractors\\Sp015.bmp",
+          "distractors\\Sp016.bmp",
+          "distractors\\Sp017.bmp",
+          "distractors\\Sp018.bmp",
+          "distractors\\Sp019.bmp",
+          "distractors\\Sp020.bmp",
+          "distractors\\Sp021.bmp",
+          "distractors\\Sp022.bmp",
+          "distractors\\Sp023.bmp",
+          "distractors\\Sp024.bmp",
+          "distractors\\Sp025.bmp",
+          "distractors\\Sp026.bmp",
+          "distractors\\Sp027.bmp",
+          "distractors\\Sp028.bmp",
+          "distractors\\Sp029.bmp",
+          "distractors\\Sp030.bmp",
+          "distractors\\Sp031.bmp",
+          "distractors\\Sp032.bmp",
+          "distractors\\Sp033.bmp",
+          "distractors\\Sp034.bmp",
+          "distractors\\Sp035.bmp",
+          "distractors\\Sp036.bmp",
+          "distractors\\Sp037.bmp",
+          "distractors\\Sp038.bmp",
+          "distractors\\Sp039.bmp",
+          "distractors\\Sp040.bmp",
+          "distractors\\Sp041.bmp",
+          "distractors\\Sp042.bmp",
+          "distractors\\Sp043.bmp",
+          "distractors\\Sp044.bmp",
+          "distractors\\Sp045.bmp",
+          "distractors\\Sp046.bmp",
+          "distractors\\Sp047.bmp",
+          "distractors\\Sp048.bmp",
+          "distractors\\Sp049.bmp",
+          "distractors\\Sp050.bmp",
+          "distractors\\Sp051.bmp",
+          "distractors\\Sp052.bmp",
+          "distractors\\Sp053.bmp",
+          "distractors\\Sp054.bmp",
+          "distractors\\Sp055.bmp",
+          "distractors\\Sp056.bmp",
+          "distractors\\Sp057.bmp",
+          "distractors\\Sp058.bmp",
+          "distractors\\Sp060.bmp",
+          "distractors\\Sp061.bmp",
+          "distractors\\Sp062.bmp",
+          "distractors\\Sp063.bmp",
+          "distractors\\Sp064.bmp",
+          "distractors\\Sp065.bmp",
+          "distractors\\Sp066.bmp",
+          "distractors\\Sp067.bmp",
+          "distractors\\Sp068.bmp",
+          "distractors\\Sp069.bmp",
+          "distractors\\Sp070.bmp",
+          "distractors\\Sp071.bmp",
+          "distractors\\Sp072.bmp",
+          "distractors\\Sp073.bmp",
+          "distractors\\Sp074.bmp",
+          "distractors\\Sp075.bmp",
+          "distractors\\Sp076.bmp",
+          "distractors\\Sp077.bmp",
+          "distractors\\Sp078.bmp",
+          "distractors\\Sp079.bmp",
+          "distractors\\Sp080.bmp",
+          "distractors\\Sp081.bmp",
+          "distractors\\Sp082.bmp",
+          "distractors\\Sp083.bmp",
+          "distractors\\Sp084.bmp",
+          "distractors\\Sp085.bmp",
+          "distractors\\Sp086.bmp",
+          "distractors\\Sp087.bmp",
+          "distractors\\Sp088.bmp",
+          "distractors\\Sp089.bmp",
+          "distractors\\Sp090.bmp",
+          "distractors\\Sp091.bmp",
+          "distractors\\Sp093.bmp",
+          "distractors\\Sp094.bmp",
+          "distractors\\Sp095.bmp",
+          "distractors\\Sp096.bmp",
+          "distractors\\Sp097.bmp",
+          "distractors\\Sp098.bmp",
+          "distractors\\Sp099.bmp",
+          "distractors\\Sp100.bmp",
+          "distractors\\Sp101.bmp",
+          "distractors\\Sp102.bmp",
+          "distractors\\Sp103.bmp",
+          "distractors\\Sp104.bmp",
+          "distractors\\Sp105.bmp",
+          "distractors\\Sp106.bmp",
+          "distractors\\Sp107.bmp",
+          "distractors\\Sp108.bmp",
+          "distractors\\Sp109.bmp",
+          "distractors\\Sp110.bmp",
+          "distractors\\Sp111.bmp",
+          "distractors\\Sp112.bmp",
+          "distractors\\Sp113.bmp",
+          "distractors\\Sp114.bmp",
+          "distractors\\Sp115.bmp",
+          "distractors\\Sp116.bmp",
+          "distractors\\Sp117.bmp",
+          "distractors\\Sp118.bmp",
+          "distractors\\Sp119.bmp",
+          "distractors\\Sp120.bmp",
+          "distractors\\Sp121.bmp",
+          "distractors\\Sp122.bmp",
+          "distractors\\Sp123.bmp",
+          "distractors\\Sp124.bmp",
+          "distractors\\Sp125.bmp",
+          "distractors\\Sp126.bmp",
+          "distractors\\Sp127.bmp",
+          "distractors\\Sp128.bmp",
+          "distractors\\Sp129.bmp",
+          "distractors\\Sp130.bmp",
+          "distractors\\Sp131.bmp",
+          "distractors\\Sp132.bmp",
+          "distractors\\Sp133.bmp",
+          "distractors\\Sp134.bmp",
+          "distractors\\Sp135.bmp",
+          "distractors\\Sp136.bmp",
+          "distractors\\Sp137.bmp",
+          "distractors\\Sp138.bmp",
+          "distractors\\Sp139.bmp",
+          "distractors\\Sp140.bmp",
+          "distractors\\Sp141.bmp",
+          "distractors\\Sp142.bmp",
+          "distractors\\Sp143.bmp",
+          "distractors\\Sp144.bmp",
+          "distractors\\Sp145.bmp",
+          "distractors\\Sp146.bmp",
+          "distractors\\Sp147.bmp",
+          "distractors\\Sp148.bmp",
+          "distractors\\Sp149.bmp",
+          "distractors\\Sp150.bmp",
+          "distractors\\Sp151.bmp",
+          "distractors\\Sp152.bmp",
+          "distractors\\Sp153.bmp",
+          "distractors\\Sp154.bmp",
+          "distractors\\Sp155.bmp",
+          "distractors\\Sp156.bmp",
+          "distractors\\Sp157.bmp",
+          "distractors\\Sp158.bmp",
+          "distractors\\Sp159.bmp",
+          "distractors\\Sp160.bmp"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "Stimulus notification",
+    "label": "Stimulus notification",
+    "color": "purple",
+    "index": 4,
+    "saved_text": "\n\n\n\n\n\n\n\nPlease click the button\nwhen you see the following image:\n\n[/image/]",
+    "saved_tags": [
+      {
+        "name": "align_55455efb205342389090c3de31dfcde6",
+        "ranges": [
+          [
+            "9.0",
+            "12.9"
+          ]
+        ],
+        "font_info": {
+          "family": "Arial",
+          "size": 12,
+          "weight": "normal",
+          "slant": "roman"
+        },
+        "foreground": "",
+        "justify": "center"
+      },
+      {
+        "name": "color_69023e965329416ebf4a29b08b0158ec",
+        "ranges": [
+          [
+            "9.0",
+            "10.33"
+          ]
+        ],
+        "font_info": {
+          "family": "Arial",
+          "size": 12,
+          "weight": "normal",
+          "slant": "roman"
+        },
+        "foreground": "#000000",
+        "justify": ""
+      },
+      {
+        "name": "font_aeaa45bd314d40c6929ffd3ed317b902",
+        "ranges": [
+          [
+            "9.0",
+            "10.33"
+          ]
+        ],
+        "font_info": {
+          "family": "Courier New",
+          "size": 13,
+          "weight": "normal",
+          "slant": "roman"
+        },
+        "foreground": "#000000",
+        "justify": ""
+      },
+      {
+        "name": "font_91c9fed362854e8599d7d06efec511b6",
+        "ranges": [
+          [
+            "9.0",
+            "10.33"
+          ]
+        ],
+        "font_info": {
+          "family": "Courier New",
+          "size": 14,
+          "weight": "normal",
+          "slant": "roman"
+        },
+        "foreground": "#000000",
+        "justify": ""
+      },
+      {
+        "name": "font_f53e7bae55cc4933afb9151fa71a6cc1",
+        "ranges": [
+          [
+            "9.0",
+            "10.33"
+          ]
+        ],
+        "font_info": {
+          "family": "Courier New",
+          "size": 15,
+          "weight": "normal",
+          "slant": "roman"
+        },
+        "foreground": "#000000",
+        "justify": ""
+      },
+      {
+        "name": "font_08d5a0f916e7494d8d657f7345d270ef",
+        "ranges": [
+          [
+            "9.0",
+            "10.33"
+          ]
+        ],
+        "font_info": {
+          "family": "Courier New",
+          "size": 16,
+          "weight": "normal",
+          "slant": "roman"
+        },
+        "foreground": "#000000",
+        "justify": ""
+      },
+      {
+        "name": "font_aa18486ed17c4f43aadd7552f776dd7d",
+        "ranges": [
+          [
+            "9.0",
+            "10.33"
+          ]
+        ],
+        "font_info": {
+          "family": "Courier New",
+          "size": 17,
+          "weight": "normal",
+          "slant": "roman"
+        },
+        "foreground": "#000000",
+        "justify": ""
+      },
+      {
+        "name": "font_02d24d94c45149ff8689f006095018cf",
+        "ranges": [
+          [
+            "9.0",
+            "10.33"
+          ]
+        ],
+        "font_info": {
+          "family": "Courier New",
+          "size": 18,
+          "weight": "normal",
+          "slant": "roman"
+        },
+        "foreground": "#000000",
+        "justify": ""
+      },
+      {
+        "name": "font_017ec6b2afcb404fb12ab50ef5640564",
+        "ranges": [
+          [
+            "9.0",
+            "10.33"
+          ]
+        ],
+        "font_info": {
+          "family": "Courier New",
+          "size": 18,
+          "weight": "bold",
+          "slant": "roman"
+        },
+        "foreground": "#000000",
+        "justify": ""
+      },
+      {
+        "name": "font_2a93cc9490684e04b2c558e5452c6d50",
+        "ranges": [
+          [
+            "9.0",
+            "10.33"
+          ]
+        ],
+        "font_info": {
+          "family": "Courier New",
+          "size": 19,
+          "weight": "bold",
+          "slant": "roman"
+        },
+        "foreground": "#000000",
+        "justify": ""
+      },
+      {
+        "name": "font_9ab74dc009db46d6a44b2658d95b9308",
+        "ranges": [
+          [
+            "9.0",
+            "10.33"
+          ]
+        ],
+        "font_info": {
+          "family": "Courier New",
+          "size": 20,
+          "weight": "bold",
+          "slant": "roman"
+        },
+        "foreground": "#000000",
+        "justify": ""
+      }
+    ],
+    "data": {},
+    "attachment": {
+      "label": "Stimulus",
+      "color": "yellow",
+      "index": 5
+    }
+  },
+  {
+    "type": "Stimulus",
+    "label": "Stimulus",
+    "color": "yellow",
+    "index": 5,
+    "saved_text": "",
+    "saved_tags": [],
+    "data": {
+      "stimulus_size_mode": "fixed",
+      "stimulus_set": "Faces",
+      "no_target": false,
+      "field_x": 5,
+      "field_y": 5,
+      "fixed_amount": 10,
+      "distractor_type": "negative",
+      "selected_target": "Select from list",
+      "target_image": "images\\faces\\positive\\happy\\100_10.jpg",
+      "distractor_set": "Random"
+    },
+    "last_selections": [
+      {
+        "stimulus_set": "Faces",
+        "stimulus_type": "positive",
+        "path": "selections\\100_10.jpg"
+      }
+    ],
+    "last_distractors": [
+      {
+        "stimulus_set": "Faces",
+        "distractor_type": "negative",
+        "paths": [
+          "distractors\\Sp101.bmp",
+          "distractors\\Sp023.bmp",
+          "distractors\\Sp153.bmp",
+          "distractors\\Sp103.bmp",
+          "distractors\\Sn016.bmp",
+          "distractors\\Sp053.bmp",
+          "distractors\\Sn038.bmp",
+          "distractors\\Sp005.bmp",
+          "distractors\\Sn069.bmp",
+          "distractors\\Sn098.bmp",
+          "distractors\\Sn127.bmp",
+          "distractors\\Sn095.bmp",
+          "distractors\\Sn111.bmp",
+          "distractors\\Sp026.bmp",
+          "distractors\\Sp002.bmp",
+          "distractors\\Sp010.bmp",
+          "distractors\\Sp114.bmp",
+          "distractors\\Sp158.bmp",
+          "distractors\\Sp006.bmp",
+          "distractors\\Sp031.bmp",
+          "distractors\\Sn054.bmp",
+          "distractors\\Sp033.bmp",
+          "distractors\\Sp080.bmp",
+          "distractors\\Sn083.bmp"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "Stimulus notification",
+    "label": "Stimulus notification",
+    "color": "purple",
+    "index": 6,
+    "saved_text": "\n\n\n\n\n\n\n\nPlease click the button\nwhen you see the following image:\n\n[/image/]",
+    "saved_tags": [
+      {
+        "name": "align_55455efb205342389090c3de31dfcde6",
+        "ranges": [
+          [
+            "9.0",
+            "12.9"
+          ]
+        ],
+        "font_info": {
+          "family": "Arial",
+          "size": 12,
+          "weight": "normal",
+          "slant": "roman"
+        },
+        "foreground": "",
+        "justify": "center"
+      },
+      {
+        "name": "color_69023e965329416ebf4a29b08b0158ec",
+        "ranges": [
+          [
+            "9.0",
+            "10.33"
+          ]
+        ],
+        "font_info": {
+          "family": "Arial",
+          "size": 12,
+          "weight": "normal",
+          "slant": "roman"
+        },
+        "foreground": "#000000",
+        "justify": ""
+      },
+      {
+        "name": "font_aeaa45bd314d40c6929ffd3ed317b902",
+        "ranges": [
+          [
+            "9.0",
+            "10.33"
+          ]
+        ],
+        "font_info": {
+          "family": "Courier New",
+          "size": 13,
+          "weight": "normal",
+          "slant": "roman"
+        },
+        "foreground": "#000000",
+        "justify": ""
+      },
+      {
+        "name": "font_91c9fed362854e8599d7d06efec511b6",
+        "ranges": [
+          [
+            "9.0",
+            "10.33"
+          ]
+        ],
+        "font_info": {
+          "family": "Courier New",
+          "size": 14,
+          "weight": "normal",
+          "slant": "roman"
+        },
+        "foreground": "#000000",
+        "justify": ""
+      },
+      {
+        "name": "font_f53e7bae55cc4933afb9151fa71a6cc1",
+        "ranges": [
+          [
+            "9.0",
+            "10.33"
+          ]
+        ],
+        "font_info": {
+          "family": "Courier New",
+          "size": 15,
+          "weight": "normal",
+          "slant": "roman"
+        },
+        "foreground": "#000000",
+        "justify": ""
+      },
+      {
+        "name": "font_08d5a0f916e7494d8d657f7345d270ef",
+        "ranges": [
+          [
+            "9.0",
+            "10.33"
+          ]
+        ],
+        "font_info": {
+          "family": "Courier New",
+          "size": 16,
+          "weight": "normal",
+          "slant": "roman"
+        },
+        "foreground": "#000000",
+        "justify": ""
+      },
+      {
+        "name": "font_aa18486ed17c4f43aadd7552f776dd7d",
+        "ranges": [
+          [
+            "9.0",
+            "10.33"
+          ]
+        ],
+        "font_info": {
+          "family": "Courier New",
+          "size": 17,
+          "weight": "normal",
+          "slant": "roman"
+        },
+        "foreground": "#000000",
+        "justify": ""
+      },
+      {
+        "name": "font_02d24d94c45149ff8689f006095018cf",
+        "ranges": [
+          [
+            "9.0",
+            "10.33"
+          ]
+        ],
+        "font_info": {
+          "family": "Courier New",
+          "size": 18,
+          "weight": "normal",
+          "slant": "roman"
+        },
+        "foreground": "#000000",
+        "justify": ""
+      },
+      {
+        "name": "font_017ec6b2afcb404fb12ab50ef5640564",
+        "ranges": [
+          [
+            "9.0",
+            "10.33"
+          ]
+        ],
+        "font_info": {
+          "family": "Courier New",
+          "size": 18,
+          "weight": "bold",
+          "slant": "roman"
+        },
+        "foreground": "#000000",
+        "justify": ""
+      },
+      {
+        "name": "font_2a93cc9490684e04b2c558e5452c6d50",
+        "ranges": [
+          [
+            "9.0",
+            "10.33"
+          ]
+        ],
+        "font_info": {
+          "family": "Courier New",
+          "size": 19,
+          "weight": "bold",
+          "slant": "roman"
+        },
+        "foreground": "#000000",
+        "justify": ""
+      },
+      {
+        "name": "font_9ab74dc009db46d6a44b2658d95b9308",
+        "ranges": [
+          [
+            "9.0",
+            "10.33"
+          ]
+        ],
+        "font_info": {
+          "family": "Courier New",
+          "size": 20,
+          "weight": "bold",
+          "slant": "roman"
+        },
+        "foreground": "#000000",
+        "justify": ""
+      }
+    ],
+    "data": {},
+    "attachment": {
+      "label": "Stimulus",
+      "color": "yellow",
+      "index": 7
+    }
+  },
+  {
+    "type": "Stimulus",
+    "label": "Stimulus",
+    "color": "yellow",
+    "index": 7,
+    "saved_text": "",
+    "saved_tags": [],
+    "data": {
+      "stimulus_size_mode": "random in range",
+      "stimulus_set": "Images",
+      "no_target": false,
+      "field_x": 5,
+      "field_y": 5,
+      "range_start": 10,
+      "range_end": 15,
+      "target_type": "negative",
+      "selected_target": "Select from list",
+      "target_image": "images\\images\\negative\\Sn\\Sn003.bmp",
+      "distractor_set": "Select set from list"
+    },
+    "last_selections": [
+      {
+        "stimulus_set": "Images",
+        "stimulus_type": "negative",
+        "path": "selections\\Sn003.bmp"
+      }
+    ],
+    "last_distractors": [
+      {
+        "stimulus_set": "Images",
+        "distractor_type": "positive",
+        "paths": [
+          "distractors\\P014.bmp",
+          "distractors\\P003.bmp",
+          "distractors\\P006.bmp",
+          "distractors\\P012.bmp",
+          "distractors\\P001.bmp",
+          "distractors\\P004.bmp",
+          "distractors\\P009.bmp",
+          "distractors\\P011.bmp",
+          "distractors\\P010.bmp",
+          "distractors\\P005.bmp",
+          "distractors\\P013.bmp",
+          "distractors\\P007.bmp",
+          "distractors\\P016.bmp",
+          "distractors\\P015.bmp",
+          "distractors\\P008.bmp"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "Stimulus notification",
+    "label": "Stimulus notification",
+    "color": "purple",
+    "index": 8,
+    "saved_text": "\n\n\n\n\n\n\n\nPlease click the button\nwhen you see the following image:\n\n[/image/]",
+    "saved_tags": [
+      {
+        "name": "align_55455efb205342389090c3de31dfcde6",
+        "ranges": [
+          [
+            "9.0",
+            "12.9"
+          ]
+        ],
+        "font_info": {
+          "family": "Arial",
+          "size": 12,
+          "weight": "normal",
+          "slant": "roman"
+        },
+        "foreground": "",
+        "justify": "center"
+      },
+      {
+        "name": "color_69023e965329416ebf4a29b08b0158ec",
+        "ranges": [
+          [
+            "9.0",
+            "10.33"
+          ]
+        ],
+        "font_info": {
+          "family": "Arial",
+          "size": 12,
+          "weight": "normal",
+          "slant": "roman"
+        },
+        "foreground": "#000000",
+        "justify": ""
+      },
+      {
+        "name": "font_aeaa45bd314d40c6929ffd3ed317b902",
+        "ranges": [
+          [
+            "9.0",
+            "10.33"
+          ]
+        ],
+        "font_info": {
+          "family": "Courier New",
+          "size": 13,
+          "weight": "normal",
+          "slant": "roman"
+        },
+        "foreground": "#000000",
+        "justify": ""
+      },
+      {
+        "name": "font_91c9fed362854e8599d7d06efec511b6",
+        "ranges": [
+          [
+            "9.0",
+            "10.33"
+          ]
+        ],
+        "font_info": {
+          "family": "Courier New",
+          "size": 14,
+          "weight": "normal",
+          "slant": "roman"
+        },
+        "foreground": "#000000",
+        "justify": ""
+      },
+      {
+        "name": "font_f53e7bae55cc4933afb9151fa71a6cc1",
+        "ranges": [
+          [
+            "9.0",
+            "10.33"
+          ]
+        ],
+        "font_info": {
+          "family": "Courier New",
+          "size": 15,
+          "weight": "normal",
+          "slant": "roman"
+        },
+        "foreground": "#000000",
+        "justify": ""
+      },
+      {
+        "name": "font_08d5a0f916e7494d8d657f7345d270ef",
+        "ranges": [
+          [
+            "9.0",
+            "10.33"
+          ]
+        ],
+        "font_info": {
+          "family": "Courier New",
+          "size": 16,
+          "weight": "normal",
+          "slant": "roman"
+        },
+        "foreground": "#000000",
+        "justify": ""
+      },
+      {
+        "name": "font_aa18486ed17c4f43aadd7552f776dd7d",
+        "ranges": [
+          [
+            "9.0",
+            "10.33"
+          ]
+        ],
+        "font_info": {
+          "family": "Courier New",
+          "size": 17,
+          "weight": "normal",
+          "slant": "roman"
+        },
+        "foreground": "#000000",
+        "justify": ""
+      },
+      {
+        "name": "font_02d24d94c45149ff8689f006095018cf",
+        "ranges": [
+          [
+            "9.0",
+            "10.33"
+          ]
+        ],
+        "font_info": {
+          "family": "Courier New",
+          "size": 18,
+          "weight": "normal",
+          "slant": "roman"
+        },
+        "foreground": "#000000",
+        "justify": ""
+      },
+      {
+        "name": "font_017ec6b2afcb404fb12ab50ef5640564",
+        "ranges": [
+          [
+            "9.0",
+            "10.33"
+          ]
+        ],
+        "font_info": {
+          "family": "Courier New",
+          "size": 18,
+          "weight": "bold",
+          "slant": "roman"
+        },
+        "foreground": "#000000",
+        "justify": ""
+      },
+      {
+        "name": "font_2a93cc9490684e04b2c558e5452c6d50",
+        "ranges": [
+          [
+            "9.0",
+            "10.33"
+          ]
+        ],
+        "font_info": {
+          "family": "Courier New",
+          "size": 19,
+          "weight": "bold",
+          "slant": "roman"
+        },
+        "foreground": "#000000",
+        "justify": ""
+      },
+      {
+        "name": "font_9ab74dc009db46d6a44b2658d95b9308",
+        "ranges": [
+          [
+            "9.0",
+            "10.33"
+          ]
+        ],
+        "font_info": {
+          "family": "Courier New",
+          "size": 20,
+          "weight": "bold",
+          "slant": "roman"
+        },
+        "foreground": "#000000",
+        "justify": ""
+      }
+    ],
+    "data": {},
+    "attachment": {
+      "label": "Stimulus",
+      "color": "yellow",
+      "index": 9
+    }
+  },
+  {
+    "type": "Stimulus",
+    "label": "Stimulus",
+    "color": "yellow",
+    "index": 9,
+    "saved_text": "",
+    "saved_tags": [],
+    "data": {
+      "stimulus_size_mode": "random",
+      "stimulus_set": "Faces",
+      "no_target": true,
+      "distractor_type": "negative",
+      "distractor_set": "Select set from list",
+      "field_x": 6,
+      "field_y": 6
+    },
+    "last_selections": [
+      {
+        "stimulus_set": "Faces",
+        "stimulus_type": "positive",
+        "path": "selections\\130_11.jpg"
+      }
+    ],
+    "last_distractors": [
+      {
+        "stimulus_set": "Faces",
+        "distractor_type": "negative",
+        "paths": [
+          "distractors\\107_28.jpg",
+          "distractors\\109_4.jpg",
+          "distractors\\108_19.jpg",
+          "distractors\\101_3.jpg",
+          "distractors\\106_22.jpg",
+          "distractors\\108_24.jpg",
+          "distractors\\105_26.jpg",
+          "distractors\\0_0.jpg",
+          "distractors\\102_17.jpg",
+          "distractors\\108_25.jpg",
+          "distractors\\110_11.jpg",
+          "distractors\\104_7.jpg",
+          "distractors\\10_0.jpg",
+          "distractors\\0_29.jpg",
+          "distractors\\100_29.jpg",
+          "distractors\\100_22.jpg",
+          "distractors\\101_19.jpg",
+          "distractors\\107_32.jpg",
+          "distractors\\105_8.jpg",
+          "distractors\\110_16.jpg",
+          "distractors\\101_32.jpg",
+          "distractors\\105_18.jpg",
+          "distractors\\103_23.jpg",
+          "distractors\\109_5.jpg",
+          "distractors\\100_24.jpg",
+          "distractors\\110_22.jpg",
+          "distractors\\103_16.jpg",
+          "distractors\\10_23.jpg",
+          "distractors\\107_20.jpg",
+          "distractors\\102_34.jpg",
+          "distractors\\10_20.jpg",
+          "distractors\\103_32.jpg",
+          "distractors\\104_17.jpg",
+          "distractors\\106_28.jpg",
+          "distractors\\106_25.jpg",
+          "distractors\\102_20.jpg",
+          "distractors\\109_21.jpg",
+          "distractors\\104_11.jpg",
+          "distractors\\0_25.jpg"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "Stimulus notification",
+    "label": "Stimulus notification",
+    "color": "purple",
+    "index": 10,
+    "saved_text": "\n\n\n\n\n\n\n\nPlease click the button\nwhen you see the following image:\n\n[/image/]",
+    "saved_tags": [
+      {
+        "name": "align_55455efb205342389090c3de31dfcde6",
+        "ranges": [
+          [
+            "9.0",
+            "12.9"
+          ]
+        ],
+        "font_info": {
+          "family": "Arial",
+          "size": 12,
+          "weight": "normal",
+          "slant": "roman"
+        },
+        "foreground": "",
+        "justify": "center"
+      },
+      {
+        "name": "color_69023e965329416ebf4a29b08b0158ec",
+        "ranges": [
+          [
+            "9.0",
+            "10.33"
+          ]
+        ],
+        "font_info": {
+          "family": "Arial",
+          "size": 12,
+          "weight": "normal",
+          "slant": "roman"
+        },
+        "foreground": "#000000",
+        "justify": ""
+      },
+      {
+        "name": "font_aeaa45bd314d40c6929ffd3ed317b902",
+        "ranges": [
+          [
+            "9.0",
+            "10.33"
+          ]
+        ],
+        "font_info": {
+          "family": "Courier New",
+          "size": 13,
+          "weight": "normal",
+          "slant": "roman"
+        },
+        "foreground": "#000000",
+        "justify": ""
+      },
+      {
+        "name": "font_91c9fed362854e8599d7d06efec511b6",
+        "ranges": [
+          [
+            "9.0",
+            "10.33"
+          ]
+        ],
+        "font_info": {
+          "family": "Courier New",
+          "size": 14,
+          "weight": "normal",
+          "slant": "roman"
+        },
+        "foreground": "#000000",
+        "justify": ""
+      },
+      {
+        "name": "font_f53e7bae55cc4933afb9151fa71a6cc1",
+        "ranges": [
+          [
+            "9.0",
+            "10.33"
+          ]
+        ],
+        "font_info": {
+          "family": "Courier New",
+          "size": 15,
+          "weight": "normal",
+          "slant": "roman"
+        },
+        "foreground": "#000000",
+        "justify": ""
+      },
+      {
+        "name": "font_08d5a0f916e7494d8d657f7345d270ef",
+        "ranges": [
+          [
+            "9.0",
+            "10.33"
+          ]
+        ],
+        "font_info": {
+          "family": "Courier New",
+          "size": 16,
+          "weight": "normal",
+          "slant": "roman"
+        },
+        "foreground": "#000000",
+        "justify": ""
+      },
+      {
+        "name": "font_aa18486ed17c4f43aadd7552f776dd7d",
+        "ranges": [
+          [
+            "9.0",
+            "10.33"
+          ]
+        ],
+        "font_info": {
+          "family": "Courier New",
+          "size": 17,
+          "weight": "normal",
+          "slant": "roman"
+        },
+        "foreground": "#000000",
+        "justify": ""
+      },
+      {
+        "name": "font_02d24d94c45149ff8689f006095018cf",
+        "ranges": [
+          [
+            "9.0",
+            "10.33"
+          ]
+        ],
+        "font_info": {
+          "family": "Courier New",
+          "size": 18,
+          "weight": "normal",
+          "slant": "roman"
+        },
+        "foreground": "#000000",
+        "justify": ""
+      },
+      {
+        "name": "font_017ec6b2afcb404fb12ab50ef5640564",
+        "ranges": [
+          [
+            "9.0",
+            "10.33"
+          ]
+        ],
+        "font_info": {
+          "family": "Courier New",
+          "size": 18,
+          "weight": "bold",
+          "slant": "roman"
+        },
+        "foreground": "#000000",
+        "justify": ""
+      },
+      {
+        "name": "font_2a93cc9490684e04b2c558e5452c6d50",
+        "ranges": [
+          [
+            "9.0",
+            "10.33"
+          ]
+        ],
+        "font_info": {
+          "family": "Courier New",
+          "size": 19,
+          "weight": "bold",
+          "slant": "roman"
+        },
+        "foreground": "#000000",
+        "justify": ""
+      },
+      {
+        "name": "font_9ab74dc009db46d6a44b2658d95b9308",
+        "ranges": [
+          [
+            "9.0",
+            "10.33"
+          ]
+        ],
+        "font_info": {
+          "family": "Courier New",
+          "size": 20,
+          "weight": "bold",
+          "slant": "roman"
+        },
+        "foreground": "#000000",
+        "justify": ""
+      }
+    ],
+    "data": {},
+    "attachment": {
+      "label": "Stimulus",
+      "color": "yellow",
+      "index": 11
+    }
+  },
+  {
+    "type": "Stimulus",
+    "label": "Stimulus",
+    "color": "yellow",
+    "index": 11,
+    "saved_text": "",
+    "saved_tags": [],
+    "data": {
+      "stimulus_size_mode": "fixed",
+      "stimulus_set": "Faces",
+      "no_target": false,
+      "distractor_type": "negative",
+      "distractor_set": "Random",
+      "field_x": 5,
+      "field_y": 5,
+      "fixed_amount": 15,
+      "selected_target": "Select from list",
+      "target_image": "images\\faces\\positive\\happy\\0_19.jpg"
+    },
+    "last_selections": [
+      {
+        "stimulus_set": "Faces",
+        "stimulus_type": "positive",
+        "path": "selections\\0_19.jpg"
+      }
+    ],
+    "last_distractors": [
+      {
+        "stimulus_set": "Faces",
+        "distractor_type": "negative",
+        "paths": [
+          "distractors\\32_7.jpg",
+          "distractors\\127_6.jpg",
+          "distractors\\135_2.jpg",
+          "distractors\\5_0.jpg",
+          "distractors\\73_14.jpg",
+          "distractors\\52_9.jpg",
+          "distractors\\70_0.jpg",
+          "distractors\\100_5.jpg",
+          "distractors\\60_10.jpg",
+          "distractors\\63_5.jpg",
+          "distractors\\92_26.jpg",
+          "distractors\\96_11.jpg",
+          "distractors\\41_23.jpg",
+          "distractors\\43_19.jpg",
+          "distractors\\13_18.jpg",
+          "distractors\\108_23.jpg",
+          "distractors\\65_30.jpg",
+          "distractors\\81_24.jpg",
+          "distractors\\59_12.jpg",
+          "distractors\\66_3.jpg",
+          "distractors\\132_16.jpg",
+          "distractors\\53_24.jpg",
+          "distractors\\28_24.jpg",
+          "distractors\\113_9.jpg"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "End",
+    "label": "End",
+    "color": "red",
+    "index": 12,
+    "saved_text": "\n\n\n\n\n\n\n\n\nThank you for participaing in the experiment!",
+    "saved_tags": [
+      {
+        "name": "color_4a4ad6e8d4a64fc0aeb86ef16b8bc05c",
+        "ranges": [
+          [
+            "10.0",
+            "10.45"
+          ]
+        ],
+        "font_info": {
+          "family": "Arial",
+          "size": 12,
+          "weight": "normal",
+          "slant": "roman"
+        },
+        "foreground": "#000000",
+        "justify": ""
+      },
+      {
+        "name": "align_bc4e90be6b1f4ed6941ac1b7aaed4969",
+        "ranges": [
+          [
+            "10.0",
+            "10.45"
+          ]
+        ],
+        "font_info": {
+          "family": "Arial",
+          "size": 12,
+          "weight": "normal",
+          "slant": "roman"
+        },
+        "foreground": "",
+        "justify": "center"
+      },
+      {
+        "name": "font_4ca30fdd120d428da9c2e9e15fa5b8c9",
+        "ranges": [
+          [
+            "10.0",
+            "10.45"
+          ]
+        ],
+        "font_info": {
+          "family": "Courier New",
+          "size": 13,
+          "weight": "normal",
+          "slant": "roman"
+        },
+        "foreground": "#000000",
+        "justify": ""
+      },
+      {
+        "name": "font_70284131876b4d3391a8804fbefdb3c9",
+        "ranges": [
+          [
+            "10.0",
+            "10.45"
+          ]
+        ],
+        "font_info": {
+          "family": "Courier New",
+          "size": 14,
+          "weight": "normal",
+          "slant": "roman"
+        },
+        "foreground": "#000000",
+        "justify": ""
+      },
+      {
+        "name": "font_679cb400f3854d178f43bc93ed4056ba",
+        "ranges": [
+          [
+            "10.0",
+            "10.45"
+          ]
+        ],
+        "font_info": {
+          "family": "Courier New",
+          "size": 15,
+          "weight": "normal",
+          "slant": "roman"
+        },
+        "foreground": "#000000",
+        "justify": ""
+      },
+      {
+        "name": "font_d42ff203d4134c37854a77850fab0352",
+        "ranges": [
+          [
+            "10.0",
+            "10.45"
+          ]
+        ],
+        "font_info": {
+          "family": "Courier New",
+          "size": 16,
+          "weight": "normal",
+          "slant": "roman"
+        },
+        "foreground": "#000000",
+        "justify": ""
+      },
+      {
+        "name": "font_fee6bf7af6a34ac9afc4a3fff19a8b08",
+        "ranges": [
+          [
+            "10.0",
+            "10.45"
+          ]
+        ],
+        "font_info": {
+          "family": "Courier New",
+          "size": 16,
+          "weight": "bold",
+          "slant": "roman"
+        },
+        "foreground": "#000000",
+        "justify": ""
+      },
+      {
+        "name": "font_259d42b874c442428797be82f8d13f52",
+        "ranges": [
+          [
+            "10.0",
+            "10.45"
+          ]
+        ],
+        "font_info": {
+          "family": "Courier New",
+          "size": 17,
+          "weight": "bold",
+          "slant": "roman"
+        },
+        "foreground": "#000000",
+        "justify": ""
+      },
+      {
+        "name": "font_80e81ebff7a94791b6042e4a6a3e808c",
+        "ranges": [
+          [
+            "10.0",
+            "10.45"
+          ]
+        ],
+        "font_info": {
+          "family": "Courier New",
+          "size": 18,
+          "weight": "bold",
+          "slant": "roman"
+        },
+        "foreground": "#000000",
+        "justify": ""
+      },
+      {
+        "name": "font_a199fb7cc49e4520bc9f3db872ce2611",
+        "ranges": [
+          [
+            "10.0",
+            "10.45"
+          ]
+        ],
+        "font_info": {
+          "family": "Courier New",
+          "size": 19,
+          "weight": "bold",
+          "slant": "roman"
+        },
+        "foreground": "#000000",
+        "justify": ""
+      },
+      {
+        "name": "font_4fa4b54dfc6b42648c5d481404e35950",
+        "ranges": [
+          [
+            "10.0",
+            "10.45"
+          ]
+        ],
+        "font_info": {
+          "family": "Courier New",
+          "size": 20,
+          "weight": "bold",
+          "slant": "roman"
+        },
+        "foreground": "#000000",
+        "justify": ""
+      }
+    ],
+    "data": {}
+  }
+]

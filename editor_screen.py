@@ -345,14 +345,23 @@ def show_editor_screen(app):
     app.timeline_components = []
     app.timeline_spacing = 100  # horizontal space between blocks
     app.selected_component = None
+
    # Create a canvas that will act as a horizontally scrollable container
-    timeline_canvas = tk.Canvas(app.root, bg="white", bd=2, relief="flat", height=80)
-    timeline_canvas.place(relx=0.025, rely=0.7, relwidth=0.7, relheight=0.2)
+    timeline_canvas = tk.Canvas(app.root, bg="white", bd=2, relief="flat", height=140)
+    app.root.update_idletasks()  
+    curr_h = app.root.winfo_height()
+    # prevent the user from ever resizing the window smaller than this
+    app.root.minsize(800, curr_h)
+    timeline_canvas.place(relx=0.025, rely=0.7, relwidth=0.7, height=140)
 
     # Create a horizontal scrollbar linked to the canvas
     scrollbar = tk.Scrollbar(app.root, orient="horizontal", command=timeline_canvas.xview)
-    # Place the scrollbar at the bottom of the canvas
-    scrollbar.place(relx=0.025, rely=0.9, relwidth=0.7)
+    scrollbar.place(
+        relx=0.025,
+        rely=0.7 + 140/curr_h,    # curr_h is your root.winfo_height() from earlier
+        relwidth=0.7,
+        height=15                # or however thick you like your scrollbar
+    )
     timeline_canvas.configure(xscrollcommand=scrollbar.set)
 
     timeline_container = tk.Frame(timeline_canvas, bg="white", width=580, height=100)
@@ -363,6 +372,20 @@ def show_editor_screen(app):
         "<Configure>",
         lambda e: timeline_canvas.configure(scrollregion=timeline_canvas.bbox("all"))
     )
+    # 1) scroll handler
+    def _on_mousewheel(event):
+        timeline_canvas.xview_scroll(int(-1 * (event.delta / 120)), "units")
+
+    # 2) hover-based binding
+    def _bind_scroll(_):
+        app.root.bind_all("<MouseWheel>", _on_mousewheel)
+    def _unbind_scroll(_):
+        app.root.unbind_all("<MouseWheel>")
+
+    for w in (timeline_canvas, scrollbar):
+        w.bind("<Enter>", _bind_scroll)
+        w.bind("<Leave>", _unbind_scroll)
+
     app.timeline_canvas = timeline_canvas
     app.timeline_container = timeline_container
     def update_timeline_container_size():

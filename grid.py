@@ -75,7 +75,17 @@ def setup_field_grid(main_panel, comp):
             comp._distractor_positions = [cell for cell in sampled if cell != tgt]
 
     def draw_grid(event=None):
-        canvas.delete("grid", "distractor", "target", "header")
+        # if the canvas has been destroyed, just stop
+        if not canvas.winfo_exists():
+            return
+
+        # 2) Otherwise safe to delete old items
+        try:
+            canvas.delete("grid", "distractor", "target", "header")
+        except tk.TclError:
+            # in case someone else nuked it behind our back
+            canvas.unbind("<Configure>")
+            return
 
         cols = comp.data.get("field_x", 10)
         rows = comp.data.get("field_y", 10)

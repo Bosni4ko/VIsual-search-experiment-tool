@@ -4,20 +4,7 @@
   "save_location": "C:\\Users\\User\\Desktop\\mag\\Program\\experiments",
   "metadata": [
     {
-      "name": "a",
-      "type": "List",
-      "value": [
-        "1-1000",
-        "1000+"
-      ]
-    },
-    {
-      "name": "b",
-      "type": "Value",
-      "value": "N/A"
-    },
-    {
-      "name": "c",
+      "name": "Value",
       "type": "Value",
       "value": "N/A"
     }

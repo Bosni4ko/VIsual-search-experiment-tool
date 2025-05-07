@@ -367,6 +367,8 @@ def show_editor_screen(app):
     def on_root_resize(event):
         # canvas keeps its fixed 140px height,
         # so scrollbar always sits right below it
+        if not timeline_canvas.winfo_exists():
+            return
         y_pixel = timeline_canvas.winfo_y() + timeline_canvas.winfo_height()
         app.scrollbar.place_configure(y=y_pixel)
 

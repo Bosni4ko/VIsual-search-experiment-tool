@@ -366,7 +366,7 @@ def show_editor_screen(app):
 
     timeline_container = tk.Frame(timeline_canvas, bg="white", width=580, height=100)
     timeline_canvas.create_window((10, 0), window=timeline_container, anchor="nw")
-
+    
     # Update the scroll region whenever the size of timeline_container changes
     timeline_container.bind(
         "<Configure>",
@@ -718,8 +718,12 @@ def show_editor_screen(app):
             save_visual_search_experiment(app, app.saved_save_location)
             messagebox.showinfo("Success", "Experiment created successfully!")
 
+    app.root.update_idletasks()
+    base_rely = 0.7      # that’s where your timeline starts
+    step      = 0.05     # gap
     create_button = tk.Button(app.root, text="Create", font=("Segoe UI", 12), bg="#fef6f6", width=12, command=on_create)
-    create_button.place(relx=0.82, rely=0.8)
+    h = create_button.winfo_reqheight()  # button’s height
+    create_button.place(relx=0.82, rely=base_rely)
 
 
 # --- Added: removal logic and button ---
@@ -766,7 +770,7 @@ def show_editor_screen(app):
         width=12,
         command=remove_selected_component
     )
-    remove_button.place(relx=0.82, rely=0.85)
+    remove_button.place(relx=0.82, rely=base_rely+step)
     # --- end added ---
     
     # Back buttton
@@ -775,4 +779,4 @@ def show_editor_screen(app):
         app.show_create_screen()
 
     back_btn = tk.Button(app.root, text="←", font=("Arial", 16), bg="#fef6f6", command=on_back)
-    back_btn.place(relx=0.82, rely=0.9)
+    back_btn.place(relx=0.82, rely=base_rely+2*step)

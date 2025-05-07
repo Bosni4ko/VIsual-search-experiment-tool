@@ -294,7 +294,6 @@ def load_timeline_state(app):
 
         # Restore main data
         block.data = item.get("data", {})
-
         # Rebuild last_selections map with tuple keys
         block.data["last_selections"] = {}
         for rec in item.get("last_selections", []):
@@ -721,7 +720,7 @@ def show_editor_screen(app):
 
             # Rerender
             render_timeline()
-            app.select_component(notification) 
+            #app.select_component(notification) 
             return 
         
         if index == 0 and component_type != "Start":
@@ -732,12 +731,12 @@ def show_editor_screen(app):
 
         # Rerender
         render_timeline()
-        app.select_component(new_block)
+        #app.select_component(new_block)
 
     app.insert_component = insert_component
     load_timeline_state(app)
-    render_timeline()
 
+    render_timeline()
     # after loading & initial render, add Start only if JSON didn't have one
     if not any(b.component_type == "Start" for b in app.timeline_components):
         start_block = ComponentBlock(

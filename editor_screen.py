@@ -5,6 +5,7 @@ import os
 from PIL import Image
 from tkinter import messagebox
 from random import sample
+from styles import apply_theme
 
 from component_block import ComponentBlock
 from palette import setup_components_palette
@@ -352,7 +353,7 @@ def show_editor_screen(app):
     curr_h = app.root.winfo_height()
     # prevent the user from ever resizing the window smaller than this
     app.root.minsize(800, curr_h)
-    timeline_canvas.place(relx=0.025, rely=0.7, relwidth=0.7, height=140)
+    timeline_canvas.place(relx=0.025, rely=0.75, relwidth=0.7, height=140)
 
     # Create a horizontal scrollbar linked to the canvas
     scrollbar = tk.Scrollbar(app.root, orient="horizontal", command=timeline_canvas.xview)
@@ -480,7 +481,7 @@ def show_editor_screen(app):
     main_panel_relwidth = overall_relwidth - left_panel_relwidth - gap
     main_panel = tk.Frame(app.root, bg="white", bd=2, relief="flat")
     main_panel.place(relx=main_panel_relx, rely=overall_rely, relwidth=main_panel_relwidth, relheight=overall_relheight)
-
+    style = apply_theme(app.root)
     # This function is used to mark a component as selected and set up the editor panels accordingly.
     def select_component(comp):
         prev = getattr(app, 'selected_component', None)
@@ -753,11 +754,49 @@ def show_editor_screen(app):
             messagebox.showinfo("Success", "Experiment created successfully!")
 
     app.root.update_idletasks()
-    base_rely = 0.7      # that’s where your timeline starts
+    base_rely = 0.75      # that’s where your timeline starts
     step      = 0.05     # gap
-    create_button = tk.Button(app.root, text="Create", font=("Segoe UI", 12), bg="#fef6f6", width=12, command=on_create)
+    def style_button(btn,
+                    bg="#f8f8f8",
+                    fg="#333333",
+                    activebg="#e0e0e0",
+                    activefg="#333333",
+                    bd=1,
+                    relief="raised",
+                    font=("Segoe UI", 14, "bold")):
+        btn.configure(
+            bg=bg,
+            fg=fg,
+            activebackground=activebg,
+            activeforeground=activefg,
+            bd=bd,
+            relief=relief,
+            font=font,
+            highlightthickness=0,
+            cursor="hand2",
+        )
+        def on_enter(e):
+            btn['bg'] = activebg
+        def on_leave(e):
+            btn['bg'] = bg
+        btn.bind("<Enter>", on_enter)
+        btn.bind("<Leave>", on_leave)
+
+    # uniform font for all
+    COMMON_FONT = ("Segoe UI", 14, "bold")
+
+    create_button = tk.Button(app.root, text=app.tr("create"), font=("Segoe UI", 12), bg="#fef6f6", width=12, command=on_create)
     h = create_button.winfo_reqheight()  # button’s height
-    create_button.place(relx=0.82, rely=base_rely)
+    style_button(
+        create_button,
+        bg="#fef6f6",
+        activebg="#d0f0d0",      # light green on hover
+        font=COMMON_FONT
+    )
+    create_button.place(
+        relx=0.82, rely=base_rely,
+        relwidth=0.15, relheight=0.055
+    )
 
 
 # --- Added: removal logic and button ---
@@ -804,7 +843,18 @@ def show_editor_screen(app):
         width=12,
         command=remove_selected_component
     )
-    remove_button.place(relx=0.82, rely=base_rely+step)
+    style_button(
+        remove_button,
+        bg="#fdecea",            # light red base
+        fg="#a94442",            # dark red text
+        activebg="#f8d7da",      # richer red on hover
+        activefg="#a94442",
+        font=COMMON_FONT
+    )
+    remove_button.place(
+        relx=0.82, rely=base_rely + step,
+        relwidth=0.15, relheight=0.055
+    )
     # --- end added ---
     
     # Back buttton
@@ -813,4 +863,13 @@ def show_editor_screen(app):
         app.show_create_screen()
 
     back_btn = tk.Button(app.root, text="←", font=("Arial", 16), bg="#fef6f6", command=on_back)
-    back_btn.place(relx=0.82, rely=base_rely+2*step)
+    style_button(
+        back_btn,
+        bg="#fef6f6",
+        activebg="#e0e0e0",
+        font=COMMON_FONT
+    )
+    back_btn.place(
+        relx=0.82, rely=base_rely + 2*step,
+        relwidth=0.15, relheight=0.055
+    )

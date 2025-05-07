@@ -3,6 +3,7 @@ from tkinter import ttk, filedialog
 import json
 import os
 from running_session_screen import show_running_session_screen
+from styles import SELECT_METADATA
 
 
 def show_experiment_session_start(app, experiment_name, experiment_path, continue_mode=False):
@@ -132,6 +133,8 @@ def show_experiment_session_start(app, experiment_name, experiment_path, continu
         textvariable=app.language_var,
         values=app.languages,
         state="readonly",
+        font=SELECT_METADATA,
+        style="Language.TCombobox",
         width=12
     )
     lang_dropdown.pack(side="left")

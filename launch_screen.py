@@ -4,6 +4,7 @@ from experiment_session_start import show_experiment_session_start
 import os
 import json
 from tkinter import messagebox
+from styles import SELECT_METADATA
 
 
 def show_launch_screen(app):
@@ -58,6 +59,8 @@ def show_launch_screen(app):
         textvariable=app.language_var,
         values=app.languages,
         state="readonly",
+        font=SELECT_METADATA,
+        style="Language.TCombobox",
         width=12
     )
     lang_dropdown.pack(side="left")

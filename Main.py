@@ -86,6 +86,26 @@ class ExperimentApp:
         self.imported_stimulus_sets = {}
         self.load_create_screen_state()
         self.show_main_screen()
+
+        self.fullscreen = False
+        self.root.bind('<F11>', self.toggle_fullscreen)
+        self.root.bind('<Escape>', self.exit_fullscreen)
+
+        self.root.title("Emotional Visual Search Experiment Launcher")
+
+    def toggle_fullscreen(self, event=None):
+        """
+        Toggle fullscreen mode on or off.
+        """
+        self.fullscreen = not self.fullscreen
+        self.root.attributes('-fullscreen', self.fullscreen)
+
+    def exit_fullscreen(self, event=None):
+        """
+        Exit fullscreen mode.
+        """
+        self.fullscreen = False
+        self.root.attributes('-fullscreen', False)
     def tr(self, key):
         return self.translations[self.current_language].get(key, key)
 

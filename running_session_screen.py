@@ -89,13 +89,25 @@ def render_current_component(app):
 
     # === Handling Different Component Types ===
     if component['type'] in ["Start", "Text", "Stimulus notification", "End"]:
-        # --- Text-based components ---
+        # compute a square side a bit smaller than the window height
+        app.root.update_idletasks()
+        win_h = app.root.winfo_height() or app.root.winfo_screenheight()
+        padding = 40                            # 20px top + 20px bottom
+        side = max(100, win_h - padding)       # ensure it's not too small
+
+        # create an invisible square container, centered
+        square = tk.Frame(main_frame,
+                          width=side,
+                          height=side,
+                          bg="#d0d0d0")
+        square.pack(expand=True)
+        square.pack_propagate(False)           # don’t let it resize itself
+
+        # now put the Text widget inside that square
         text_widget = tk.Text(
-            main_frame,
+            square,
             font=("Segoe UI", 16),
             wrap="word",
-            width=80,
-            height=20,
             bg="#d0d0d0",
             bd=0,
             highlightthickness=0,

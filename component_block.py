@@ -4,7 +4,7 @@ import tkinter as tk
 class ComponentBlock(tk.Frame):
     def __init__(self, app, parent, label, color, x=0, y=0, 
                  from_timeline=False, preview=False, attachment=None, component_type=None):
-        super().__init__(parent, width=80, height=60, bg=color, 
+        super().__init__(parent, width=100, height=80, bg=color, 
                          highlightbackground="black", highlightthickness=1)
         self.app = app  # Store a reference to the application
         self.label_text = label
@@ -15,20 +15,20 @@ class ComponentBlock(tk.Frame):
         self.place(x=x, y=y)
         self.attachment = attachment  # can be another ComponentBlock or None
         self.component_type = component_type or label
-        self.label_offset_y = 65  # vertical offset for text below the block
+        self.label_offset_y = 85  # vertical offset for text below the block
         self.data = {}
         self.saved_text = ""
         self.saved_tags = []
 
         # Hidden internal label inside block
         self.label_widget = tk.Label(self, text="", bg=color)
-        self.label_widget.place(relx=0.5, rely=0.5, anchor="center")
+        self.label_widget.place(relx=0.5, rely=0.7, anchor="center")
 
         if self.from_timeline and not self.preview:
             # Editable entry for timeline blocks
             self.name_var = tk.StringVar(value=self.label_text)
             self.name_entry = tk.Entry(parent, textvariable=self.name_var, 
-                                       font=("Segoe UI", 9), width=10, justify="center")
+                                       font=("Segoe UI", 12, "bold"), justify="center")
             self.name_entry.place(x=x, y=y + self.label_offset_y)
             self.name_entry.bind("<Return>", self.update_label)
             self.name_entry.bind("<FocusOut>", self.update_label)

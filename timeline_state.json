@@ -352,245 +352,243 @@
     "last_distractors": []
   },
   {
-    "type": "Stimulus",
-    "label": "Stimuls",
-    "color": "yellow",
+    "type": "Text",
+    "label": "Text",
+    "color": "gray",
     "index": 1,
     "saved_text": "",
     "saved_tags": [],
-    "data": {
-      "stimulus_size_mode": "random",
-      "stimulus_set": "Faces",
-      "no_target": false,
-      "field_x": 5,
-      "field_y": 5,
-      "distractor_type": "negative",
-      "selected_target": "Select from list",
-      "distractor_set": "Select set from list",
-      "target_type": "positive",
-      "target_image": "images\\images\\positive\\P\\P005.bmp"
-    },
-    "last_selections": [
+    "data": {},
+    "last_selections": [],
+    "last_distractors": []
+  },
+  {
+    "type": "Text",
+    "label": "Text",
+    "color": "gray",
+    "index": 2,
+    "saved_text": "",
+    "saved_tags": [],
+    "data": {},
+    "last_selections": [],
+    "last_distractors": []
+  },
+  {
+    "type": "Stimulus notification",
+    "label": "Stimulus notification",
+    "color": "purple",
+    "index": 3,
+    "saved_text": "\n\n\n\n\n\n\n\nPlease click the button\nwhen you see the following image:\n\n[/image/]",
+    "saved_tags": [
       {
-        "stimulus_set": "Faces",
-        "stimulus_type": "positive",
-        "path": "images\\faces\\positive\\happy\\100_21.jpg"
+        "name": "align_55455efb205342389090c3de31dfcde6",
+        "ranges": [
+          [
+            "9.0",
+            "12.9"
+          ]
+        ],
+        "font_info": {
+          "family": "Arial",
+          "size": 12,
+          "weight": "normal",
+          "slant": "roman"
+        },
+        "foreground": "",
+        "justify": "center"
+      },
+      {
+        "name": "color_69023e965329416ebf4a29b08b0158ec",
+        "ranges": [
+          [
+            "9.0",
+            "10.33"
+          ]
+        ],
+        "font_info": {
+          "family": "Arial",
+          "size": 12,
+          "weight": "normal",
+          "slant": "roman"
+        },
+        "foreground": "#000000",
+        "justify": ""
+      },
+      {
+        "name": "font_aeaa45bd314d40c6929ffd3ed317b902",
+        "ranges": [
+          [
+            "9.0",
+            "10.33"
+          ]
+        ],
+        "font_info": {
+          "family": "Courier New",
+          "size": 13,
+          "weight": "normal",
+          "slant": "roman"
+        },
+        "foreground": "#000000",
+        "justify": ""
+      },
+      {
+        "name": "font_91c9fed362854e8599d7d06efec511b6",
+        "ranges": [
+          [
+            "9.0",
+            "10.33"
+          ]
+        ],
+        "font_info": {
+          "family": "Courier New",
+          "size": 14,
+          "weight": "normal",
+          "slant": "roman"
+        },
+        "foreground": "#000000",
+        "justify": ""
+      },
+      {
+        "name": "font_f53e7bae55cc4933afb9151fa71a6cc1",
+        "ranges": [
+          [
+            "9.0",
+            "10.33"
+          ]
+        ],
+        "font_info": {
+          "family": "Courier New",
+          "size": 15,
+          "weight": "normal",
+          "slant": "roman"
+        },
+        "foreground": "#000000",
+        "justify": ""
+      },
+      {
+        "name": "font_08d5a0f916e7494d8d657f7345d270ef",
+        "ranges": [
+          [
+            "9.0",
+            "10.33"
+          ]
+        ],
+        "font_info": {
+          "family": "Courier New",
+          "size": 16,
+          "weight": "normal",
+          "slant": "roman"
+        },
+        "foreground": "#000000",
+        "justify": ""
+      },
+      {
+        "name": "font_aa18486ed17c4f43aadd7552f776dd7d",
+        "ranges": [
+          [
+            "9.0",
+            "10.33"
+          ]
+        ],
+        "font_info": {
+          "family": "Courier New",
+          "size": 17,
+          "weight": "normal",
+          "slant": "roman"
+        },
+        "foreground": "#000000",
+        "justify": ""
+      },
+      {
+        "name": "font_02d24d94c45149ff8689f006095018cf",
+        "ranges": [
+          [
+            "9.0",
+            "10.33"
+          ]
+        ],
+        "font_info": {
+          "family": "Courier New",
+          "size": 18,
+          "weight": "normal",
+          "slant": "roman"
+        },
+        "foreground": "#000000",
+        "justify": ""
+      },
+      {
+        "name": "font_017ec6b2afcb404fb12ab50ef5640564",
+        "ranges": [
+          [
+            "9.0",
+            "10.33"
+          ]
+        ],
+        "font_info": {
+          "family": "Courier New",
+          "size": 18,
+          "weight": "bold",
+          "slant": "roman"
+        },
+        "foreground": "#000000",
+        "justify": ""
+      },
+      {
+        "name": "font_2a93cc9490684e04b2c558e5452c6d50",
+        "ranges": [
+          [
+            "9.0",
+            "10.33"
+          ]
+        ],
+        "font_info": {
+          "family": "Courier New",
+          "size": 19,
+          "weight": "bold",
+          "slant": "roman"
+        },
+        "foreground": "#000000",
+        "justify": ""
+      },
+      {
+        "name": "font_9ab74dc009db46d6a44b2658d95b9308",
+        "ranges": [
+          [
+            "9.0",
+            "10.33"
+          ]
+        ],
+        "font_info": {
+          "family": "Courier New",
+          "size": 20,
+          "weight": "bold",
+          "slant": "roman"
+        },
+        "foreground": "#000000",
+        "justify": ""
       }
     ],
-    "last_distractors": [
-      {
-        "stimulus_set": "Faces",
-        "distractor_type": "negative",
-        "paths": [
-          "images\\faces\\negative\\angry\\100_22.jpg",
-          "images\\faces\\negative\\disgust\\126_23.jpg",
-          "images\\faces\\negative\\disgust\\124_7.jpg",
-          "images\\faces\\negative\\disgust\\125_26.jpg",
-          "images\\faces\\negative\\disgust\\121_8.jpg",
-          "images\\faces\\negative\\disgust\\127_25.jpg",
-          "images\\faces\\negative\\disgust\\122_1.jpg",
-          "images\\faces\\negative\\disgust\\123_33.jpg",
-          "images\\faces\\negative\\disgust\\124_9.jpg",
-          "images\\faces\\negative\\angry\\100_24.jpg",
-          "images\\faces\\negative\\disgust\\122_4.jpg",
-          "images\\faces\\negative\\disgust\\125_22.jpg",
-          "images\\faces\\negative\\disgust\\128_2.jpg",
-          "images\\faces\\negative\\disgust\\127_29.jpg",
-          "images\\faces\\negative\\disgust\\126_4.jpg",
-          "images\\faces\\negative\\disgust\\125_1.jpg",
-          "images\\faces\\negative\\disgust\\122_14.jpg",
-          "images\\faces\\negative\\angry\\0_0.jpg",
-          "images\\faces\\negative\\disgust\\127_12.jpg",
-          "images\\faces\\negative\\disgust\\124_19.jpg",
-          "images\\faces\\negative\\disgust\\123_12.jpg",
-          "images\\faces\\negative\\angry\\0_25.jpg",
-          "images\\faces\\negative\\angry\\0_29.jpg",
-          "images\\faces\\negative\\disgust\\126_24.jpg"
-        ]
-      }
-    ]
+    "data": {},
+    "last_selections": [],
+    "last_distractors": [],
+    "attachment": {
+      "label": "Stimulus",
+      "color": "yellow",
+      "index": 4
+    }
   },
   {
     "type": "Stimulus",
     "label": "Stimulus",
     "color": "yellow",
-    "index": 2,
+    "index": 4,
     "saved_text": "",
     "saved_tags": [],
     "data": {
       "stimulus_size_mode": "random",
       "stimulus_set": "Images",
-      "no_target": false,
-      "distractor_set": "Select set from list",
-      "selected_target": "Select from list",
-      "distractor_type": "negative"
+      "no_target": false
     },
-    "last_selections": [
-      {
-        "stimulus_set": "Images",
-        "stimulus_type": "positive",
-        "path": "images\\images\\positive\\P\\P001.bmp"
-      }
-    ],
-    "last_distractors": [
-      {
-        "stimulus_set": "Images",
-        "distractor_type": "negative",
-        "paths": [
-          "images\\images\\negative\\Sn\\Sn010.bmp",
-          "images\\images\\negative\\Sn\\Sn034.bmp",
-          "images\\images\\negative\\Sn\\Sn013.bmp",
-          "images\\images\\negative\\Sn\\Sn014.bmp",
-          "images\\images\\negative\\Sn\\Sn035.bmp",
-          "images\\images\\negative\\Sn\\Sn048.bmp",
-          "images\\images\\negative\\Sn\\Sn001.bmp",
-          "images\\images\\negative\\Sn\\Sn017.bmp",
-          "images\\images\\negative\\Sn\\Sn028.bmp",
-          "images\\images\\negative\\Sn\\Sn025.bmp",
-          "images\\images\\negative\\Sn\\Sn043.bmp",
-          "images\\images\\negative\\Sn\\Sn052.bmp",
-          "images\\images\\negative\\Sn\\Sn008.bmp",
-          "images\\images\\negative\\Sn\\Sn004.bmp",
-          "images\\images\\negative\\Sn\\Sn009.bmp",
-          "images\\images\\negative\\Sn\\Sn038.bmp",
-          "images\\images\\negative\\Sn\\Sn002.bmp",
-          "images\\images\\negative\\Sn\\Sn039.bmp",
-          "images\\images\\negative\\Sn\\Sn016.bmp",
-          "images\\images\\negative\\Sn\\Sn026.bmp",
-          "images\\images\\negative\\Sn\\Sn023.bmp",
-          "images\\images\\negative\\Sn\\Sn007.bmp",
-          "images\\images\\negative\\Sn\\Sn046.bmp",
-          "images\\images\\negative\\Sn\\Sn005.bmp",
-          "images\\images\\negative\\Sn\\Sn015.bmp",
-          "images\\images\\negative\\Sn\\Sn045.bmp",
-          "images\\images\\negative\\Sn\\Sn011.bmp",
-          "images\\images\\negative\\Sn\\Sn029.bmp",
-          "images\\images\\negative\\Sn\\Sn022.bmp",
-          "images\\images\\negative\\Sn\\Sn027.bmp",
-          "images\\images\\negative\\Sn\\Sn053.bmp",
-          "images\\images\\negative\\Sn\\Sn050.bmp",
-          "images\\images\\negative\\Sn\\Sn020.bmp",
-          "images\\images\\negative\\Sn\\Sn044.bmp",
-          "images\\images\\negative\\Sn\\Sn024.bmp",
-          "images\\images\\negative\\Sn\\Sn049.bmp",
-          "images\\images\\negative\\Sn\\Sn051.bmp",
-          "images\\images\\negative\\Sn\\Sn047.bmp",
-          "images\\images\\negative\\Sn\\Sn042.bmp",
-          "images\\images\\negative\\Sn\\Sn018.bmp",
-          "images\\images\\negative\\Sn\\Sn036.bmp",
-          "images\\images\\negative\\Sn\\Sn033.bmp",
-          "images\\images\\negative\\Sn\\Sn021.bmp",
-          "images\\images\\negative\\Sn\\Sn037.bmp",
-          "images\\images\\negative\\Sn\\Sn030.bmp",
-          "images\\images\\negative\\Sn\\Sn040.bmp",
-          "images\\images\\negative\\Sn\\Sn019.bmp",
-          "images\\images\\negative\\Sn\\Sn054.bmp",
-          "images\\images\\negative\\Sn\\Sn006.bmp",
-          "images\\images\\negative\\Sn\\Sn012.bmp",
-          "images\\images\\negative\\Sn\\Sn041.bmp",
-          "images\\images\\negative\\Sn\\Sn003.bmp",
-          "images\\images\\negative\\Sn\\Sn032.bmp",
-          "images\\images\\negative\\Sn\\Sn031.bmp"
-        ]
-      }
-    ]
-  },
-  {
-    "type": "Text",
-    "label": "Text",
-    "color": "gray",
-    "index": 3,
-    "saved_text": "",
-    "saved_tags": [],
-    "data": {},
-    "last_selections": [],
-    "last_distractors": []
-  },
-  {
-    "type": "Text",
-    "label": "Text",
-    "color": "gray",
-    "index": 4,
-    "saved_text": "",
-    "saved_tags": [],
-    "data": {},
-    "last_selections": [],
-    "last_distractors": []
-  },
-  {
-    "type": "Text",
-    "label": "Text",
-    "color": "gray",
-    "index": 5,
-    "saved_text": "",
-    "saved_tags": [],
-    "data": {},
-    "last_selections": [],
-    "last_distractors": []
-  },
-  {
-    "type": "Text",
-    "label": "Text",
-    "color": "gray",
-    "index": 6,
-    "saved_text": "",
-    "saved_tags": [],
-    "data": {},
-    "last_selections": [],
-    "last_distractors": []
-  },
-  {
-    "type": "Text",
-    "label": "Text",
-    "color": "gray",
-    "index": 7,
-    "saved_text": "",
-    "saved_tags": [],
-    "data": {},
-    "last_selections": [],
-    "last_distractors": []
-  },
-  {
-    "type": "Text",
-    "label": "Text",
-    "color": "gray",
-    "index": 8,
-    "saved_text": "",
-    "saved_tags": [],
-    "data": {},
-    "last_selections": [],
-    "last_distractors": []
-  },
-  {
-    "type": "Text",
-    "label": "Text",
-    "color": "gray",
-    "index": 9,
-    "saved_text": "",
-    "saved_tags": [],
-    "data": {},
-    "last_selections": [],
-    "last_distractors": []
-  },
-  {
-    "type": "Text",
-    "label": "Text",
-    "color": "gray",
-    "index": 10,
-    "saved_text": "",
-    "saved_tags": [],
-    "data": {},
-    "last_selections": [],
-    "last_distractors": []
-  },
-  {
-    "type": "End",
-    "label": "End",
-    "color": "red",
-    "index": 11,
-    "saved_text": "",
-    "saved_tags": [],
-    "data": {},
     "last_selections": [],
     "last_distractors": []
   }

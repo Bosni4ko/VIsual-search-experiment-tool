@@ -344,7 +344,7 @@ def load_timeline_state(app):
 def show_editor_screen(app):
     app.clear_screen()
     app.timeline_components = []
-    app.timeline_spacing = 100  # horizontal space between blocks
+    app.timeline_spacing = 120  # horizontal space between blocks
     app.selected_component = None
 
    # Create a canvas that will act as a horizontally scrollable container
@@ -353,7 +353,7 @@ def show_editor_screen(app):
     curr_h = app.root.winfo_height()
     # prevent the user from ever resizing the window smaller than this
     app.root.minsize(800, curr_h)
-    timeline_canvas.place(relx=0.025, rely=0.75, relwidth=0.7, height=140)
+    timeline_canvas.place(relx=0.025, rely=0.75, relwidth=0.7, height=120)
 
     # Create a horizontal scrollbar linked to the canvas
     scrollbar = tk.Scrollbar(app.root, orient="horizontal", command=timeline_canvas.xview)
@@ -361,7 +361,8 @@ def show_editor_screen(app):
     timeline_canvas.configure(xscrollcommand=scrollbar.set)
     app.scrollbar = scrollbar
 
-    timeline_container = tk.Frame(timeline_canvas, bg="white", width=580, height=100)
+    canvas_height = int(timeline_canvas['height'])
+    timeline_container = tk.Frame(timeline_canvas, bg="white", width=580, height=canvas_height)
     timeline_canvas.create_window((10, 0), window=timeline_container, anchor="nw")
     def on_root_resize(event):
         # canvas keeps its fixed 140px height,
@@ -451,16 +452,11 @@ def show_editor_screen(app):
             block.place(in_=app.timeline_container, x=i * app.timeline_spacing, y=10)
             # If the block is from the timeline and has an entry widget, position it as well.
             if block.from_timeline and hasattr(block, 'name_entry'):
-                block.name_entry.place(in_=app.timeline_container, x=i * app.timeline_spacing, y=75)
+                block.name_entry.place(in_=app.timeline_container, x=i * app.timeline_spacing,  y=10 + block.label_offset_y, width=block.winfo_width())
         update_timeline_container_size()
     
     render_timeline()
     app.render_timeline= render_timeline
-    
-    # Automatically add Start block at index 0
-    start_block = ComponentBlock(app,app.timeline_container, "Start", "green", x=0, y=10, from_timeline=True,component_type="Start")
-    app.timeline_components.append(start_block)
-    start_block.name_entry.place(x=0, y=75)
 
     setup_components_palette(app)
 
@@ -739,6 +735,23 @@ def show_editor_screen(app):
     app.insert_component = insert_component
     load_timeline_state(app)
     render_timeline()
+
+    # after loading & initial render, add Start only if JSON didn't have one
+    if not any(b.component_type == "Start" for b in app.timeline_components):
+        start_block = ComponentBlock(
+            app, app.timeline_container,
+            "Start", "green",
+            x=0, y=10,
+            from_timeline=True,
+            component_type="Start"
+        )
+        app.timeline_components.insert(0, start_block)
+        start_block.name_entry.place(
+            x=0,
+            y=10 + start_block.label_offset_y,
+            width=start_block.winfo_width()
+        )
+        render_timeline()
 
     def on_create():
         # Save any pending text formatting

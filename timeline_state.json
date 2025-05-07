@@ -562,10 +562,32 @@
     "last_distractors": []
   },
   {
+    "type": "Text",
+    "label": "Text",
+    "color": "gray",
+    "index": 9,
+    "saved_text": "",
+    "saved_tags": [],
+    "data": {},
+    "last_selections": [],
+    "last_distractors": []
+  },
+  {
+    "type": "Text",
+    "label": "Text",
+    "color": "gray",
+    "index": 10,
+    "saved_text": "",
+    "saved_tags": [],
+    "data": {},
+    "last_selections": [],
+    "last_distractors": []
+  },
+  {
     "type": "End",
     "label": "End",
     "color": "red",
-    "index": 9,
+    "index": 11,
     "saved_text": "",
     "saved_tags": [],
     "data": {},

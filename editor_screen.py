@@ -356,55 +356,89 @@ def show_editor_screen(app):
 
     # Create a horizontal scrollbar linked to the canvas
     scrollbar = tk.Scrollbar(app.root, orient="horizontal", command=timeline_canvas.xview)
-    scrollbar.place(
-        relx=0.025,
-        rely=0.7 + 140/curr_h,    # curr_h is your root.winfo_height() from earlier
-        relwidth=0.7,
-        height=15                # or however thick you like your scrollbar
-    )
+    scrollbar.place(relx=0.025, y=timeline_canvas.winfo_y() + 140, relwidth=0.7, height=15)
     timeline_canvas.configure(xscrollcommand=scrollbar.set)
+    app.scrollbar = scrollbar
 
     timeline_container = tk.Frame(timeline_canvas, bg="white", width=580, height=100)
     timeline_canvas.create_window((10, 0), window=timeline_container, anchor="nw")
-    
+    def on_root_resize(event):
+        # canvas keeps its fixed 140px height,
+        # so scrollbar always sits right below it
+        y_pixel = timeline_canvas.winfo_y() + timeline_canvas.winfo_height()
+        app.scrollbar.place_configure(y=y_pixel)
+
+    # bind once, after creating the widgets:
+    app.root.bind("<Configure>", on_root_resize)
+
+    # bind once, after creating the widgets:
+    app.root.bind("<Configure>", on_root_resize)
     # Update the scroll region whenever the size of timeline_container changes
     timeline_container.bind(
         "<Configure>",
         lambda e: timeline_canvas.configure(scrollregion=timeline_canvas.bbox("all"))
     )
-    # 1) scroll handler
+    def _is_in_timeline(widget):
+    # climb the master chain looking for our timeline widgets
+        while widget:
+            if widget in (app.timeline_canvas, app.scrollbar, app.timeline_container):
+                return True
+            widget = getattr(widget, "master", None)
+        return False
     def _on_mousewheel(event):
-        timeline_canvas.xview_scroll(int(-1 * (event.delta / 120)), "units")
+        if not _is_in_timeline(event.widget):
+            # not over timeline → do nothing, let other widgets scroll
+            return
 
-    # 2) hover-based binding
-    def _bind_scroll(_):
-        app.root.bind_all("<MouseWheel>", _on_mousewheel)
-    def _unbind_scroll(_):
-        app.root.unbind_all("<MouseWheel>")
+        canvas = app.timeline_canvas
+        units = -1 * (event.delta // 120)
 
-    for w in (timeline_canvas, scrollbar):
-        w.bind("<Enter>", _bind_scroll)
-        w.bind("<Leave>", _unbind_scroll)
+        lo, hi = canvas.xview()
+        if (units < 0 and lo <= 0.0) or (units > 0 and hi >= 1.0):
+            # at one edge → eat the event so you can’t drift past
+            return "break"
+
+        canvas.xview_scroll(units, "units")
+        return "break"
+
+
+    app.root.bind_all("<MouseWheel>", _on_mousewheel)
 
     app.timeline_canvas = timeline_canvas
     app.timeline_container = timeline_container
     def update_timeline_container_size():
-        # Make sure all geometry calculations are up-to-date
+        # 1) Force geometry update
         app.timeline_container.update_idletasks()
-        
-        # Calculate the required width: For example, get the rightmost component's x position plus its width
-        max_width = 100
+
+        # 2) Compute needed inner-frame width
+        max_w = 100
         for child in app.timeline_container.winfo_children():
-            x = child.winfo_x()
-            w = child.winfo_width()
-            max_width = max(max_width, x + w)
-            
-        # Optionally, add some padding
-        new_width = max_width + 20  
-        app.timeline_container.config(width=new_width)
-        
-        # Update the canvas scroll region in case it changed
-        app.timeline_container.event_generate("<Configure>")
+            x, w = child.winfo_x(), child.winfo_width()
+            max_w = max(max_w, x + w)
+        new_w = max_w + 20
+        app.timeline_container.config(width=new_w)
+
+        # 3) Update scrollregion
+        canvas    = app.timeline_canvas
+        scrollbar = app.scrollbar
+        canvas.configure(scrollregion=canvas.bbox("all"))
+
+        # 4) Show/hide scrollbar & set can_scroll
+        bbox = canvas.bbox("all") or (0, 0, 0, 0)
+        content_w = bbox[2] - bbox[0]
+        visible_w = canvas.winfo_width()
+
+        if content_w <= visible_w:
+            # nothing to scroll
+            app.can_scroll = False
+            scrollbar.place_forget()
+            canvas.xview_moveto(0)
+        else:
+            # overflow → enable scroll
+            app.can_scroll = True
+            y = canvas.winfo_y() + canvas.winfo_height()  # always 140px below top
+            scrollbar.place(relx=0.025, y=y, relwidth=0.7, height=15)
+
 
     # Function to render timeline content horizontally
     def render_timeline():

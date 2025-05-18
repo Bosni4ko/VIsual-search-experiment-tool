@@ -2,15 +2,15 @@ This repository contains a Python-based application for designing, launching, an
 Developed as part of a master's thesis.
 
 **Visual Search Experiments**: Supports configurable grid-based tasks with emotional distractors and targets.
-**Experimental Conditions**: Easy creation of experiments with three types of valence stimulus:
-  -Positive
-  -Negative
-  -Neutral
-**Session Management**:
-  - Participant info entry and session tracking
-  - Save data in structured JSON and CSV formats. IMportant data includes reaction time, target presence, participant metadata, number of stimulus, stimulus images position and names.
-**Multilingual UI**
-  -Build-in UI which supports two languages: English and Latvian
+**Experimental Conditions**: Easy creation of experiments with three types of valence stimulus: <br>
+  -Positive <br>
+  -Negative <br>
+  -Neutral <br>
+**Session Management**: <br>
+  - Participant info entry and session tracking <br>
+  - Save data in structured JSON and CSV formats. IMportant data includes reaction time, target presence, participant metadata, number of stimulus, stimulus images position and names. <br>
+**Multilingual UI** <br>
+  -Build-in UI which supports two languages: English and Latvian <br>
 
 Directory has the following structure: <br>
 ├── Main.py # Entry point to the application <br>

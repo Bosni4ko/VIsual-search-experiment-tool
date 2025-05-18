@@ -6,9 +6,11 @@ Developed as part of a master's thesis.
   -Positive <br>
   -Negative <br>
   -Neutral <br>
+  
 **Session Management**: <br>
   - Participant info entry and session tracking <br>
   - Save data in structured JSON and CSV formats. IMportant data includes reaction time, target presence, participant metadata, number of stimulus, stimulus images position and names. <br>
+  
 **Multilingual UI** <br>
   -Build-in UI which supports two languages: English and Latvian <br>
 

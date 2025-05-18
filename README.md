@@ -12,7 +12,7 @@ Developed as part of a master's thesis.
 **Multilingual UI**
   -Build-in UI which supports two languages: English and Latvian
 
-Directory has the following structure:
+Directory has the following structure: <br>
 ├── Main.py # Entry point to the application <br>
 ├── launch_screen.py # Screen for launching experiments <br>
 ├── experiment_session_start.py # Screen for starting experiment sessions <br>

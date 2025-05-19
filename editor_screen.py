@@ -25,7 +25,7 @@ def save_visual_search_experiment(app, base_save_dir, compress_images=True, imag
         image_quality: Quality setting for JPEG compression (1-95).
     """
 
-    # Create a subfolder named after the experiment
+     # Format experiment folder name
     exp_folder_name = app.saved_exp_name.strip().replace(" ", "_")  # Clean name: replace spaces with underscores
     save_dir = os.path.join(base_save_dir, exp_folder_name)
     # Delete existing folder if it already exists
@@ -33,7 +33,7 @@ def save_visual_search_experiment(app, base_save_dir, compress_images=True, imag
         shutil.rmtree(save_dir)
     os.makedirs(save_dir, exist_ok=True)
 
-    # Create two separate folders for selections and distractors
+    # Prepare subfolders for selections and distractors
     selections_dir = os.path.join(save_dir, "selections")
     distractors_dir = os.path.join(save_dir, "distractors")
     os.makedirs(selections_dir, exist_ok=True)
@@ -41,7 +41,7 @@ def save_visual_search_experiment(app, base_save_dir, compress_images=True, imag
 
     image_map = {}  # (original_path, destination_folder) -> relative_path
     state = []
-
+    # Iterate through each component in the timeline
     for idx, block in enumerate(app.timeline_components):
         entry = {
             "type": block.component_type,
@@ -51,20 +51,21 @@ def save_visual_search_experiment(app, base_save_dir, compress_images=True, imag
         }
         entry["saved_text"] = block.saved_text
         entry["saved_tags"] = block.saved_tags
-
+        # Extract non-transient block data
         raw_data = getattr(block, "data", {}) or {}
         main_data = {k: v for k, v in raw_data.items() if k not in ("last_selections", "last_distractors")}
         entry["data"] = main_data
-
+         # Handle Stimulus-specific last selections & distractors
         if block.component_type == "Stimulus":
-            # Handle last_selections
+             # Process last selections 
             last_sel = raw_data.get("last_selections", {}).copy()
             selected_target_mode = raw_data.get("selected_target", "Random")
             stimulus_set = raw_data.get("stimulus_set", "Faces")
             target_type = raw_data.get("target_type", "positive")
             no_target = raw_data.get("no_target", False)
-            
+             # Determine root image directory based on stimulus set
             stim_set = raw_data.get("stimulus_set", "Faces")
+            # Randomly pick a target if needed
             if selected_target_mode == "Random" or no_target:
                 from random import choice
                 if stim_set == "Faces":
@@ -78,6 +79,7 @@ def save_visual_search_experiment(app, base_save_dir, compress_images=True, imag
                 if os.path.isdir(base_path):
                     # Walk through base_path and all its subdirectories
                     all_imgs = []
+                    # Collect all valid image files
                     for root, dirs, files in os.walk(base_path):
                         for fname in files:
                             if fname.lower().endswith((".jpg", ".jpeg", ".png",".bmp")):
@@ -85,7 +87,7 @@ def save_visual_search_experiment(app, base_save_dir, compress_images=True, imag
                     if all_imgs:
                         random_img = choice(all_imgs)
                         last_sel[(stimulus_set, target_type)] = random_img
-
+            # Copy/compress selected images and update entry
             new_last_sel = []
             for key, path in last_sel.items():
                 new_path = copy_and_compress_image(
@@ -97,13 +99,13 @@ def save_visual_search_experiment(app, base_save_dir, compress_images=True, imag
                     "path": new_path
                 })
             entry["last_selections"] = new_last_sel
-
+            # Process last distractors similarly
             last_dist = raw_data.get("last_distractors", {}).copy()
             distractor_set_mode = raw_data.get("distractor_set", "All")
             distractor_type = raw_data.get("distractor_type", "positive")
             grid_x = raw_data.get("field_x", 10)
             grid_y = raw_data.get("field_y", 10)
-
+            # Reuse root_dir logic
             if stim_set == "Faces":
                 root_dir = os.path.join("images", "faces")
             elif stim_set == "Images":

@@ -20,7 +20,7 @@ class ScrollableFrame(tk.Frame):
         self.canvas.configure(yscrollcommand=vsb.set)
         self.current_screen = "main"  # default screen
 
-        # Inner frame
+        # Inner frame placed in the canvas
         self.scrollable_frame = tk.Frame(self.canvas, bg="#ffffff")
         self.scrollable_frame.bind(
             "<Configure>",
@@ -28,7 +28,7 @@ class ScrollableFrame(tk.Frame):
         )
         self.canvas.create_window((0, 0), window=self.scrollable_frame, anchor="nw")
 
-        # Layout
+        # Pack canvas and scrollbar
         self.canvas.pack(side="left", fill="both", expand=True)
         vsb.pack(side="right", fill="y")
 
@@ -46,7 +46,6 @@ class ScrollableFrame(tk.Frame):
             if content_height <= view_height:
                 return  # nothing to scroll
         
-        # now actually scroll
         delta = event.delta
         if sys.platform == "darwin":
             self.canvas.yview_scroll(-1 * delta, "units")
@@ -70,7 +69,7 @@ class ExperimentApp:
         self.root.configure(bg="#f0f0f0")  # Light, neutral background
         apply_theme(self.root)  
 
-        # Stored values for persistence
+        # Initialize persistent values
         self.saved_exp_name = "Default_Experiment_name"
         self.saved_participant_name = "Participant"
         self.saved_save_location = os.path.join(os.getcwd(), "experiments")
@@ -92,26 +91,28 @@ class ExperimentApp:
         self.root.bind('<Escape>', self.exit_fullscreen)
 
         self.root.title("Emotional Visual Search Experiment Launcher")
-
+     # Toggle fullscreen mode
     def toggle_fullscreen(self, event=None):
         """
         Toggle fullscreen mode on or off.
         """
         self.fullscreen = not self.fullscreen
         self.root.attributes('-fullscreen', self.fullscreen)
-
+     # Exit fullscreen mode
     def exit_fullscreen(self, event=None):
         """
         Exit fullscreen mode.
         """
         self.fullscreen = False
         self.root.attributes('-fullscreen', False)
+    # Translation helper
     def tr(self, key):
         return self.translations[self.current_language].get(key, key)
-
+    # Clear all widgets from the root window
     def clear_screen(self):
         for widget in self.root.winfo_children():
             widget.destroy()
+     # Change application language
     def change_language(self):
         def set_language(new_lang):
             self.current_language = new_lang
@@ -126,10 +127,11 @@ class ExperimentApp:
         for lang in self.languages:
             btn = ttk.Button(popup, text=lang, command=lambda l=lang: set_language(l))
             btn.pack(pady=5)
+    # Handle language change from dropdown
     def on_language_change(self, event=None):
         selected_language = self.language_var.get()
         self.current_language = selected_language
-        # Now reopen the correct screen
+        # Reopen the correct screen
         if self.current_screen == "main":
             self.show_main_screen()
         elif self.current_screen == "create":
@@ -139,8 +141,8 @@ class ExperimentApp:
         elif self.current_screen == "session_start":
             from experiment_session_start import show_experiment_session_start
             show_experiment_session_start(self, self.experiment_name, self.experiment_path, self.continue_mode)
-        
-
+     
+    # Show the main screen UI
     def show_main_screen(self):
         self.current_screen = "main"
         self.clear_screen()
@@ -169,7 +171,6 @@ class ExperimentApp:
         title_label = ttk.Label(header_frame, text=self.tr("visual_search_launcher"), anchor="center")
         title_label.pack(pady=(0, 30))
 
-
         button_frame = tk.Frame(header_frame, bg="#f0f0f0")
         button_frame.pack()
         
@@ -178,14 +179,14 @@ class ExperimentApp:
         
         launch_button = ttk.Button(button_frame, text=self.tr("launch_experiment"), command=self.show_launch_screen)
         launch_button.grid(row=0, column=1, padx=20, pady=20)
-
+    # Open directory chooser and update the entry
     def choose_save_location(self):
         directory = filedialog.askdirectory(initialdir=self.save_location_entry.get() or os.getcwd())
         if directory:
             self.save_location_entry.delete(0, tk.END)
             self.save_location_entry.insert(0, directory)
             self.saved_save_location = directory 
-
+     # Map translated metadata type to internal value
     def get_real_type(self, displayed_type):
         """
         Maps translated type (displayed text) back to internal real type: 'Value' or 'List'
@@ -196,7 +197,7 @@ class ExperimentApp:
             return "List"
         else:
             return displayed_type  # fallback (shouldn't happen)
-
+    
     def show_create_screen(self):
         self.current_screen = "create"
         self.clear_screen()
@@ -285,6 +286,7 @@ class ExperimentApp:
         back_button.grid(row=0, column=0, padx=20)
         create_button = ttk.Button(action_frame, text=self.tr("create"), command=self.validate_and_proceed)
         create_button.grid(row=0, column=1, padx=20)
+    # Show launch screen
     def show_launch_screen(self):
         show_launch_screen(self)
 
@@ -293,7 +295,7 @@ class ExperimentApp:
         """
         Adds a metadata row that allows entering a metadata name and choosing whether its value is a
         single entry (Value) or a list of items (List). Both the white placeholder (for Value)
-        and the list container (for List) are created; we show one and hide the other.
+        and the list container (for List) are created; it shows one and hide the other.
         """
         row_frame = tk.Frame(self.metadata_frame, bg="#ffffff")
         row_frame.pack(fill="x", pady=5)
@@ -480,7 +482,7 @@ class ExperimentApp:
         self.save_current_create_screen_state()
         # Proceed with the editor screen using the collected information.
         show_editor_screen(self)
-
+    # Save current create screen state to file
     def save_current_create_screen_state(self):
         data = {
             "exp_name": self.saved_exp_name,
@@ -490,7 +492,7 @@ class ExperimentApp:
         }
         with open(STATE_FILE, "w") as f:
             json.dump(data, f, indent=2)
-    
+    # Load saved create screen state from file
     def load_create_screen_state(self):
         if os.path.exists(STATE_FILE):
             try:
@@ -503,7 +505,7 @@ class ExperimentApp:
             except Exception as e:
                 print(f"Error loading saved create screen state: {e}")
 
-
+     # Go back to main screen
     def back_to_main(self):
         """
         Saves the current create screen state and then returns to the main screen.

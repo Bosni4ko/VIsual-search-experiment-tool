@@ -114,7 +114,7 @@ def render_current_component(app):
             relief="flat"
         )
         text_widget.pack(expand=True, padx=20, pady=20, fill="both")
-
+    
         # --- Load the text ---
         text_content = component.get('saved_text', '')
 

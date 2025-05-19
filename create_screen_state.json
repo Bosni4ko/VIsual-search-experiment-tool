@@ -1,5 +1,5 @@
 {
-  "exp_name": "First_Test_experiment",
+  "exp_name": "Default_Experiment_name",
   "participant_name": "Participant",
   "save_location": "C:\\Users\\User\\Desktop\\mag\\Program\\experiments",
   "metadata": [
@@ -12,10 +12,8 @@
       "name": "Dzimums",
       "type": "List",
       "value": [
-        "Virietis",
-        "Sieviete",
-        "Negribu noradit",
-        "Cits"
+        "V",
+        "S"
       ]
     }
   ]
